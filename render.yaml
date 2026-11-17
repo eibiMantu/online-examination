@@ -1,0 +1,39 @@
+services:
+  - type: web
+    name: neu-online-examination
+    runtime: node
+    plan: free
+    branch: dev
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    numInstances: 1
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SQLITE_PATH
+        value: /tmp/neu-examination.sqlite
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: ADMIN_USERNAME
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: DEAN_USERNAME
+        sync: false
+      - key: DEAN_PASSWORD
+        sync: false
+      - key: FACULTY_COORDINATOR_USERNAME
+        sync: false
+      - key: FACULTY_COORDINATOR_PASSWORD
+        sync: false
+      - key: PROFESSOR_USERNAME
+        sync: false
+      - key: PROFESSOR_PASSWORD
+        sync: false
+      - key: STUDENT_USERNAME
+        sync: false
+      - key: STUDENT_PASSWORD
+        sync: false

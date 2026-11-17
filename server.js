@@ -7,6 +7,7 @@ const { createAuth } = require('./server/auth');
 const { requireCollectionAccess, visibleRecords } = require('./server/access-policy');
 const { validateProtectedWrite } = require('./server/protected-write');
 const { openDatabase } = require('./server/database');
+const { createSupabaseReplicatedStore } = require('./server/supabase-replica');
 const { parseCsv, stringifyCsv } = require('./server/csv');
 const { createAcademicPeriodService, initialFromSettings, normalizeOperationalWrite, validateSettingsWrite, ACTIVE_COLLECTIONS } = require('./server/academic-periods');
 const { createAccountLifecycleService, STATUS_BY_ACTION } = require('./server/account-lifecycle');
@@ -20,24 +21,22 @@ const MAX_BODY = 10 * 1024 * 1024;
 const KEY_RE = /^[A-Za-z0-9:_-]{1,80}$/;
 const CSV_COLLECTIONS = new Set(['users','faculty','students','subjects','sections','sectionSubjects','studentEnrollments','subjectAssignments','exams','questions','studentSubmissions','applicationAuditLog']);
 const MIME = {'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.png':'image/png','.jpg':'image/jpeg','.jpeg':'image/jpeg','.svg':'image/svg+xml','.ico':'image/x-icon','.md':'text/markdown; charset=utf-8'};
-const store = openDatabase(DB_FILE);
 function readEnvFile(filename){try{return Object.fromEntries(fs.readFileSync(filename,'utf8').split(/\r?\n/).map(line=>line.trim()).filter(line=>line&&!line.startsWith('#')&&line.includes('=')).map(line=>{const index=line.indexOf('=');return[line.slice(0,index).trim(),line.slice(index+1).trim()]}));}catch{return{};}}
-function ensureDemoAccounts(){const existing=store.read('users',[]),env={...readEnvFile(path.join(ROOT,'.env')),...process.env};const required=[
+const runtimeEnv = {...readEnvFile(path.join(ROOT,'.env')),...process.env};
+const localStore = openDatabase(DB_FILE);
+const store = createSupabaseReplicatedStore(localStore, {
+  url: runtimeEnv.SUPABASE_URL,
+  serviceKey: runtimeEnv.SUPABASE_SERVICE_ROLE_KEY
+});
+function ensureDemoAccounts(){const existing=store.read('users',[]),env=runtimeEnv;const required=[
   {username:env.ADMIN_USERNAME||'admin',password:env.ADMIN_PASSWORD||'admin123',role:'admin',status:'active'},
   {username:env.DEAN_USERNAME||'dean.demo',password:env.DEAN_PASSWORD||'dean123',role:'dean',status:'active'},
   {username:env.FACULTY_COORDINATOR_USERNAME||'coordinator.demo',password:env.FACULTY_COORDINATOR_PASSWORD||'coord123',role:'coordinator',status:'active'},
   {username:env.PROFESSOR_USERNAME||'23-32534-345',password:env.PROFESSOR_PASSWORD||'reyes23',role:'faculty',status:'active'},
   {username:env.STUDENT_USERNAME||'2025-00002',password:env.STUDENT_PASSWORD||'santos2025',role:'student',status:'active'}
 ];const users=Array.isArray(existing)?existing:[],initialCount=users.length,known=new Set(users.map(item=>item.username));required.forEach(item=>{if(!known.has(item.username))users.push(item)});if(users.length!==initialCount)store.write('users',users);const profiles=store.read('coordinators',[]);if(!Array.isArray(profiles)||!profiles.length){store.write('coordinators',required.filter(item=>item.role==='coordinator').map(({username,role})=>({id:username,username,role,first:'Demo',last:'Santos',college:'College of Information and Computer Studies',status:'active'})));}}
-ensureDemoAccounts();
 function ensureOfficialCurricula(){const file=path.join(ROOT,'assets','philippine-curricula.json');if(!fs.existsSync(file))return;const official=JSON.parse(fs.readFileSync(file,'utf8')),current=store.read('curricula',[]),records=Array.isArray(current)?current:[],officialPrograms=new Set(official.map(item=>item.program)),bySubject=new Map(records.filter(item=>officialPrograms.has(item.program)).map(item=>[`${item.program}|${item.subjectCode}`,item])),merged=official.map(item=>({...item,...(bySubject.get(`${item.program}|${item.subjectCode}`)||{}),sourceUrl:item.sourceUrl,institution:item.institution})),custom=records.filter(item=>!officialPrograms.has(item.program)||item.institution&&item.institution!=='University of the East');store.write('curricula',[...merged,...custom]);}
-ensureOfficialCurricula();
-initialFromSettings(store);
-const auth = createAuth(store);
-const academicPeriods = createAcademicPeriodService(store);
-const accountLifecycle = createAccountLifecycleService(store);
-const backupRestore = createBackupRestoreService(store);
-const personnel = createPersonnelService(store);
+let auth, academicPeriods, accountLifecycle, backupRestore, personnel;
 
 function send(res, status, body, type='application/json; charset=utf-8', headers={}) { res.writeHead(status, {'Content-Type':type,'X-Content-Type-Options':'nosniff','Cache-Control':'no-store, no-cache, must-revalidate','Pragma':'no-cache','Expires':'0',...headers}); res.end(type.startsWith('application/json') ? JSON.stringify(body) : body); }
 function readBody(req) { return new Promise((resolve,reject)=>{let size=0,chunks=[];req.on('data',chunk=>{size+=chunk.length;if(size>MAX_BODY){reject(Object.assign(new Error('Request body is too large.'),{status:413}));req.destroy();}else chunks.push(chunk);});req.on('end',()=>resolve(Buffer.concat(chunks).toString('utf8')));req.on('error',reject);}); }
@@ -45,7 +44,7 @@ function cleanKey(value) { const key=decodeURIComponent(value||''); if(!KEY_RE.t
 function collectionFromCsvPath(pathname) { const match=pathname.match(/^\/api\/csv\/([^/]+)\/(import|export)$/); if(!match)return null;const key=cleanKey(match[1]);if(!CSV_COLLECTIONS.has(key))throw Object.assign(new Error('CSV is not enabled for this collection.'),{status:400});return{key,action:match[2]}; }
 
 async function api(req,res,url) {
-  if(url.pathname==='/api/health'&&req.method==='GET') return send(res,200,{ok:true,storage:'sqlite',database:path.basename(DB_FILE)});
+  if(url.pathname==='/api/health'&&req.method==='GET'){const replication=store.status(),healthy=!replication.enabled||replication.healthy;return send(res,healthy?200:503,{ok:healthy,storage:replication.enabled?'sqlite+supabase':'sqlite',database:path.basename(DB_FILE),replication});}
   if(url.pathname==='/api/auth/login'&&req.method==='POST'){const parsed=JSON.parse(await readBody(req)||'{}');const result=auth.login(String(parsed.username||''),String(parsed.password||''),req.socket.remoteAddress||'');return send(res,200,result);}
   if(url.pathname==='/api/auth/session'&&req.method==='GET'){const session=auth.requireSession(req);return send(res,200,{session});}
   if(url.pathname==='/api/auth/logout'&&req.method==='DELETE'){const token=auth.tokenFrom(req);if(token)auth.logout(token);return send(res,200,{ok:true});}
@@ -93,5 +92,30 @@ async function api(req,res,url) {
 function staticFile(req,res,url){let pathname=url.pathname==='/'?'/html/index.html':url.pathname;let decoded;try{decoded=decodeURIComponent(pathname);}catch{return send(res,400,{error:'Invalid path.'});}if(/^\/[A-Za-z0-9_-]+\.html$/.test(decoded))decoded='/html'+decoded;const target=path.resolve(ROOT,'.'+decoded);if(target!==ROOT&&!target.startsWith(ROOT+path.sep))return send(res,403,{error:'Forbidden.'});fs.stat(target,(error,stat)=>{if(error||!stat.isFile())return send(res,404,{error:'File not found.'});fs.createReadStream(target).on('error',()=>send(res,500,{error:'Could not read file.'})).pipe((res.writeHead(200,{'Content-Type':MIME[path.extname(target).toLowerCase()]||'application/octet-stream','X-Content-Type-Options':'nosniff','Cache-Control':'no-store'}),res));});}
 
 const server=http.createServer(async(req,res)=>{const url=new URL(req.url,'http://localhost');try{if(url.pathname.startsWith('/api/')){const handled=await api(req,res,url);if(handled!==false)return;return send(res,404,{error:'API route not found.'});}if(!['GET','HEAD'].includes(req.method))return send(res,405,{error:'Method not allowed.'});staticFile(req,res,url);}catch(error){const status=error.status||400;if(status>=500)console.error(error);send(res,status,{error:error.message||'Request failed.'});}});
-server.listen(PORT,()=>console.log(`NEU Examination server: http://localhost:${PORT}\nSQLite: ${DB_FILE}`));
-process.on('SIGINT',()=>{store.close();server.close(()=>process.exit(0));});
+
+async function start() {
+  const hydration = await store.hydrate();
+  ensureDemoAccounts();
+  ensureOfficialCurricula();
+  initialFromSettings(store);
+  auth = createAuth(store);
+  academicPeriods = createAcademicPeriodService(store);
+  accountLifecycle = createAccountLifecycleService(store);
+  backupRestore = createBackupRestoreService(store);
+  personnel = createPersonnelService(store);
+  server.listen(PORT, '0.0.0.0', () => console.log(`NEU Examination server: http://localhost:${PORT}\nSQLite cache: ${DB_FILE}\nSupabase: ${hydration.enabled ? `enabled (${hydration.hydrated} collections hydrated)` : 'disabled'}`));
+}
+
+let stopping = false;
+async function shutdown() {
+  if (stopping) return;
+  stopping = true;
+  server.close(async () => {
+    await store.flush();
+    store.close();
+    process.exit(0);
+  });
+}
+process.on('SIGINT', shutdown);
+process.on('SIGTERM', shutdown);
+start().catch(error => { console.error(error); store.close(); process.exit(1); });

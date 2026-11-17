@@ -10,7 +10,13 @@ const port = 3017;
 const origin = `http://127.0.0.1:${port}`;
 const server = spawn(process.execPath, ['server.js'], {
   cwd: path.join(__dirname, '..'),
-  env: { ...process.env, PORT: String(port), SQLITE_PATH: database },
+  env: {
+    ...process.env,
+    PORT: String(port),
+    SQLITE_PATH: database,
+    SUPABASE_URL: '',
+    SUPABASE_SERVICE_ROLE_KEY: ''
+  },
   stdio: ['ignore', 'pipe', 'pipe']
 });
 let serverErrors = '';

@@ -19,7 +19,7 @@ The prototype currently includes:
 - SQLite-backed server login with opaque expiring sessions, logout revocation, active-account checks, and sign-in rate limiting;
 - subject, section, enrollment, examination, submission, grading, reporting, and audit data;
 - light and dark interface themes;
-- SQLite as the primary data source when the Node server is running; and
+- SQLite as the local primary data source, with optional Supabase durability for Render; and
 - CSV as an import/export format rather than the application database.
 
 Dean and Faculty Coordinator workspaces now use the shared role-dashboard design system while preserving their distinct academic responsibilities. Remaining role-specific work and ownership are tracked in [`.plans/new`](.plans/new).
@@ -30,6 +30,29 @@ Dean and Faculty Coordinator workspaces now use the shared role-dashboard design
 - A current desktop browser
 
 No production dependencies need to be installed. The server uses Node's built-in SQLite support.
+
+## Deploy with Supabase and Render
+
+The repository includes a `render.yaml` Blueprint and a server-only Supabase
+replication layer. The existing synchronous application services continue to use
+a local SQLite cache, while Supabase stores every collection off-device and
+hydrates the cache before Render accepts traffic.
+
+1. Create a Supabase project and run
+   `supabase/migrations/202611170001_app_collections.sql` in its SQL Editor.
+2. In Supabase Project Settings, copy the project URL and the server-only
+   service-role key. Never place the service-role key in browser code or Git.
+3. In Render, create a Blueprint from this repository and select `render.yaml`.
+4. Supply `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, and every credential
+   marked `sync: false`. Replace all demonstration passwords.
+5. Deploy. Render checks `/api/health`; a configured but unhealthy Supabase
+   replica returns HTTP 503 so a broken deployment does not receive traffic.
+
+The Blueprint intentionally runs one application instance. Collection updates
+are whole-document writes, so multiple instances could overwrite concurrent
+changes. Supabase credentials are optional locally; without them, `npm start`
+continues to use SQLite only. Copy `.env.example` to `.env` for local cloud
+testing and keep `.env` untracked.
 
 ## Run the project
 
@@ -102,7 +125,7 @@ CSV is supported only for transferring tabular data. The parser supports UTF-8 B
 
 The Node server provides:
 
-- `GET /api/health` — server and storage status
+- `GET /api/health` — server, SQLite cache, and Supabase replication status
 - `POST /api/auth/login` — validate a SQLite account and create a server session
 - `GET /api/auth/session` — validate the current bearer token
 - `DELETE /api/auth/logout` — revoke the current bearer token

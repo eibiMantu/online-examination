@@ -16,7 +16,7 @@
    rather than five times in a row. */
 const _storageSeen = new Map();
 const SQLITE_BACKEND_ACTIVE = typeof location !== 'undefined'
-  && /^https?:$/.test(location.protocol) && location.port === '3000';
+  && /^https?:$/.test(location.protocol);
 const SQLITE_LOCAL_ONLY = new Set(['currentUser','accessNotice']);
 const SQLITE_PERIOD_SCOPED = new Set([
   'sectionSubjects', 'studentEnrollments', 'subjectAssignments', 'exams',
