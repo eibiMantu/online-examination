@@ -105,7 +105,8 @@ function required(condition, message) {
    })
 */
 function mountSidebar({ items, panels, container = '.topbar-left',
-                        titleEl = null, onSelect = null, startAt = null } = {}) {
+                        titleEl = null, onSelect = null, startAt = null,
+                        collapsedWidth = 0, expandedWidth = 260 } = {}) {
   const host = typeof container === 'string' ? document.querySelector(container) : container;
   if (!host || !Array.isArray(items) || items.length === 0) return null;
   const navItems = items.filter(item => item && item.id);
@@ -154,10 +155,14 @@ function mountSidebar({ items, panels, container = '.topbar-left',
   }
 
   function setOpen(open) {
-    bar.style.width = open ? '260px' : '0';
+    const compactWidth=window.innerWidth<=760?0:Math.max(0,Number(collapsedWidth)||0);
+    bar.style.width = `${open ? expandedWidth : compactWidth}px`;
     menuBtn.setAttribute('aria-expanded', String(open));
     document.body.classList.toggle('sidebar-open', open);
     document.body.classList.add('sidebar-layout-ready');
+    document.body.classList.toggle('sidebar-mini',compactWidth>0);
+    document.body.style.setProperty('--sidebar-shell-width',`${expandedWidth}px`);
+    document.body.style.setProperty('--sidebar-mini-width',`${compactWidth}px`);
   }
 
   function show(id, options = {}) {
@@ -168,7 +173,12 @@ function mountSidebar({ items, panels, container = '.topbar-left',
     }
     known.forEach(p => {
       const el = document.getElementById(p);
-      if (el) el.style.display = (p === id) ? 'block' : 'none';
+      if (el) {
+        const active = p === id;
+        el.hidden = !active;
+        el.style.display = active ? 'block' : 'none';
+        el.setAttribute('aria-hidden', String(!active));
+      }
     });
     bar.querySelectorAll('a').forEach(a =>
       a.classList.toggle('active', a.dataset.panel === id));
@@ -216,7 +226,7 @@ function mountSidebar({ items, panels, container = '.topbar-left',
 
   menuBtn.addEventListener('click', e => {
     e.stopPropagation();
-    setOpen(bar.style.width !== '260px');
+    setOpen(bar.style.width !== `${expandedWidth}px`);
   });
   bar.querySelector('.close-x').addEventListener('click', () => setOpen(false));
   bar.querySelectorAll('a').forEach(a =>
@@ -224,10 +234,10 @@ function mountSidebar({ items, panels, container = '.topbar-left',
 
   // Escape closes; clicking the page behind it closes.
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && bar.style.width === '260px') { setOpen(false); menuBtn.focus(); }
+    if (e.key === 'Escape' && bar.style.width === `${expandedWidth}px`) { setOpen(false); menuBtn.focus(); }
   });
   document.addEventListener('click', e => {
-    if (bar.style.width === '260px' && !bar.contains(e.target) && e.target !== menuBtn) setOpen(false);
+    if (bar.style.width === `${expandedWidth}px` && !bar.contains(e.target) && e.target !== menuBtn) setOpen(false);
   });
 
   window.addEventListener('popstate', event => {
@@ -242,6 +252,8 @@ function mountSidebar({ items, panels, container = '.topbar-left',
     show,
     back,
     current: () => activePanel,
+    isOpen: () => document.body.classList.contains('sidebar-open'),
+    toggle: () => setOpen(!document.body.classList.contains('sidebar-open')),
     open: () => setOpen(true),
     close: () => setOpen(false)
   };

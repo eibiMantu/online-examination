@@ -1,11 +1,13 @@
 /* Canonical, versioned curriculum demo data. Replaces only the known legacy
    sample set; custom installations are left untouched. */
 const DemoData = {
-  version: 31,
+  version: 33,
   ensureLearningContent() {
     const key='subjectWorkspaceContent',current=DB.read(key,[]);
-    const cleaned=current.filter(item=>!(item.subjectCode==='CCS211-24'&&(!item.title||item.title==='Untitled')));
-    const createdAt='2026-08-20T08:00:00+08:00',base={subjectCode:'CCS211-24',updatedBy:'23-32534-345',createdAt,availability:'open',durationMinutes:0,requiresPrevious:false};
+    const cleaned=current
+      .filter(item=>!(item.subjectCode==='CCS211-24'&&(!item.title||item.title==='Untitled')))
+      .map(item=>item.subjectCode==='CCS211-24'?{...item,subjectCode:'CDS1101'}:item);
+    const createdAt='2026-08-20T08:00:00+08:00',base={subjectCode:'CDS1101',updatedBy:'23-32534-345',createdAt,availability:'open',durationMinutes:0,requiresPrevious:false};
     const lessons=[
       {...base,id:'demo-ccs211-content-01',week:1,weekTitle:'Foundations',type:'heading',title:'Course orientation',body:'## Data Structures and Algorithms\nReview the course outcomes, grading guide, and learning sequence.'},
       {...base,id:'demo-ccs211-content-02',week:1,weekTitle:'Foundations',type:'text',title:'Why data structures matter',body:'Learn how arrays, lists, stacks, and queues organize information for efficient programs.'},
@@ -20,6 +22,18 @@ const DemoData = {
     if(!missing.length&&cleaned.length===current.length)return false;
     DB.write(key,[...cleaned,...missing]);return true;
   },
+  ensureWeeklyCurriculum() {
+    if (typeof WeeklyLearning === 'undefined') return false;
+    const generated=WeeklyLearning.build(DB.read('subjects',[]),DB.read('sectionSubjects',[]));
+    if (!generated.content.length) return false;
+    const existingContent=DB.read('subjectWorkspaceContent',[]).filter(item=>!String(item.id||'').startsWith('curr-')&&!String(item.id||'').startsWith('demo-ccs211-content-'));
+    const existingExams=DB.read('exams',[]).filter(item=>!String(item.id||'').startsWith('CURR-'));
+    const existingQuestions=DB.read('questions',[]).filter(item=>!String(item.id||'').startsWith('CURR-'));
+    DB.write('subjectWorkspaceContent',[...existingContent,...generated.content]);
+    DB.write('exams',[...existingExams,...generated.exams]);
+    DB.write('questions',[...existingQuestions,...generated.questions]);
+    return true;
+  },
   install() {
     // Browser role pages must not overwrite canonical SQLite collections.
     // When SQLite already supplied the canonical records, this browser only
@@ -32,6 +46,7 @@ const DemoData = {
       return false;
     }
     this.ensureLearningContent();
+    this.ensureWeeklyCurriculum();
     if (Number(localStorage.getItem('demoCurriculumVersion') || 0) >= this.version) return false;
     const currentStudents=DB.read('students',[]);
     const looksLikeDemo=!currentStudents.length||Number(localStorage.getItem('demoCurriculumVersion')||0)>0||currentStudents.some(item=>item.id==='2024-00001');
@@ -171,8 +186,9 @@ const DemoData = {
           eligible.forEach((studentId,rank)=>{if(rank%10===0)return;const failed=rank%10===1||rank%10===2,awarded=failed?Math.floor(total*.5):Math.min(total,Math.ceil(total*(.75+(rank%4)*.05)));studentSubmissions.push({id:`SUB-${exam.id}-${studentId}`,studentId,examId:exam.id,submittedAt:`${exam.date}T${String(10+rank%7).padStart(2,'0')}:15:00+08:00`,total,answers:[{awarded,needsManualGrading:false}]});});}
       }
     });
-    const practiceCode=mariaCodes.find(code=>code==='CHC1101')||mariaCodes[1]||mariaCodes[0],practiceSubject=subjects.find(subject=>subject.code===practiceCode),practiceOffer=offers.find(offer=>offer.subjectCode===practiceCode&&offer.sectionId==='2BSCS-1');
-    const practiceExam={id:'DEMO-ALWAYS-OPEN',facultyId:practiceOffer.facultyId,subjectCode:practiceSubject.code,title:'Human-Computer Interaction — Always-Open Practice Exam',desc:'A reusable practice assessment with no opening date or deadline.',date:'',start:'',end:'',durationMinutes:0,maxAttempts:99,passingPercent:70,materials:'Notes permitted',questionLayout:'one',navigationMode:'free',status:'published',scoreRelease:'immediate',answerRelease:'immediate',showSubmittedAnswers:true,showFeedback:true,sections:['2BSCS-1']};
+    const practiceSubject=subjects.find(subject=>subject.name==='Human-Computer Interaction'&&mariaCodes.includes(subject.code))||subjects.find(subject=>subject.code===mariaCodes[1])||subjects.find(subject=>subject.code===mariaCodes[0]);
+    const practiceCode=practiceSubject.code,practiceOffer=offers.find(offer=>offer.subjectCode===practiceCode&&offer.sectionId==='2BSCS-1');
+    const practiceExam={id:'DEMO-ALWAYS-OPEN',facultyId:practiceOffer.facultyId,subjectCode:practiceSubject.code,title:'Human-Computer Interaction — Always-Open Practice Exam',desc:'A reusable practice assessment with no opening date or deadline.',date:'',start:'',end:'',durationMinutes:0,maxAttempts:99,passingPercent:70,materials:'Notes permitted',questionLayout:'one',navigationMode:'free',status:'published',scoreRelease:'immediate',answerRelease:'immediate',showSubmittedAnswers:true,showFeedback:true,dashboardAlwaysOpen:true,sections:['2BSCS-1']};
     exams.push(practiceExam);for(let q=0;q<10;q++)questions.push(buildQuestion(practiceExam,q,practiceSubject));
     const mistakesExam={id:'DEMO-REVIEW-MISTAKES',facultyId:practiceOffer.facultyId,subjectCode:practiceSubject.code,title:'Human-Computer Interaction — Incorrect Answers Review Demo',desc:'A completed demonstration assessment containing both correct and incorrect responses.',date:isoDate(-1),start:'10:00',end:'11:00',durationMinutes:45,maxAttempts:1,passingPercent:70,materials:'No additional materials',questionLayout:'one',navigationMode:'free',status:'published',scoreRelease:'immediate',answerRelease:'immediate',showSubmittedAnswers:true,showFeedback:true,sections:['2BSCS-1']};
     exams.push(mistakesExam);for(let q=0;q<8;q++)questions.push(buildQuestion(mistakesExam,q,practiceSubject));

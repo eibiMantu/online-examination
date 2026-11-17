@@ -181,9 +181,20 @@ body.sidebar-layout-ready.sidebar-open {
   padding-left: var(--sidebar-shell-width);
 }
 
+body.sidebar-layout-ready.sidebar-mini {
+  padding-left: var(--sidebar-mini-width, 76px);
+}
+
+body.sidebar-layout-ready.sidebar-mini.sidebar-open {
+  padding-left: var(--sidebar-shell-width);
+}
+
 body.sidebar-layout-ready > .topbar {
   position: sticky;
   top: 0;
+  /* Keep header popovers above cards and sticky workspace tabs. The sidebar
+     and dialogs intentionally use higher layers, so they still cover it. */
+  z-index: 40;
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;

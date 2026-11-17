@@ -14,7 +14,7 @@ ok(!/SUB2/.test(r.d.querySelector('#examTable tbody').textContent),'no unrelated
 r.w.close();
 
 console.log('\n=== K2. Enrolled subjects use cards ===');
-s=SEED(); Object.assign(s.subjects.find(subject=>subject.code==='SUB1'),{workspaceColor:'#7560ad',workspaceIcon:'code'}); s.students.push({id:'S2',last:'Reyes',first:'Ana',sections:['A']}); s.studentEnrollments=[{studentId:'S1',subjectCode:'SUB1',sectionId:'A'},{studentId:'S2',subjectCode:'SUB1',sectionId:'A'}]; s.sectionSubjects=[{sectionId:'A',assignments:[{subjectCode:'SUB1',facultyId:'F1'}]}]; r=stu(s);
+s=SEED(); Object.assign(s.subjects.find(subject=>subject.code==='SUB1'),{workspaceColor:'#7560ad',workspaceIcon:'code'}); s.students.push({id:'S2',last:'Reyes',first:'Ana',sections:['A']}); s.studentEnrollments=[{studentId:'S1',subjectCode:'SUB1',sectionId:'A'},{studentId:'S2',subjectCode:'SUB1',sectionId:'A'}]; s.sectionSubjects=[{sectionId:'A',assignments:[{subjectCode:'SUB1',facultyId:'F1'}]}]; s.subjectWorkspaceContent=[{id:'lesson-1',subjectCode:'SUB1',week:1,weekTitle:'Foundations',title:'Course orientation',type:'text',body:'Welcome'},{id:'lesson-2',subjectCode:'SUB1',week:2,weekTitle:'Core concepts',title:'Lesson two',type:'text',body:'Continue'}]; r=stu(s);
 ok(r.d.querySelectorAll('#studentSubjectCards .enrolled-subject-card').length>0,'each enrolled subject is rendered as a card');
 const studentCourseCard=r.d.querySelector('#studentSubjectCards .student-course-card');
 ok(!!studentCourseCard.querySelector('.student-course-icon')&&!!studentCourseCard.querySelector('.student-course-arrow'),'Student subject card matches the Faculty course-card structure');
@@ -27,7 +27,23 @@ const subjectProfile=r.d.querySelector('#studentSubjectDetail .student-subject-p
 ok(subjectProfile.style.getPropertyValue('--course-accent')==='#7560ad'&&subjectProfile.querySelector('.student-course-icon path').getAttribute('d')===studentCourseCard.querySelector('.student-course-icon path').getAttribute('d'),'subject hero matches the course cell and inherits Faculty color and icon settings');
 ok(!!subjectProfile.querySelector('.student-subject-profile-meta')&&!!subjectProfile.querySelector('.student-course-progress'),'subject hero includes professor, exam count, and exam progress');
 const subjectTabs=[...r.d.querySelectorAll('#studentSubjectDetail .subject-detail-tab')];
-ok(subjectTabs.map(tab=>tab.textContent.trim()).join('|')==='Main|Class'&&subjectTabs[0].classList.contains('active'),'subject page opens with underlined Main and Class tabs below the hero');
+ok(subjectTabs.map(tab=>tab.textContent.trim()).join('|')==='Main|Class|Exams'&&subjectTabs[0].classList.contains('active'),'subject page opens with underlined Main, Class, and Exams tabs below the hero');
+subjectTabs[2].click();
+ok(r.d.querySelector('[data-subject-tab-panel="exams"]')?.classList.contains('active')&&!!r.d.querySelector('.subject-exam-progress-row .subject-exam-grade i'),'Exams tab lists each examination with dates, a grade progress bar, and score');
+subjectTabs[0].click();
+ok(!!r.d.querySelector('.student-subject-layout>.student-subject-content-column .student-subject-main')&&!!r.d.querySelector('.student-subject-layout>.student-subject-side-column>.student-week-rail'),'subject page aligns the expanded main body and weekly mini sidebar from the header row');
+ok(!!r.d.querySelector('#subjects-panel.student-subjects-page .student-page-heading')&&/Current enrollment/.test(r.d.querySelector('#subjects-panel .student-page-heading')?.textContent||''),'My Subjects uses the shared Student page header and theme hierarchy');
+ok(r.d.querySelectorAll('.student-week-link').length===2&&r.d.querySelectorAll('.student-week-nav-controls button').length===2&&[...r.d.querySelectorAll('.learning-week')].filter(week=>week.open).length===1,'weekly sidebar mirrors the course weeks and focuses one week with previous and next controls');
+ok(r.d.querySelector('#student-subject-week-1>summary')?.dataset.weekLabel==='W01','weekly lesson badge displays its week number instead of an empty box');
+r.d.querySelector('.student-week-nav-controls button:last-child').click();
+ok(r.d.querySelector('.student-week-link[data-week="2"]')?.classList.contains('active')&&r.d.getElementById('student-subject-week-2')?.open,'next-week control pinpoints and opens the following week');
+r.w.focusStudentLearningCell('lesson-2',{scroll:false});
+r.w.toggleLearningCellDone('lesson-2');
+ok(r.d.querySelector('.student-week-link[data-week="2"]')?.classList.contains('active')&&r.d.querySelector('[data-learning-block="lesson-2"]')?.open&&r.d.querySelector('[data-learning-block="lesson-2"]')?.classList.contains('is-focused'),'marking a lesson done preserves its active week, expanded cell, and focused main-body view');
+ok(/youtube-nocookie\.com\/embed\//.test(r.w.renderStudentLearningVideo({subjectCode:'CCS2101',title:'Video lesson',body:'Watch and compare.'})),'video lessons render as playable privacy-enhanced embeds');
+ok(/How to use this visual/.test(r.w.renderStudentVisualLesson({weekTitle:'Logic',title:'Visual',body:'Concept map',imageUrl:'data:image/svg+xml,x'})),'visual aids include explicit teaching instructions');
+ok(!!r.d.querySelector('.learning-week .week-content-cell.lesson-cell')&&!r.d.querySelector('.learning-week .week-content-cell.quiz-cell'),'weekly cards use the full width for lessons and do not embed a quiz sidebar');
+ok(r.d.querySelector('.student-subject-side-column')?.firstElementChild?.classList.contains('student-week-upcoming')&&r.d.querySelector('.student-subject-side-column')?.lastElementChild?.classList.contains('student-week-rail'),'open deadline quizzes use a separate card above Course Path');
 ok(r.d.querySelectorAll('#studentSubjectDetail .subject-info-cell').length>=5,'subject page separates details, professor, rules, schedule, and exams into cells');
 const subjectExamCell=r.d.querySelector('#studentSubjectDetail [data-open-exam]');
 ok(!!subjectExamCell,'subject page renders examinations as shared interactive exam cells');
@@ -47,11 +63,29 @@ r.w.RoleProfileViewer.close();
 const emailButton=r.d.querySelector('#studentSubjectDetail .professor-email');
 ok(emailButton?.tagName==='BUTTON','professor listing provides an in-site email-composer icon');
 emailButton.click();
-ok(r.d.getElementById('emailComposerModal').style.display==='flex'&&/Prof\./.test(r.d.getElementById('emailComposerTo').value),'email icon opens a pre-addressed composer prompt');
-r.d.getElementById('emailComposerMessage').value='May I ask about the next examination?';
-ok(r.w.sendProfessorEmail()===true,'composer sends a completed email');
+ok(r.d.getElementById('mail-panel').style.display==='block'&&/Prof\./.test(r.d.getElementById('studentMailTo').selectedOptions[0].textContent),'email icon opens the full Mail page with a pre-addressed composer');
+r.d.getElementById('studentMailMessage').value='May I ask about the next examination?';
+ok(r.w.sendStudentMailPage()===true,'Mail page sends a completed email');
 ok(JSON.parse(r.w.localStorage.getItem('studentEmails')||'[]').some(item=>item.studentId==='S1'&&item.facultyId),'sent email is saved with its student and professor');
-ok(r.d.getElementById('emailComposerModal').style.display==='none','composer closes after sending');
+ok(/May I ask about the next examination/.test(r.d.getElementById('studentMailReader').textContent),'sent message remains visible in the Mail reader');
+r.w.close();
+
+console.log('\n=== K3. HCI practice exam follows the HCI subject path ===');
+s=SEED(); s.subjects.find(subject=>subject.code==='SUB2').name='Human-Computer Interaction'; s.studentEnrollments=[{studentId:'S1',subjectCode:'SUB1',sectionId:'A'},{studentId:'S1',subjectCode:'SUB2',sectionId:'A'}]; s.sectionSubjects=[{sectionId:'A',assignments:[{subjectCode:'SUB1',facultyId:'F1'},{subjectCode:'SUB2',facultyId:'F1'}]}]; s.exams=[{id:'DEMO-ALWAYS-OPEN',facultyId:'F1',subjectCode:'SUB1',title:'Human-Computer Interaction — Always-Open Practice Exam',date:'',start:'',end:'',status:'published',sections:['A']}]; r=stu(s);
+r.d.querySelector('#studentSubjectCards [data-subject="SUB2"]').click();
+ok(r.d.querySelector('[data-open-exam="DEMO-ALWAYS-OPEN"]'),'the always-open HCI practice exam is routed to Human-Computer Interaction instead of the old positional subject');
+r.w.close();
+
+console.log('\n=== K4. Weekly prerequisites and dashboard always-open scope ===');
+s=SEED();s.studentEnrollments=[{studentId:'S1',subjectCode:'SUB1',sectionId:'A'}];s.sectionSubjects=[{sectionId:'A',assignments:[{subjectCode:'SUB1',facultyId:'F1'}]}];
+s.exams=[{id:'DEMO-ALWAYS-OPEN',facultyId:'F1',subjectCode:'SUB1',title:'HCI Practice',date:'',status:'published',maxAttempts:99,sections:['A']},{id:'CURR-SUB1-QUIZ-02',facultyId:'F1',subjectCode:'SUB1',title:'Unit Quiz Weeks 1-2',date:'',status:'published',maxAttempts:99,sections:['A']}];
+s.questions=[{id:'qa',examId:'DEMO-ALWAYS-OPEN',type:'mcq',text:'Practice',points:1,options:[{text:'A',isCorrect:true}]},{id:'qb',examId:'CURR-SUB1-QUIZ-02',type:'mcq',text:'Quiz',points:1,options:[{text:'A',isCorrect:true}]}];
+s.subjectWorkspaceContent=[{id:'required-page',subjectCode:'SUB1',week:2,weekTitle:'Core ideas',title:'Practice and recap',type:'text',body:'Complete this lesson first.'},{id:'attached-quiz',subjectCode:'SUB1',week:2,weekTitle:'Core ideas',title:'Unit Quiz Weeks 1-2',type:'exam',examId:'CURR-SUB1-QUIZ-02',requiresPrevious:true}];
+r=stu(s);r.d.querySelector('#studentSubjectCards .enrolled-subject-card').click();
+const lockedQuiz=r.d.querySelector('[data-open-quiz="CURR-SUB1-QUIZ-02"]');lockedQuiz?.click();
+ok(!!lockedQuiz&&/Prerequisite required/.test(r.d.getElementById('examBriefing').textContent),'locked weekly quiz still opens the standard exam prompt with its prerequisite');
+ok(!!r.d.querySelector('.prerequisite-redirect')&&r.d.querySelector('.exam-prerequisite-disabled')?.disabled&&/Take exam/.test(r.d.querySelector('.exam-prerequisite-disabled')?.textContent||''),'locked prompt offers a lesson redirect and crosses out the disabled Take exam action');
+ok(/HCI Practice/.test(r.d.getElementById('alwaysOpenExams').textContent)&&!/Unit Quiz/.test(r.d.getElementById('alwaysOpenExams').textContent),'dashboard always-open list keeps only the designated HCI practice exam');
 r.w.close();
 
 console.log('\n=== L. Exam window is enforced ===');

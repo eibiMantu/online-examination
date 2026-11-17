@@ -10,10 +10,12 @@ console.log('=== X. Schedule + total points shown (plan: Module 4) ===');
 let r=stu();
 r.w.startExam('e1');
 const meta=r.d.getElementById('modalExamMeta').textContent;
+const subline=r.d.getElementById('modalExamSub').textContent;
 console.log('    meta:',meta.trim());
-ok(/2 question\(s\)/.test(meta),'question count shown');
-ok(/20 point\(s\) total/.test(meta),'total points shown');
-ok(/00:01 to 23:59/.test(meta),'schedule shown');
+ok(/2 questions/.test(subline),'question count shown');
+ok(/20 points/.test(subline),'total points shown');
+ok(/SUB1/.test(meta),'subject shown in the compact exam header');
+ok(/2 questions/.test(subline)&&/20 points/.test(subline),'schedule and paper summary shown on the secondary line');
 
 console.log('\n=== Y. Review step lists answers and flags blanks ===');
 r.d.querySelector('input[name="q_q1"]').checked=true;   // answer MCQ only

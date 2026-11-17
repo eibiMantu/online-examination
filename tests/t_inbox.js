@@ -35,11 +35,9 @@ const tick=()=>new Promise(resolve=>setTimeout(resolve,0));
 
   const notice={id:'n1',studentId:'S1',facultyId:'F1',subject:'Re: Exam 1',message:'Please review the example.',createdAt:'2026-08-29T10:00:00+08:00',read:false,type:'faculty-mail'};
   page=load('student.html',{...seed,studentNotifications:[notice],currentUser:{username:'S1',role:'student'}});
-  page.d.querySelector('.header-inbox-btn').click();
-  page.d.querySelector('.header-inbox-item').click();await tick();
-  page.d.getElementById('confirmYes').click();await tick();
-  page.d.querySelector('.confirm-box textarea').value='Thank you, Professor.';
-  page.d.querySelector('.confirm-box .confirm-ok').click();await tick();
+  page.d.querySelector('#sidebar [data-panel="mail-panel"]').click();page.d.querySelector('.student-mail-row').click();await tick();
+  page.d.getElementById('studentMailReply').value='Thank you, Professor.';
+  page.d.querySelector('.student-mail-reply button').click();await tick();
   ok(page.read('studentEmails').some(item=>item.studentId==='S1'&&item.facultyId==='F1'&&/Thank you/.test(item.message)),'Student can reply back to Faculty mail');
   page.w.close();
   process.exit(0);

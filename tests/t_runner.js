@@ -82,6 +82,7 @@ ok(!r.read('examAttempts')?.['S1::e1'],'draft attempt cleared only after success
 ok(r.d.getElementById('review-detail-panel').style.display==='block'&&!r.d.getElementById('takeExamModal').classList.contains('active'),'successful submission automatically opens the score and review page');
 ok(/Submission recorded/.test(r.d.getElementById('studentReviewFeedback').textContent),'result page confirms the recorded submission and score state');
 ok(!!r.d.querySelector('.review-result-summary')&&!r.d.querySelector('#studentReviewFeedback .score-box'),'review uses a compact transparent result summary instead of the large score cell');
+ok(!!r.d.querySelector('#studentReviewFeedback .review-score-layout .exam-score-pie'),'completed review places the result on the left and an inline score pie chart on the right');
 r.w.close();
 
 console.log('\n=== FACULTY SETTINGS. Presentation and navigation are persisted ===');

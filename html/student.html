@@ -9,6 +9,7 @@
 <script src="../js/section-service.js"></script>
 <script src="../js/audit-service.js"></script>
 <script src="../js/permission-service.js"></script>
+<script src="../js/weekly-learning.js"></script>
 <script src="../js/demo-data.js"></script>
 <script src="../js/admin-table-tools.js"></script>
 <script src="../js/student-card-tools.js"></script>
@@ -173,6 +174,23 @@
   .subject-detail-tab.active::after { background:var(--course-accent,var(--accent)); }
   .student-subject-tab-panel { display:none; }
   .student-subject-tab-panel.active { display:block; }
+  .student-subject-layout { display:grid; grid-template-columns:minmax(0,1fr) 232px; align-items:start; gap:18px; }
+  .student-subject-content-column { min-width:0; }
+  .student-subject-workspace { display:block; }
+  .student-subject-main { min-width:0; }
+  .student-week-rail { position:sticky; top:92px; overflow:hidden; border:1px solid var(--line); border-radius:16px; background:var(--surface); box-shadow:var(--sh-md); }
+  .student-week-rail-head { padding:17px 17px 13px; border-bottom:1px solid var(--line); background:linear-gradient(145deg,var(--surface),var(--course-soft)); }
+  .student-week-rail-head span { display:block; color:var(--course-accent); font-size:10px; font-weight:850; letter-spacing:.09em; text-transform:uppercase; }
+  .student-week-rail-head strong { display:block; margin-top:4px; color:var(--ink); font-size:15px; }
+  .student-week-links { display:grid; gap:5px; padding:9px; }
+  .student-week-link { display:grid; grid-template-columns:34px minmax(0,1fr) auto; align-items:center; gap:9px; width:100%; padding:10px; border:0; border-radius:10px; background:transparent; color:var(--ink); text-align:left; cursor:pointer; }
+  .student-week-link:hover,.student-week-link.active { background:var(--course-soft); color:var(--course-accent); }
+  .student-week-number { display:grid; place-items:center; width:34px; height:34px; border-radius:10px; background:color-mix(in srgb,var(--course-accent) 12%,var(--surface)); color:var(--course-accent); font-size:11px; font-weight:850; }
+  .student-week-link-label { min-width:0; }
+  .student-week-link-label strong,.student-week-link-label small { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .student-week-link-label strong { font-size:12px; }
+  .student-week-link-label small { margin-top:2px; color:var(--ink-soft); font-size:10px; }
+  .student-week-link-arrow { color:var(--ink-soft); font-size:14px; }
   .student-subject-profile { position:relative; display:block; min-height:196px; overflow:hidden; box-sizing:border-box; padding:20px 22px; border:1px solid color-mix(in srgb,var(--course-accent) 20%,var(--line)); border-left:5px solid var(--course-accent); border-radius:18px; background:linear-gradient(145deg,var(--surface) 58%,var(--course-soft)); color:var(--ink); box-shadow:var(--sh-md); }
   .student-subject-profile::after { content:""; position:absolute; right:-38px; bottom:-54px; width:150px; height:150px; border:22px solid color-mix(in srgb,var(--course-accent) 10%,transparent); border-radius:50%; pointer-events:none; }
   .student-subject-profile-head { position:relative; z-index:2; display:flex; align-items:center; justify-content:space-between; }
@@ -204,7 +222,36 @@
   #emailComposerModal .modal-buttons button { width:auto; min-width:105px; margin:0; }
   .subject-detail-exams { grid-column:1/-1; }
   .subject-detail-exam-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:12px; }
-  .learning-week-stack{display:grid;gap:8px}.learning-week{border:1px solid var(--line);border-radius:10px;background:var(--surface);overflow:hidden}.learning-week>summary{padding:14px 16px;cursor:pointer;list-style:none}.learning-week>summary::-webkit-details-marker,.learning-cell>summary::-webkit-details-marker{display:none}.learning-week-description{margin:0;padding:0 16px 12px;color:var(--ink-soft);font-size:12px;line-height:1.55}.learning-cell{border-top:1px solid var(--line)}.learning-cell>summary,.learning-cell.locked{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px}.learning-cell>summary{cursor:pointer;list-style:none}.learning-cell summary span,.learning-cell.locked span{color:var(--ink-soft);font-size:11px}.learning-cell.locked{background:var(--surface-soft);color:var(--ink-soft)}.learning-cell-body{padding:2px 16px 15px;color:var(--ink-soft);line-height:1.6;white-space:pre-wrap}
+  .learning-week-stack{display:grid;gap:12px}.learning-week{scroll-margin-top:96px;border:1px solid var(--line);border-radius:12px;background:var(--surface);overflow:hidden}.learning-week>summary{padding:15px 17px;cursor:default;list-style:none;background:color-mix(in srgb,var(--course-accent) 5%,var(--surface))}.learning-week>summary::-webkit-details-marker,.learning-cell>summary::-webkit-details-marker{display:none}.learning-week-description{margin:0;padding:0 17px 13px;color:var(--ink-soft);font-size:12px;line-height:1.55}.learning-cell{border-top:1px solid var(--line)}.learning-cell>summary,.learning-cell.locked{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 17px}.learning-cell>summary{cursor:default;list-style:none}.learning-cell summary span,.learning-cell.locked span{color:var(--ink-soft);font-size:11px}.learning-cell.locked{background:var(--surface-soft);color:var(--ink-soft)}.learning-cell-body{padding:3px 17px 17px;color:var(--ink-soft);line-height:1.7;white-space:pre-wrap}
+  .learning-visual{margin:4px 0 14px;white-space:normal}.learning-visual img{display:block;width:100%;max-height:300px;object-fit:cover;border-radius:12px;border:1px solid var(--line)}.learning-visual figcaption{margin-top:8px;font-size:12px}.learning-complete-button{margin-top:12px;border:0;border-radius:9px;background:var(--course-accent);color:#fff;padding:9px 13px;font-weight:800;cursor:pointer}.learning-complete-button:disabled{background:color-mix(in srgb,var(--course-accent) 18%,var(--surface));color:var(--course-accent);cursor:default}.learning-done-badge{border-radius:999px;background:color-mix(in srgb,var(--course-accent) 14%,var(--surface));color:var(--course-accent)!important;padding:4px 8px;font-weight:850;text-transform:uppercase;letter-spacing:.04em}
+  #studentSubjectDetail .subject-info-cell{border-color:var(--line);background:var(--surface);color:var(--ink);box-shadow:var(--sh-sm)}
+  #studentSubjectDetail .subject-info-cell h3{font-size:14px;line-height:1.3;color:var(--ink)}
+  #studentSubjectDetail .subject-info-cell p,#studentSubjectDetail .subject-info-cell li{font-size:12px;line-height:1.6;color:var(--ink-soft)}
+  #studentSubjectDetail .learning-week{border-radius:14px;background:var(--surface);box-shadow:none}
+  #studentSubjectDetail .learning-week>summary{padding:17px 18px;background:color-mix(in srgb,var(--course-accent) 7%,var(--surface));color:var(--ink);font-size:14px}
+  #studentSubjectDetail .learning-cell>summary{display:grid;grid-template-columns:38px minmax(0,1fr) auto;justify-content:stretch;padding:12px 15px;cursor:default;background:var(--surface)}
+  .learning-row-icon{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;font-size:16px;font-weight:900}
+  .learning-row-icon.lesson{background:#e7f2ed;color:#176b58}.learning-row-icon.practice{background:#fff0df;color:#bd5d19}.learning-row-icon.visual{background:#ede9f8;color:#745bb0}.learning-row-icon.media{background:#e4f1f3;color:#23727a}.learning-row-icon.file{background:#e9eef8;color:#4168a4}.learning-row-icon.quiz{background:#fff0e8;color:#cc5b21}
+  .learning-row-copy{min-width:0}.learning-row-copy strong{display:block;color:var(--ink);font-size:12px;line-height:1.35}.learning-row-copy small{display:block;margin-top:3px;color:var(--ink-soft);font-size:10px;font-weight:650;letter-spacing:.01em}
+  .learning-status-button{display:inline-flex;align-items:center;gap:6px;min-width:76px;justify-content:center;border:1px solid transparent;border-radius:8px;padding:7px 9px;background:#fff0df;color:#a84d13;font:inherit;font-size:10px;font-weight:850;cursor:pointer}.learning-status-button.done{background:#e3f0df;color:#38743a}.learning-status-button:hover{border-color:currentColor}.learning-status-button .status-caret{font-size:8px;opacity:.72}
+  #studentSubjectDetail .learning-cell-body{padding:3px 68px 16px;color:var(--ink-soft);font-size:12px;line-height:1.65;white-space:normal}
+  #studentSubjectDetail .learning-cell-body>p{margin:2px 0 8px}.learning-meta-line{display:flex;gap:7px;margin-bottom:8px;color:var(--ink-soft);font-size:10px;font-weight:700}
+  .student-week-upcoming{border-top:1px solid var(--line);padding:14px 11px 12px}.student-week-upcoming-head{display:flex;align-items:center;justify-content:space-between;padding:0 5px 8px}.student-week-upcoming-head strong{font-size:12px;color:var(--ink)}.student-week-upcoming-head span{font-size:9px;font-weight:850;color:var(--course-accent);text-transform:uppercase;letter-spacing:.07em}.student-week-exam-list{display:grid;gap:7px}.student-week-exam{display:block;width:100%;border:1px solid var(--line);border-left:3px solid var(--exam-tone,#d06b2d);border-radius:9px;background:var(--surface-soft);padding:9px 10px;text-align:left;color:var(--ink);cursor:pointer}.student-week-exam strong,.student-week-exam small{display:block}.student-week-exam strong{font-size:10px;line-height:1.35}.student-week-exam small{margin-top:3px;color:var(--ink-soft);font-size:9px}.student-week-empty{padding:7px 5px;color:var(--ink-soft);font-size:10px;line-height:1.45}
+  :root[data-theme="dark"] .learning-row-icon.lesson{background:rgba(23,107,88,.2)}:root[data-theme="dark"] .learning-row-icon.practice,:root[data-theme="dark"] .learning-status-button{background:rgba(189,93,25,.19)}:root[data-theme="dark"] .learning-status-button.done{background:rgba(56,116,58,.24);color:#9bd69e}
+  .exam-prerequisite-lock{display:grid;grid-template-columns:42px minmax(0,1fr);gap:12px;margin-top:16px;padding:15px;border:1px solid color-mix(in srgb,var(--student-orange,#c45f22) 35%,var(--line));border-left:4px solid var(--student-orange,#c45f22);border-radius:12px;background:color-mix(in srgb,var(--student-orange,#c45f22) 7%,var(--surface))}.exam-prerequisite-icon{display:grid;place-items:center;width:40px;height:40px;border-radius:10px;background:color-mix(in srgb,var(--student-orange,#c45f22) 14%,var(--surface));font-size:18px}.exam-prerequisite-lock span,.exam-prerequisite-lock strong,.exam-prerequisite-lock p{display:block}.exam-prerequisite-lock span{color:var(--student-orange,#c45f22);font-size:10px;font-weight:850;letter-spacing:.07em;text-transform:uppercase}.exam-prerequisite-lock strong{margin-top:3px;color:var(--ink);font-size:13px}.exam-prerequisite-lock p{margin:5px 0 0;color:var(--ink-soft);font-size:11px;line-height:1.5}.exam-prerequisite-disabled{position:relative;display:grid!important;gap:1px;opacity:.62!important;cursor:not-allowed!important;text-decoration:line-through}.exam-prerequisite-disabled small{font-size:9px;font-weight:650;text-decoration:none}.prerequisite-redirect{border-color:var(--student-orange,#c45f22)!important;color:var(--student-orange,#c45f22)!important}
+  #studentSubjectDetail .locked-exam-row{width:100%;border-right:0;border-bottom:0;border-left:0;text-align:left;font:inherit;cursor:pointer}#studentSubjectDetail .locked-exam-row:hover{background:color-mix(in srgb,var(--student-orange,#c45f22) 7%,var(--surface))}.student-week-rail>.student-week-upcoming{border-top:0;border-bottom:1px solid var(--line)}
+  #studentSubjectDetail .student-week-rail{max-height:calc(100vh - 112px);overflow-x:hidden;overflow-y:auto;scrollbar-width:thin;scrollbar-color:color-mix(in srgb,var(--course-accent) 34%,transparent) transparent}
+  #studentSubjectDetail .student-week-rail::-webkit-scrollbar{width:6px}#studentSubjectDetail .student-week-rail::-webkit-scrollbar-thumb{border-radius:999px;background:color-mix(in srgb,var(--course-accent) 34%,transparent)}
+  #studentSubjectDetail .weekly-learning-section{padding:0;border:0;background:transparent;box-shadow:none}#studentSubjectDetail .weekly-learning-section>h3{margin:2px 0 14px;padding:0 2px;color:var(--ink);font-size:17px;letter-spacing:-.015em}
+  #studentSubjectDetail .learning-week-stack{gap:22px}
+  #studentSubjectDetail .learning-week{overflow:hidden;border:1px solid var(--line);border-radius:16px;background:var(--surface);box-shadow:var(--sh-sm)}
+  #studentSubjectDetail .learning-week>summary{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line);background:linear-gradient(110deg,color-mix(in srgb,var(--week-tone,var(--course-accent)) 10%,var(--surface)),var(--surface) 62%);font-size:inherit}
+  #studentSubjectDetail .learning-week>summary::before{content:attr(data-week-label);display:grid;place-items:center;min-width:46px;height:34px;border-radius:10px;background:var(--week-tone,var(--course-accent));color:#fff;font-size:10px;font-weight:900;letter-spacing:.055em}
+  #studentSubjectDetail .learning-week>summary strong{display:block;color:var(--ink);font-size:14px;line-height:1.35;letter-spacing:-.01em}
+  #studentSubjectDetail .learning-week-description{margin:0;padding:12px 18px 0;color:var(--ink-soft);font-size:11px;line-height:1.55}
+  .week-classification-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(210px,.38fr);gap:12px;padding:14px 16px 17px}.week-content-cell{min-width:0;overflow:hidden;border:1px solid var(--line);border-radius:12px;background:var(--surface)}.week-content-cell.quiz-cell{background:color-mix(in srgb,var(--student-orange,#c45f22) 3%,var(--surface))}.week-content-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 13px;border-bottom:1px solid var(--line);background:var(--surface-soft)}.week-content-heading strong{color:var(--ink);font-size:11px;text-transform:uppercase;letter-spacing:.065em}.week-content-heading span{color:var(--ink-soft);font-size:9px;font-weight:800}.week-content-list>.learning-cell:first-child{border-top:0}.week-content-empty{padding:18px 14px;color:var(--ink-soft);font-size:10px;line-height:1.45}
+  #studentSubjectDetail .learning-row-copy strong{font-size:13px;line-height:1.4;font-weight:780}#studentSubjectDetail .learning-row-copy small{font-size:9px;line-height:1.35}#studentSubjectDetail .learning-status-button{min-width:68px;padding:6px 8px;font-size:9px;line-height:1;font-weight:800}#studentSubjectDetail .learning-row-icon{width:32px;height:32px;font-size:14px}#studentSubjectDetail .learning-cell>summary{grid-template-columns:36px minmax(0,1fr) auto;gap:9px;padding:11px 12px}#studentSubjectDetail .learning-cell-body{padding:4px 56px 15px;font-size:11px;line-height:1.62}
+  @media(max-width:1080px){.week-classification-grid{grid-template-columns:1fr}.week-content-cell.quiz-cell{order:2}}@media(max-width:920px){#studentSubjectDetail .student-week-rail{max-height:none;overflow:visible}.week-classification-grid{padding:12px}}
   .subject-detail-exam { padding:16px; border:1px solid #e1e8e4; border-radius:12px; background:#fafcfb; cursor:pointer; text-align:left; }
   .subject-detail-exam:hover { border-color:var(--accent-line); background:var(--accent-soft); }
   .subject-detail-exam strong { display:block; margin-bottom:8px; color:#2d4135; line-height:1.45; }
@@ -235,6 +282,7 @@
   @media(max-width:640px){.exam-list-row{grid-template-columns:1fr}.exam-list-actions{justify-content:space-between}.exam-list-score{text-align:left}.review-answer-grid,.review-match-row{grid-template-columns:1fr}.review-result-summary{align-items:flex-start;flex-direction:column}.review-result-score{justify-content:flex-start;text-align:left}}
   #exams-panel,#results-panel { position:relative; }
   #exams-panel > .role-table-tools,#results-panel > .role-table-tools { top:20px; right:20px; }
+  @media(max-width:920px){.student-subject-layout{display:flex;flex-direction:column}.student-subject-content-column{width:100%}.student-week-rail{position:static;order:-1;width:100%;box-sizing:border-box}.student-week-links{display:flex;overflow-x:auto}.student-week-link{flex:0 0 205px}}
   @media(max-width:760px){.enrolled-subject-grid{grid-template-columns:1fr}.subject-card-head{align-items:flex-start}.subject-exam-row:not(.result-exam-row){grid-template-columns:1fr;gap:8px}.subject-exam-row .btn-take-exam{width:100%}.subject-summary{max-width:125px}.subject-detail-grid{grid-template-columns:1fr}.subject-detail-exams{grid-column:auto}#exams-panel > .role-table-tools,#results-panel > .role-table-tools{position:relative;top:auto;right:auto;justify-content:flex-end;margin:-4px 0 16px}}
   @media(max-width:560px){.result-exam-row{grid-template-columns:1fr auto;gap:6px 12px}.result-exam-row>div:first-child{grid-column:1/-1}.result-exam-row>*:not(:first-child){white-space:normal}.result-exam-row>div:last-child{grid-column:1/-1}}
 
@@ -278,6 +326,55 @@
   #takeExamModal .exam-navigator.is-dragging .nav-handle { cursor:grabbing; }
   #takeExamModal .exam-navigator.is-positioned .nav-panel { position:fixed; left:0; top:0; transform:none; visibility:hidden; opacity:0; transition:opacity 160ms ease; }
   #takeExamModal .exam-navigator.is-positioned.open .nav-panel { visibility:visible; opacity:1; }
+  #takeExamModal.exam-page-shell { background:var(--page-bg); }
+  #takeExamModal .exam-box { background:var(--page-bg); }
+  #takeExamModal .exam-page-header { padding:15px max(24px,calc((100vw - 1040px)/2)); border-color:rgba(255,255,255,.12); background:linear-gradient(118deg,var(--accent-dark),var(--accent)); box-shadow:0 8px 28px rgba(13,62,53,.16); }
+  #takeExamModal #modalExamTitle { color:#fff; font-size:19px; }
+  #takeExamModal :is(.exam-meta,#modalExamSub) { color:rgba(255,255,255,.76); }
+  #takeExamModal .exam-close { border-color:rgba(255,255,255,.26); background:rgba(255,255,255,.1); color:#fff; }
+  #takeExamModal .exam-timer { border-color:rgba(255,255,255,.22); background:rgba(255,255,255,.12); color:#fff; }
+  #takeExamModal .timer-label { color:rgba(255,255,255,.72); }
+  #takeExamModal .exam-page-content { width:min(980px,calc(100% - 40px)); padding-top:22px; }
+  #takeExamModal .exam-navigator,#takeExamModal .exam-navigator.is-positioned { position:fixed; z-index:340; width:52px; margin:0; pointer-events:none; }
+  #takeExamModal .exam-navigator .nav-handle,#takeExamModal .exam-navigator.is-positioned .nav-handle { display:grid!important; place-items:center; left:0; right:auto; top:0; width:52px; min-height:48px; padding:0; border:1px solid rgba(255,255,255,.16); border-bottom:2px solid var(--student-orange,#c45f22); border-radius:12px; background:linear-gradient(145deg,var(--accent-dark),var(--accent)); color:#fff; box-shadow:0 8px 22px rgba(7,59,53,.22); transform:none; touch-action:none; cursor:grab; pointer-events:auto; }
+  #takeExamModal .nav-handle-count { font-size:10px; font-weight:650; letter-spacing:-.02em; }
+  #takeExamModal .exam-navigator.is-dragging .nav-handle { cursor:grabbing; }
+  #takeExamModal .exam-navigator.open .nav-handle { display:none!important; }
+  #takeExamModal .exam-navigator .nav-panel,#takeExamModal .exam-navigator.is-positioned .nav-panel { position:fixed; width:min(300px,calc(100vw - 36px)); max-height:min(70vh,560px); padding:16px; overflow-y:auto; border:1px solid var(--accent-line); border-radius:16px; background:var(--surface); box-shadow:0 18px 48px rgba(20,45,38,.2); transform:none!important; visibility:hidden; opacity:0; transition:opacity 160ms ease; pointer-events:auto; }
+  #takeExamModal .exam-navigator.open .nav-panel,#takeExamModal .exam-navigator.is-positioned.open .nav-panel { visibility:visible; opacity:1; }
+  #takeExamModal .nav-head { margin-bottom:9px; color:var(--accent-dark); }
+  #takeExamModal .nav-close { display:grid; width:30px; height:30px; place-items:center; padding:0; border-radius:8px; }
+  #takeExamModal .nav-legend { justify-content:flex-start; margin:0 0 10px; font-size:10px; }
+  #takeExamModal .nav-cells { grid-template-columns:repeat(5,minmax(36px,1fr)); gap:7px; }
+  #takeExamModal .nav-cell { min-height:38px; border-radius:9px; background:var(--surface); font-size:11px; }
+  #takeExamModal .exam-progress { position:relative; display:grid!important; grid-template-columns:1fr auto; gap:6px 16px; margin:0 0 14px; padding:12px 14px 17px; border:1px solid var(--line); border-radius:12px; background:var(--surface); color:var(--ink); }
+  #takeExamModal .exam-progress-track { grid-column:1/-1; height:5px; overflow:hidden; border-radius:999px; background:var(--surface-soft); }
+  #takeExamModal .exam-progress-track span { display:block; height:100%; border-radius:inherit; background:linear-gradient(90deg,var(--accent),var(--student-orange,#c45f22)); }
+  #takeExamModal .prog-position { font-size:11px; text-transform:uppercase; letter-spacing:.06em; }
+  #takeExamModal .prog-counts { font-size:11px; }
+  #takeExamModal .q-item { padding:24px; border-color:var(--line); border-left:4px solid var(--accent); border-radius:16px; background:var(--surface); box-shadow:var(--sh-md); }
+  #takeExamModal .q-title { color:var(--ink); font-size:16px; }
+  #takeExamModal .opt-label { border-color:var(--line); background:var(--surface); }
+  #takeExamModal .opt-label:hover { border-color:var(--accent); background:var(--accent-soft); }
+  #takeExamModal .opt-label:has(input:checked) { border-color:var(--accent); background:var(--accent-soft); box-shadow:inset 3px 0 var(--accent); }
+  #takeExamModal .q-nav { margin-top:22px; }
+  #takeExamModal .review-head { padding:18px 20px; border:1px solid var(--accent-line); border-left:4px solid var(--student-orange,#c45f22); border-radius:14px; background:var(--surface); }
+  #takeExamModal .review-item { margin-bottom:10px; padding:16px 18px; border-color:var(--line); border-left-color:var(--accent); border-radius:12px; background:var(--surface); }
+  #takeExamModal .review-item.unanswered { border-left-color:var(--danger); background:color-mix(in srgb,var(--danger) 5%,var(--surface)); }
+  .exam-result-layout,.review-score-layout { display:grid; grid-template-columns:minmax(0,1fr) 142px; align-items:center; gap:22px; margin-bottom:16px; padding:15px 0 18px; border-bottom:1px solid var(--line); }
+  .exam-result-copy h3,.review-score-copy h3 { margin:0 0 5px; color:var(--ink); font-size:18px; }
+  .exam-result-copy p,.review-score-copy p { margin:3px 0; color:var(--ink-soft); font-size:11px; line-height:1.5; }
+  .exam-result-kicker { color:var(--accent); font-size:10px; font-weight:850; letter-spacing:.1em; text-transform:uppercase; }
+  .exam-result-metrics { display:flex; flex-wrap:wrap; gap:8px; margin:16px 0; }
+  .exam-result-metrics span { padding:7px 10px; border-radius:999px; background:var(--surface-soft); color:var(--ink-soft); font-size:11px; font-weight:750; }
+  .exam-score-pie { --score-angle:0deg; position:relative; display:grid; place-items:center; width:116px; aspect-ratio:1; margin:auto; border-radius:50%; background:conic-gradient(from -90deg,var(--student-green,var(--accent)) 0 var(--score-angle),var(--student-orange,#c45f22) var(--score-angle) calc(var(--score-angle) + 2deg),color-mix(in srgb,var(--student-green,var(--accent)) 10%,var(--surface)) calc(var(--score-angle) + 2deg) 360deg); box-shadow:0 8px 20px rgba(14,86,77,.12); }
+  .exam-score-pie::before { content:""; position:absolute; inset:14px; border:1px solid color-mix(in srgb,var(--student-green,var(--accent)) 10%,var(--line)); border-radius:50%; background:var(--surface,#fff); box-shadow:inset 0 3px 10px rgba(15,58,51,.04); }
+  .exam-score-pie>span { position:relative; z-index:1; color:var(--ink-soft); font-size:8px; font-weight:650; text-align:center; text-transform:uppercase; letter-spacing:.06em; }
+  .exam-score-pie strong { display:block; margin-bottom:1px; color:var(--ink); font-size:18px; font-weight:650; letter-spacing:-.03em; text-transform:none; }
+  .answer-key-review { border:0!important; background:transparent!important; box-shadow:none!important; }
+  #examResultSection .exam-result-layout + .score-box { display:none; }
+  #studentReviewFeedback .review-score-layout + .review-result-summary { display:none; }
+  @media(max-width:680px){.exam-result-layout,.review-score-layout{grid-template-columns:1fr}.exam-score-pie{width:108px}.exam-result-copy,.review-score-copy{text-align:center}.exam-result-metrics{justify-content:center}#takeExamModal .nav-legend{display:none}#takeExamModal .nav-cells{grid-template-columns:repeat(5,1fr)}}
   #examModalActions { position:fixed; right:max(24px,calc((100vw - 1040px)/2)); bottom:20px; z-index:21; padding:8px; border:1px solid #e0e7e3; border-radius:13px; background:rgba(255,255,255,.96); box-shadow:0 7px 22px rgba(20,45,29,.12); }
   #questionReportModal { z-index:400; }
   #questionReportModal .modal { width:min(520px,calc(100vw - 32px)); padding:26px; border-radius:16px; }
@@ -329,7 +426,7 @@
 </style>
 <!-- Loaded after the page styles so the shared tokens win on ties -->
 <link rel="stylesheet" href="../css/shared-ui.css?v=20260902-subject-profile-theme">
-<link rel="stylesheet" href="../css/student-dashboard-redesign.css?v=20261117">
+<link rel="stylesheet" href="../css/student-dashboard-redesign.css?v=20261117-mail-sidebar-2">
 <script src="../js/dates.js"></script>
 <script src="../js/exam-timing.js"></script>
 <script src="../js/grading.js"></script>
@@ -422,6 +519,15 @@
       </aside>
     </div>
     <div id="nextUp" class="sr-only" aria-live="polite"></div>
+  </div>
+
+  <!-- Mail -->
+  <div id="mail-panel" class="section-card student-mail-page">
+    <header class="student-page-heading student-mail-heading"><div><span class="dashboard-eyebrow">Communication center</span><h1>Mail</h1><p>Read announcements, contact professors, and keep subject conversations together.</p></div><button type="button" class="dashboard-schedule-link" onclick="openStudentMailCompose()">Compose mail</button></header>
+    <div class="student-mail-layout">
+      <aside class="student-dashboard-card student-mail-list-card"><div class="student-mail-list-head"><div><span class="dashboard-eyebrow">Messages</span><h2>Mailbox</h2></div><div class="student-mail-tabs"><button type="button" class="active" data-mail-filter="inbox" onclick="selectStudentMailFilter('inbox')">Inbox</button><button type="button" data-mail-filter="sent" onclick="selectStudentMailFilter('sent')">Sent</button></div></div><div id="studentMailList" class="student-mail-list"></div></aside>
+      <section id="studentMailReader" class="student-dashboard-card student-mail-reader"><div class="student-mail-empty"><span aria-hidden="true">&#9993;</span><h2>Select a message</h2><p>Choose a conversation from the mailbox to read it here.</p></div></section>
+    </div>
   </div>
 
   <!-- Schedule -->
@@ -523,9 +629,10 @@
   </div>
 
   <!-- Subjects -->
-  <div id="subjects-panel" class="section-card">
-    <h3>📚 My Enrolled Subjects</h3>
-    <p class="panel-description">Your subjects, sections, and assigned instructors.</p>
+  <div id="subjects-panel" class="section-card student-subjects-page">
+    <header class="student-page-heading">
+      <div><span class="dashboard-eyebrow">Current enrollment</span><h1>My Subjects</h1><p>Open a course to view its professor, weekly learning path, quizzes, and examinations.</p></div>
+    </header>
     <div class="role-table-shell"><div class="role-table-tools" id="studentSubjectTools"></div>
       <div id="studentSubjectCards" class="enrolled-subject-grid"></div>
       <div class="table-scroll compat-table">
@@ -581,25 +688,25 @@
     <!-- Details shown before the attempt starts -->
     <div id="examBriefing" style="display:none;"></div>
 
-    <div id="examProgress" class="exam-progress" style="display:none;" aria-live="polite"></div>
-    <div id="saveState" class="save-state is-saved" style="display:none;" aria-live="polite"></div>
-
-    <div id="examQuestionsContainer"></div>
-
     <aside id="examNavigator" class="exam-navigator" style="display:none;" aria-label="Question navigator">
       <button type="button" class="nav-handle" onclick="if(this.dataset.dragged){delete this.dataset.dragged}else{toggleNavigator()}"
               aria-expanded="false" aria-controls="questionNavPanel" title="Drag to move; click to open">
-        <span aria-hidden="true">&#9776;</span><span class="sr-only">Open question navigator</span>
+        <span class="nav-handle-count" aria-hidden="true">Q</span><span class="sr-only">Open question navigator</span>
       </button>
       <div id="questionNavPanel" class="nav-panel">
         <div class="nav-head">
-          <strong>Questions</strong>
+          <strong>Quick navigation</strong>
           <button type="button" class="nav-close" onclick="closeNavigator()" aria-label="Close question navigator">&times;</button>
         </div>
         <div class="nav-legend"><span>&#10003; Answered</span><span>&#9873; Flagged</span></div>
         <div class="nav-cells"></div>
       </div>
     </aside>
+
+    <div id="examProgress" class="exam-progress" style="display:none;" aria-live="polite"></div>
+    <div id="saveState" class="save-state is-saved" style="display:none;" aria-live="polite"></div>
+
+    <div id="examQuestionsContainer"></div>
 
     <!-- Answer review step, shown between answering and final submission. -->
     <div id="examReviewSection" style="display:none;"></div>
@@ -631,6 +738,16 @@ let faculty = DB.read('faculty', []);
 let questions = DB.read('questions', []);
 let submissions = DB.read('studentSubmissions', []);
 
+// Older demo snapshots attached the HCI practice assessments to the second
+// enrolled subject by position. Resolve them by the actual course name so the
+// always-open exam consistently appears inside Human-Computer Interaction.
+const hciSubject = subjects.find(subject => subject.name === 'Human-Computer Interaction');
+if (hciSubject) {
+  exams = exams.map(exam => ['DEMO-ALWAYS-OPEN','DEMO-REVIEW-MISTAKES'].includes(exam.id)
+    ? { ...exam, subjectCode:hciSubject.code }
+    : exam);
+}
+
 // The identity is whoever logged in. The previous fallback invented a student
 // (the first on file, or a hardcoded ID) whenever no session existed, which
 // showed a real student's data to anyone who opened this page directly.
@@ -642,13 +759,6 @@ if (!currentStudent) {
     'Your login exists but no student record is attached to it. Please contact the administrator.';
   throw new Error('No student record for the signed-in account.');
 }
-
-mountProfileMenu({
-  name: `${currentStudent.first} ${currentStudent.last}`,
-  role: 'student',
-  id: currentStudent.id,
-  container: '#topbarRight'
-});
 
 document.getElementById('studentWelcome').textContent = `Welcome, ${currentStudent.first} ${currentStudent.last}`;
 document.getElementById('studentInfo').textContent = `Student ID: ${currentStudent.id} | Sections: ${(currentStudent.sections || []).join(', ') || 'Regular'}`;
@@ -855,10 +965,12 @@ function openResultReviewPage(submissionId) {
   const pending = (submission.answers || []).filter(answer => answer.needsManualGrading && answer.awarded === null);
   const awarded = (submission.answers || []).reduce((total, answer) => total + (answer.awarded || 0), 0);
   const grade = pending.length === 0 && visibility.showScore ? gradeFor(awarded, submission.total) : null;
+  const scorePercent = submission.total ? Math.round(awarded / submission.total * 100) : 0;
   markFeedbackViewed(exam.id);
   document.getElementById('studentReviewTitle').textContent = exam.title || 'Exam review';
   document.getElementById('studentReviewMeta').textContent = `${exam.subjectCode} · Submitted ${new Date(submission.submittedAt).toLocaleString()}`;
   document.getElementById('studentReviewFeedback').innerHTML = `
+    <section class="review-score-layout" aria-label="Reviewed examination score"><div class="review-score-copy"><span class="exam-result-kicker">Exam review</span><h3>${pending.length ? 'Current result' : 'Final result'}</h3><p>${pending.length ? `${pending.length} answer${pending.length === 1 ? '' : 's'} still awaiting marking.` : 'All available answers have been graded.'}</p>${visibility.showScore ? `<p><strong>Your score:</strong> ${awarded} &nbsp;/&nbsp; <strong>Total score:</strong> ${submission.total}</p>` : '<p>Score hidden by your professor.</p>'}${grade ? `<span class="grade-chip ${grade.passed ? 'grade-pass' : 'grade-fail'}"><span class="grade-rating">${grade.rating}</span><span class="grade-sub">${grade.percentText}% &middot; ${grade.remark}</span></span>` : ''}</div><div class="exam-score-pie" style="--score-angle:${visibility.showScore ? scorePercent * 3.6 : 0}deg" role="img" aria-label="${visibility.showScore ? `${awarded} out of ${submission.total} points, ${scorePercent} percent` : 'Score hidden'}"><span>${visibility.showScore ? `<strong>${awarded}/${submission.total}</strong>${scorePercent}%` : '<strong>&mdash;</strong>Hidden'}</span></div></section>
     <div class="review-result-summary">
       <div class="review-result-status"><span class="review-result-check" aria-hidden="true">✓</span><div><strong>Submission recorded</strong><small>${pending.length ? `${pending.length} answer${pending.length === 1 ? '' : 's'} awaiting marking` : 'Final result available'}</small></div></div>
       <div class="review-result-score">
@@ -933,6 +1045,7 @@ function loadStudentSubjects() {
 }
 
 let selectedStudentSubjectCode = null;
+let pendingStudentLearningViewState = null;
 const studentSubjectIconPaths={book:'M4 4h6.5A3.5 3.5 0 0 1 14 7.5V20a4.5 4.5 0 0 0-3.5-1.5H4V4Zm16 0h-3.5A3.5 3.5 0 0 0 14 5.1a5.5 5.5 0 0 1 1 3.2V20a4.5 4.5 0 0 1 3.5-1.5H20V4Z',code:'m8 9-4 3 4 3v3l-8-6 8-6v3Zm8 0V6l8 6-8 6v-3l4-3-4-3ZM10 20 13 4h2l-3 16h-2Z',science:'M9 2h6v2h-1v5.1l5.4 8.1A3 3 0 0 1 16.9 22H7.1a3 3 0 0 1-2.5-4.8L10 9.1V4H9V2Zm3 8-2.7 4h5.4L12 10Zm-4 6-1.7 2.3a1 1 0 0 0 .8 1.7h9.8a1 1 0 0 0 .8-1.7L16 16H8Z',chart:'M4 20V10h4v10H4Zm6 0V4h4v16h-4Zm6 0v-7h4v7h-4Z'};
 function studentSubjectIcon(name){return `<svg viewBox="0 0 24 24"><path d="${studentSubjectIconPaths[name]||studentSubjectIconPaths.book}"/></svg>`;}
 function studentSubjectAccent(subject){const saved=String(subject?.workspaceColor||'');if(/^#[0-9a-f]{6}$/i.test(saved))return saved;return ['#2f8d83','#3576a8','#7560ad','#b2762e'][Math.max(0,subjects.findIndex(item=>item.code===subject?.code))%4];}
@@ -944,8 +1057,11 @@ function learningCellState(item, index, ordered) {
     if (!isFinite(opens) || now < opens) return { locked:true, label:isFinite(opens) ? `Opens ${new Date(opens).toLocaleString()}` : 'Locked' };
     if (item.durationMinutes && now > opens + Number(item.durationMinutes) * 60000) return { locked:true, label:'Closed' };
   }
-  if (item.requiresPrevious && index > 0 && !views.some(view => view.studentId === currentStudent.id && view.blockId === ordered[index - 1].id)) return { locked:true, label:'View previous cell first' };
+  if (item.requiresPrevious && index > 0 && !views.some(view => view.studentId === currentStudent.id && view.blockId === ordered[index - 1].id && view.completedAt)) return { locked:true, label:'Mark the previous page done first' };
   return { locked:false, label:'Open' };
+}
+function learningCellCompleted(blockId) {
+  return DB.read('subjectContentViews', []).some(view => view.studentId === currentStudent.id && view.blockId === blockId && view.completedAt);
 }
 function recordLearningCellView(blockId, details) {
   if (!details.open) return;
@@ -955,8 +1071,53 @@ function recordLearningCellView(blockId, details) {
     DB.write('subjectContentViews', views);
   }
 }
+function captureStudentLearningViewState() {
+  const root=document.getElementById('studentSubjectDetail');
+  if(!root||!selectedStudentSubjectCode)return null;
+  return{
+    subjectCode:selectedStudentSubjectCode,
+    activeWeek:Number(root.querySelector('.student-week-link.active')?.dataset.week)||null,
+    openBlockIds:[...root.querySelectorAll('.learning-cell[open][data-learning-block]')].map(cell=>cell.dataset.learningBlock),
+    focusedBlockId:root.querySelector('.learning-cell.is-focused[data-learning-block]')?.dataset.learningBlock||null,
+    scrollY:window.scrollY||0
+  };
+}
+function toggleLearningCellDone(blockId) {
+  pendingStudentLearningViewState=captureStudentLearningViewState();
+  const views=DB.read('subjectContentViews',[]),now=new Date().toISOString();
+  let record=views.find(view=>view.studentId===currentStudent.id&&view.blockId===blockId);
+  const wasCompleted=!!record?.completedAt;
+  if(record){if(wasCompleted)delete record.completedAt;else record.completedAt=now}else{record={studentId:currentStudent.id,blockId,viewedAt:now,completedAt:now};views.push(record)}
+  DB.write('subjectContentViews',views);
+  notify(wasCompleted?'Page returned to To do.':'Page marked done. The next lesson is now available.',wasCompleted?'info':'success');
+  if(selectedStudentSubjectCode)openStudentSubject(selectedStudentSubjectCode);
+}
+function markLearningCellDone(blockId){toggleLearningCellDone(blockId)}
+function learningTypeMeta(item){
+  if(item.type==='exam')return{tone:'quiz',icon:'&#9638;',label:'Quiz'};
+  if(item.type==='link')return{tone:'media',icon:'&#9654;',label:'Video resource'};
+  if(item.type==='visual')return{tone:'visual',icon:'&#9672;',label:'Visual guide'};
+  if(item.type==='file')return{tone:'file',icon:'&#8682;',label:'Download'};
+  const title=String(item.title||'').toLowerCase();
+  if(title.includes('practice')||title.includes('example'))return{tone:'practice',icon:'&#10003;',label:'Practice'};
+  return{tone:'lesson',icon:'&#9776;',label:`Page ${item.pageNumber||''}`.trim()};
+}
+function examLearningPrerequisite(examId){
+  const ordered=DB.read('subjectWorkspaceContent',[]).filter(item=>item.subjectCode===exams.find(exam=>exam.id===examId)?.subjectCode).sort((a,b)=>a.week-b.week||String(a.createdAt||'').localeCompare(String(b.createdAt||'')));
+  const examIndex=ordered.findIndex(item=>item.type==='exam'&&item.examId===examId),examItem=ordered[examIndex];
+  if(!examItem?.requiresPrevious||examIndex<1)return null;
+  const prerequisite=ordered[examIndex-1];
+  if(learningCellCompleted(prerequisite.id))return null;
+  return{examItem,prerequisite,title:prerequisite.title||`Week ${prerequisite.week} lesson`,description:prerequisite.body||prerequisite.weekDescription||`Complete the required Week ${prerequisite.week} learning page before starting this examination.`};
+}
+function goToExamPrerequisite(examId){
+  const requirement=examLearningPrerequisite(examId);if(!requirement)return;
+  closeExamModal();
+  if(selectedStudentSubjectCode!==requirement.prerequisite.subjectCode)openStudentSubject(requirement.prerequisite.subjectCode);
+  setTimeout(()=>{focusStudentSubjectWeek(requirement.prerequisite.week);document.querySelector(`[data-learning-block="${requirement.prerequisite.id}"]`)?.scrollIntoView({behavior:'smooth',block:'center'})},80);
+}
 function showStudentSubjectTab(tab) {
-  const next = tab === 'class' ? 'class' : 'main';
+  const next = ['main','class','exams'].includes(tab) ? tab : 'main';
   document.querySelectorAll('#studentSubjectDetail .subject-detail-tab').forEach(button => {
     const active = button.dataset.subjectTab === next;
     button.classList.toggle('active', active);
@@ -964,12 +1125,62 @@ function showStudentSubjectTab(tab) {
   });
   document.querySelectorAll('#studentSubjectDetail .student-subject-tab-panel').forEach(panel => panel.classList.toggle('active', panel.dataset.subjectTabPanel === next));
 }
+function studentSubjectExamTabMarkup(subjectExams){
+  if(!subjectExams.length)return'<div class="subject-empty">No examinations are available for this subject.</div>';
+  return `<div class="subject-exam-progress-list"><div class="subject-exam-progress-head" aria-hidden="true"><span>Examination</span><span>Due date</span><span>Date finished</span><span>Grade</span><span>Score</span></div>${subjectExams.map(exam=>{
+    const submission=submissions.filter(item=>item.studentId===currentStudent.id&&item.examId===exam.id).sort((a,b)=>new Date(b.submittedAt)-new Date(a.submittedAt))[0];
+    const answers=submission?.answers||[],pending=answers.some(answer=>answer.needsManualGrading&&answer.awarded===null),earned=answers.reduce((sum,answer)=>sum+Number(answer.awarded||0),0),total=Number(submission?.total||questions.filter(question=>question.examId===exam.id).reduce((sum,question)=>sum+Number(question.points||5),0));
+    const percent=submission&&total?Math.max(0,Math.min(100,Math.round(earned/total*100))):0;
+    const due=exam.date?`${new Date(`${exam.date}T00:00:00`).toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'})}${exam.end?` · ${formatScheduleTime(exam.end)}`:''}`:'Always open';
+    const finished=submission?new Date(submission.submittedAt).toLocaleString(undefined,{month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit'}):'Not finished';
+    const gradeLabel=!submission?'Not graded':pending?'In progress':`${percent}%`;
+    return `<button type="button" class="subject-exam-progress-row" data-open-exam="${escapeQuestionMedia(exam.id)}" onclick="openExamDetails('${escapeQuestionMedia(exam.id)}')"><span class="subject-exam-progress-name"><strong>${escapeQuestionMedia(exam.title||'Examination')}</strong><small>${escapeQuestionMedia(exam.subjectCode)} · ${questions.filter(question=>question.examId===exam.id).length} items</small></span><span class="subject-exam-progress-date" data-label="Due date">${escapeQuestionMedia(due)}</span><span class="subject-exam-progress-date" data-label="Date finished">${escapeQuestionMedia(finished)}</span><span class="subject-exam-grade" data-label="Grade"><span><strong>${gradeLabel}</strong><i style="--exam-grade:${percent}%"><b></b></i></span></span><span class="subject-exam-score" data-label="Score"><strong>${submission?`${earned} / ${total}`:'—'}</strong><small>${pending?'Awaiting marking':submission?'Recorded':'No attempt'}</small></span></button>`;
+  }).join('')}</div>`;
+}
+function focusStudentSubjectWeek(week, options={}) {
+  const target = document.getElementById(`student-subject-week-${week}`);
+  if (!target) return;
+  document.querySelectorAll('#studentSubjectDetail .learning-week').forEach(cell => { cell.open = cell === target; });
+  target.open = true;
+  document.querySelectorAll('#studentSubjectDetail .student-week-link').forEach(button => button.classList.toggle('active', Number(button.dataset.week) === Number(week)));
+  if(options.scroll!==false)target.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+function focusStudentLearningCell(blockId, options={}){
+  const cell=[...document.querySelectorAll('#studentSubjectDetail .learning-cell[data-learning-block]')].find(item=>item.dataset.learningBlock===String(blockId));
+  if(!cell)return;
+  const week=cell.closest('.learning-week'),weekNumber=Number(week?.id?.replace('student-subject-week-',''));
+  if(weekNumber)focusStudentSubjectWeek(weekNumber,{scroll:false});
+  document.querySelectorAll('#studentSubjectDetail .learning-cell.is-focused').forEach(item=>item.classList.remove('is-focused'));
+  cell.open=true;cell.classList.add('is-focused');
+  if(options.scroll!==false)cell.scrollIntoView({behavior:'smooth',block:'center'});
+}
+function navigateStudentSubjectWeek(direction) {
+  const buttons=[...document.querySelectorAll('#studentSubjectDetail .student-week-link')];
+  if(!buttons.length)return;
+  const current=Math.max(0,buttons.findIndex(button=>button.classList.contains('active'))),next=Math.min(buttons.length-1,Math.max(0,current+(direction<0?-1:1)));
+  focusStudentSubjectWeek(Number(buttons[next].dataset.week));buttons[next].focus({preventScroll:true});
+}
+function studentLearningVideoId(item){
+  if(item?.videoId)return item.videoId;
+  return {CCS2101:'Vts-lQzIyB4',CCS2102:'pTB0EiLXUC8',CDS1101:'Nqrq0yB96gY',CIM1101:'HXV3zeQKqGY',CMA1102:'WUvTyaaNkzM',CHC1101:'5UXxl7RTUt0',PPE1103:'UItWltVZZmE',ZGE1102:'JJ0nFD19eT8'}[item?.subjectCode]||'';
+}
+function renderStudentLearningVideo(item){
+  const videoId=studentLearningVideoId(item),title=escapeQuestionMedia(item.title||'Video lesson'),body=escapeQuestionMedia(item.body||'');
+  if(!videoId)return `<a href="${escapeQuestionMedia(item.url||'#')}" target="_blank" rel="noopener">&#9654; ${title}</a>${body?`<p>${body}</p>`:''}`;
+  return `<div class="learning-video"><div class="learning-video-frame"><iframe src="https://www.youtube-nocookie.com/embed/${videoId}" title="${title}" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>${body?`<p>${body}</p>`:''}<a href="https://www.youtube.com/watch?v=${videoId}" target="_blank" rel="noopener">Open on YouTube ↗</a></div>`;
+}
+function renderStudentVisualLesson(item){
+  const topic=escapeQuestionMedia(item.weekTitle||item.title||'this concept'),body=escapeQuestionMedia(item.body||'');
+  return `<figure class="learning-visual"><img src="${item.imageUrl}" alt="${escapeQuestionMedia(item.imageAlt||item.title)}"><figcaption>${body}</figcaption></figure><section class="visual-lesson-notes"><strong>How to use this visual</strong><ol><li><b>Define:</b> State what ${topic} means in your own words.</li><li><b>Connect:</b> Identify how its key terms relate to one another.</li><li><b>Apply:</b> Use the guided example, then create one new case and explain the result.</li></ol></section>`;
+}
 function openStudentSubject(code) {
   if (!studentSubjectCodes.includes(code)) {
     notify('That subject is not part of your current enrollment.', 'error');
     return;
   }
   selectedStudentSubjectCode = code;
+  const preservedView=pendingStudentLearningViewState?.subjectCode===code?pendingStudentLearningViewState:null;
+  pendingStudentLearningViewState=null;
   const subject = subjects.find(item => item.code === code);
   const enrollment = SectionService.enrollmentsForStudent(currentStudent.id).find(item => item.subjectCode === code);
   const offering = enrollment ? SectionService.offeringFor(enrollment.sectionId, code, sectionSubjects) : null;
@@ -987,6 +1198,7 @@ function openStudentSubject(code) {
   const allStudentEnrollments = DB.read('studentEnrollments', []);
   const classmates = enrollment ? students.filter(person => person.id !== currentStudent.id && allStudentEnrollments.some(item => item.studentId === person.id && item.subjectCode === code && item.sectionId === enrollment.sectionId)).sort((a,b)=>a.last.localeCompare(b.last)||a.first.localeCompare(b.first)) : [];
   const courseAccent=studentSubjectAccent(subject),completedExamIds=new Set(submissions.filter(item=>item.studentId===currentStudent.id).map(item=>item.examId)),completedExamCount=subjectExams.filter(exam=>completedExamIds.has(exam.id)).length,progressPercent=subjectExams.length?Math.round(completedExamCount/subjectExams.length*100):0;
+  const upcomingSubjectExams=subjectExams.filter(exam=>!completedExamIds.has(exam.id)&&examWindow(exam).state==='open').sort((a,b)=>String(a.date||'9999').localeCompare(String(b.date||'9999'))).slice(0,4);
   const professorLabel=professors.length?`Prof. ${professors[0].first} ${professors[0].last}`:'Professor to be assigned';
   document.getElementById('studentSubjectDetail').style.setProperty('--course-accent',courseAccent);
   document.getElementById('studentSubjectDetail').style.setProperty('--course-soft',`color-mix(in srgb,${courseAccent} 12%,var(--surface))`);
@@ -998,27 +1210,60 @@ function openStudentSubject(code) {
       <div class="student-subject-profile-meta"><span>${escapeQuestionMedia(professorLabel)}</span><span>${subjectExams.length} exam${subjectExams.length===1?'':'s'}</span></div>
       <div class="student-course-progress" role="progressbar" aria-label="${escapeQuestionMedia(code)} examination progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${progressPercent}"><div class="student-course-progress-label"><span>Exam progress</span><strong>${progressPercent}%</strong></div><div class="student-course-progress-track"><span style="width:${progressPercent}%"></span></div><small>${completedExamCount} of ${subjectExams.length} exam${subjectExams.length===1?'':'s'} completed</small></div>
     </section>
-    <nav class="subject-detail-tabs" aria-label="Subject page"><button type="button" class="subject-detail-tab active" data-subject-tab="main" aria-selected="true" onclick="showStudentSubjectTab('main')">Main</button><button type="button" class="subject-detail-tab" data-subject-tab="class" aria-selected="false" onclick="showStudentSubjectTab('class')">Class</button></nav>
-    <div class="student-subject-tab-panel active" data-subject-tab-panel="main"><div class="subject-detail-grid">
+    <nav class="subject-detail-tabs" aria-label="Subject page"><button type="button" class="subject-detail-tab active" data-subject-tab="main" aria-selected="true" onclick="showStudentSubjectTab('main')">Main</button><button type="button" class="subject-detail-tab" data-subject-tab="class" aria-selected="false" onclick="showStudentSubjectTab('class')">Class</button><button type="button" class="subject-detail-tab" data-subject-tab="exams" aria-selected="false" onclick="showStudentSubjectTab('exams')">Exams</button></nav>
+    <div class="student-subject-tab-panel active" data-subject-tab-panel="main"><div class="student-subject-workspace"><main class="student-subject-main"><div class="subject-detail-grid">
       <section class="subject-info-cell"><h3>&#128100; Professor${professors.length === 1 ? '' : 's'}</h3>${professors.length ? professors.map(person => { const handled = [...new Set([...subjectOfferings.filter(item => item.facultyId === person.id).map(item => item.sectionId), ...(offering?.facultyId === person.id && enrollment?.sectionId ? [enrollment.sectionId] : [])])]; return `<div class="professor-contact-row"><p><strong>Prof. ${escapeQuestionMedia(person.first)} ${escapeQuestionMedia(person.last)}</strong><br>${escapeQuestionMedia(person.id)}<br><span>Handles: ${escapeQuestionMedia(handled.join(', ') || 'No section listed')}</span></p><button type="button" class="icon-action professor-email" onclick="openEmailComposer('${person.id}','${code}')" aria-label="Email Prof. ${escapeQuestionMedia(person.first)} ${escapeQuestionMedia(person.last)}" title="Compose email">&#9993;</button></div>`; }).join('') : '<p>No professor has been assigned yet.</p>'}</section>
       <section class="subject-info-cell"><h3>&#128220; Examination rules</h3><ul><li>Follow the instructions and schedule shown for each examination.</li><li>Passing grade: ${escapeQuestionMedia(passing)}.</li><li>Allowed attempts: ${escapeQuestionMedia(attempts.join(', ') || 'Set per examination')}.</li><li>Materials: ${escapeQuestionMedia(materials.join('; ') || 'Set per examination')}.</li><li>Leaving, navigation, review, and result access follow the settings chosen by the professor.</li></ul></section>
       <section class="subject-info-cell"><h3>&#128197; Schedule summary</h3><p>${subjectExams.length} examination${subjectExams.length === 1 ? '' : 's'} available for this subject.</p><p>Open each examination below to see its exact date, deadline, duration, items, and attempt rules.</p></section>
-      <section class="subject-info-cell subject-detail-exams"><h3>&#128218; Weekly learning content</h3><div class="learning-week-stack">${learningWeeks.length ? learningWeeks.map(week => {const weekRecord=learningContent.find(item=>item.week===week);return `<details class="learning-week"><summary><strong>Week ${week} · ${escapeQuestionMedia(weekRecord?.weekTitle || `Week ${week}`)}</strong></summary>${weekRecord?.weekDescription?`<p class="learning-week-description">${escapeQuestionMedia(weekRecord.weekDescription)}</p>`:''}${learningContent.filter(item=>item.week===week).map(item=>{const index=learningContent.indexOf(item),state=learningCellState(item,index,learningContent);return state.locked?`<div class="learning-cell locked"><strong>${escapeQuestionMedia(item.title||'Content')}</strong><span>&#128274; ${escapeQuestionMedia(state.label)}</span></div>`:`<details class="learning-cell ${item.type==='exam'?'attached-exam-block':''}" ontoggle="recordLearningCellView('${item.id}',this)"><summary><strong>${escapeQuestionMedia(item.title||'Content')}</strong></summary><div class="learning-cell-body">${item.type==='exam'?`<button type="button" class="attached-exam-link" onclick="openExamDetails('${escapeQuestionMedia(item.examId)}')"><span>&#128221;</span><span><strong>${escapeQuestionMedia(item.title||'Examination')}</strong><small>View examination details</small></span><span aria-hidden="true">&#8594;</span></button>`:item.type==='file'?`<a href="${item.dataUrl||'#'}" download="${escapeQuestionMedia(item.fileName||item.title)}">&#128206; ${escapeQuestionMedia(item.title||item.fileName)}</a>`:item.type==='link'?`<a href="${escapeQuestionMedia(item.url||'#')}" target="_blank" rel="noopener">&#128279; ${escapeQuestionMedia(item.title||item.url)}</a>${item.body?`<p>${escapeQuestionMedia(item.body)}</p>`:''}`:escapeQuestionMedia(item.body||'')}</div></details>`}).join('')}</details>`}).join('') : '<div class="subject-empty">Your professor has not published weekly content yet.</div>'}</div></section>
-      <section class="subject-info-cell subject-detail-exams"><h3>&#9997; Examinations</h3><div class="subject-detail-exam-grid">${subjectExams.length ? subjectExams.map(exam => {
-        const schedule = exam.date ? `${exam.date} · ${exam.start || '09:00'}–${exam.end || '23:59'}` : 'Always open';
-        return `<button type="button" class="subject-detail-exam" data-open-exam="${escapeQuestionMedia(exam.id)}" onclick="openExamDetails('${exam.id}')"><strong>${escapeQuestionMedia(exam.title || 'Examination')}</strong><span>${escapeQuestionMedia(schedule)}</span><span>${exam.questionIds?.length || questions.filter(question => question.examId === exam.id).length} items · ${exam.durationMinutes || 'No'} minute time limit</span></button>`;
-      }).join('') : '<div class="subject-empty">No examinations are available for this subject.</div>'}</div></section>
-    </div></div>
-    <div class="student-subject-tab-panel" data-subject-tab-panel="class"><section class="subject-info-cell classmate-cell"><h3>&#128101; Classmates</h3><p class="field-hint">Limited profiles protect grades, activity, and login information.</p><div class="classmate-list">${classmates.length?classmates.map(person=>`<button type="button" class="classmate-row" onclick="RoleProfileViewer.openStudent('${person.id}',{viewerRole:'student',viewerId:'${currentStudent.id}',subjectCode:'${code}',sectionId:'${enrollment.sectionId}'})"><span class="classmate-avatar">${escapeQuestionMedia(`${person.first?.[0]||''}${person.last?.[0]||''}`.toUpperCase())}</span><span><strong>${escapeQuestionMedia(person.last)}, ${escapeQuestionMedia(person.first)}</strong><small>View limited profile</small></span><span aria-hidden="true">&#8594;</span></button>`).join(''):'<p>No classmates are listed for this offering.</p>'}</div></section></div>`;
+      <section class="subject-info-cell subject-detail-exams"><h3>Weekly learning</h3><div class="learning-week-stack">${learningWeeks.length ? learningWeeks.map(week => {const weekRecord=learningContent.find(item=>item.week===week);return `<details class="learning-week"><summary><strong>Week ${week} · ${escapeQuestionMedia(weekRecord?.weekTitle || `Week ${week}`)}</strong></summary>${weekRecord?.weekDescription?`<p class="learning-week-description">${escapeQuestionMedia(weekRecord.weekDescription)}</p>`:''}${learningContent.filter(item=>item.week===week).map(item=>{const index=learningContent.indexOf(item),state=learningCellState(item,index,learningContent),completed=learningCellCompleted(item.id),meta=learningTypeMeta(item);return state.locked?`<div class="learning-cell locked"><strong>${escapeQuestionMedia(item.title||'Content')}</strong><span>&#128274; ${escapeQuestionMedia(state.label)}</span></div>`:`<details class="learning-cell ${item.type==='exam'?'attached-exam-block':''}" ontoggle="recordLearningCellView('${item.id}',this)"><summary><span class="learning-row-icon ${meta.tone}" aria-hidden="true">${meta.icon}</span><span class="learning-row-copy"><strong>${escapeQuestionMedia(item.title||'Content')}</strong><small>${escapeQuestionMedia(meta.label)} · Week ${week}</small></span>${item.type==='exam'?`<button type="button" class="learning-status-button ${completed?'done':''}" onclick="event.preventDefault();event.stopPropagation();openExamDetails('${escapeQuestionMedia(item.examId)}')">${completed?'✓ Done':'Open quiz'} <span class="status-caret">▾</span></button>`:`<button type="button" class="learning-status-button ${completed?'done':''}" onclick="event.preventDefault();event.stopPropagation();toggleLearningCellDone('${item.id}')">${completed?'✓ Done':'To do'} <span class="status-caret">▾</span></button>`}</summary><div class="learning-cell-body"><div class="learning-meta-line"><span>${escapeQuestionMedia(meta.label)}</span><span>Short lesson</span></div>${item.type==='exam'?`<button type="button" class="attached-exam-link" onclick="openExamDetails('${escapeQuestionMedia(item.examId)}')"><span>&#128221;</span><span><strong>${escapeQuestionMedia(item.title||'Examination')}</strong><small>Always open · up to 99 attempts</small></span><span aria-hidden="true">&#8594;</span></button>`:item.type==='visual'?renderStudentVisualLesson(item):item.type==='file'?`<a href="${item.dataUrl||'#'}" download="${escapeQuestionMedia(item.fileName||item.title)}">&#128206; ${escapeQuestionMedia(item.title||item.fileName)}</a>`:item.type==='link'?renderStudentLearningVideo(item):`<p>${escapeQuestionMedia(item.body||'')}</p>`}</div></details>`}).join('')}</details>`}).join('') : '<div class="subject-empty">Your professor has not published weekly content yet.</div>'}</div></section>
+    </div></main><aside class="student-week-rail" aria-label="Weekly lessons"><div class="student-week-rail-head"><div><span>Course path</span><strong>Weekly lessons</strong></div><div class="student-week-nav-controls"><button type="button" onclick="navigateStudentSubjectWeek(-1)" aria-label="Previous week">&#8249;</button><button type="button" onclick="navigateStudentSubjectWeek(1)" aria-label="Next week">&#8250;</button></div></div><div class="student-week-links">${learningWeeks.length?learningWeeks.map((week,index)=>{const weekItems=learningContent.filter(item=>item.week===week&&item.type!=='exam'),weekRecord=learningContent.find(item=>item.week===week);return `<button type="button" class="student-week-link ${index===0?'active':''}" data-week="${week}" onclick="focusStudentSubjectWeek(${week})"><span class="student-week-number">W${week}</span><span class="student-week-link-label"><strong>${escapeQuestionMedia(weekRecord?.weekTitle||`Week ${week}`)}</strong><small>${weekItems.length} lesson${weekItems.length===1?'':'s'}</small></span><span class="student-week-link-arrow" aria-hidden="true">&#8594;</span></button>`}).join(''):'<div class="subject-empty">No lessons yet.</div>'}</div><section class="student-week-upcoming"><div class="student-week-upcoming-head"><strong>Open quizzes</strong><span>${upcomingSubjectExams.length}</span></div><div class="student-week-exam-list">${upcomingSubjectExams.length?upcomingSubjectExams.map((exam,index)=>`<button type="button" class="student-week-exam" data-open-quiz="${escapeQuestionMedia(exam.id)}" style="--exam-tone:${['#cf6729','#27766d','#9b6a24','#6e5da8'][index%4]}" onclick="openExamDetails('${escapeQuestionMedia(exam.id)}')"><strong>${escapeQuestionMedia(exam.title||'Examination')}</strong><small>${exam.date?`Due ${escapeQuestionMedia(`${exam.date} · ${exam.end||'23:59'}`)}`:'Always open'}</small></button>`).join(''):'<div class="student-week-empty">No open quizzes for this subject.</div>'}</div></section></aside></div></div>
+    <div class="student-subject-tab-panel" data-subject-tab-panel="class"><section class="subject-info-cell classmate-cell"><h3>&#128101; Classmates</h3><p class="field-hint">Limited profiles protect grades, activity, and login information.</p><div class="classmate-list">${classmates.length?classmates.map(person=>`<button type="button" class="classmate-row" onclick="RoleProfileViewer.openStudent('${person.id}',{viewerRole:'student',viewerId:'${currentStudent.id}',subjectCode:'${code}',sectionId:'${enrollment.sectionId}'})"><span class="classmate-avatar">${escapeQuestionMedia(`${person.first?.[0]||''}${person.last?.[0]||''}`.toUpperCase())}</span><span><strong>${escapeQuestionMedia(person.last)}, ${escapeQuestionMedia(person.first)}</strong><small>View limited profile</small></span><span aria-hidden="true">&#8594;</span></button>`).join(''):'<p>No classmates are listed for this offering.</p>'}</div></section></div>
+    <div class="student-subject-tab-panel" data-subject-tab-panel="exams"><section class="subject-info-cell subject-exam-progress-card"><div class="subject-exam-progress-title"><span class="dashboard-eyebrow">Subject assessment</span><h3>Examination progress</h3><p>Due dates, completed attempts, grades, and recorded scores.</p></div>${studentSubjectExamTabMarkup(subjectExams)}</section></div>`;
+  const detailRoot=document.getElementById('studentSubjectDetail'),hero=detailRoot.querySelector('.student-subject-profile'),tabs=detailRoot.querySelector('.subject-detail-tabs'),mainPanel=detailRoot.querySelector('[data-subject-tab-panel="main"]'),classPanel=detailRoot.querySelector('[data-subject-tab-panel="class"]'),examsPanel=detailRoot.querySelector('[data-subject-tab-panel="exams"]'),weekRail=detailRoot.querySelector('.student-week-rail');
+  const subjectLayout=document.createElement('div'),subjectColumn=document.createElement('div'),sideColumn=document.createElement('aside');
+  subjectLayout.className='student-subject-layout';subjectColumn.className='student-subject-content-column';sideColumn.className='student-subject-side-column';sideColumn.setAttribute('aria-label','Course navigation and open quizzes');
+  detailRoot.insertBefore(subjectLayout,hero);subjectLayout.append(subjectColumn,sideColumn);subjectColumn.append(hero,tabs,mainPanel,classPanel,examsPanel);
+  const upcomingPanel=weekRail.querySelector('.student-week-upcoming'),weekLinks=weekRail.querySelector('.student-week-links');
+  if(upcomingPanel)sideColumn.append(upcomingPanel);sideColumn.append(weekRail);
+  document.querySelectorAll('#studentSubjectDetail .learning-week').forEach((weekCell,index) => {
+    const weekNumber=learningWeeks[index],weekItems=learningContent.filter(item=>item.week===weekNumber),contentCells=[...weekCell.children].filter(child=>child.classList.contains('learning-cell'));
+    weekCell.id = `student-subject-week-${weekNumber}`;
+    weekCell.dataset.weekLabel=`W${String(weekNumber).padStart(2,'0')}`;
+    weekCell.querySelector(':scope>summary')?.setAttribute('data-week-label',weekCell.dataset.weekLabel);
+    weekCell.style.setProperty('--week-tone',['var(--course-accent)','#c76125','#367b86','#7460a8'][(weekNumber-1)%4]);
+    weekCell.open = preservedView?.activeWeek ? Number(preservedView.activeWeek)===Number(weekNumber) : index === 0;
+    const classification=document.createElement('div'),lessonCell=document.createElement('section'),lessonList=document.createElement('div');
+    classification.className='week-classification-grid';lessonCell.className='week-content-cell lesson-cell';lessonList.className='week-content-list';
+    const lessonCount=weekItems.filter(item=>item.type!=='exam').length;
+    lessonCell.innerHTML=`<header class="week-content-heading"><strong>Lessons</strong><span>${lessonCount} page${lessonCount===1?'':'s'}</span></header>`;
+    contentCells.forEach((cell,itemIndex)=>{if(weekItems[itemIndex]?.type==='exam')cell.remove();else lessonList.appendChild(cell)});
+    if(!lessonList.children.length)lessonList.innerHTML='<div class="week-content-empty">No lesson pages have been published for this week.</div>';
+    lessonCell.appendChild(lessonList);classification.append(lessonCell);weekCell.appendChild(classification);
+  });
+  document.querySelector('#studentSubjectDetail .learning-week-stack')?.closest('.subject-info-cell')?.classList.add('weekly-learning-section');
+  const lockedLearningItems=learningContent.filter((item,index)=>learningCellState(item,index,learningContent).locked);
+  document.querySelectorAll('#studentSubjectDetail .learning-cell.locked').forEach((cell,index)=>{
+    const item=lockedLearningItems[index];if(!item)return;cell.dataset.learningBlock=item.id;
+    if(item.type==='exam'){cell.classList.add('locked-exam-row');cell.setAttribute('role','button');cell.tabIndex=0;cell.onclick=()=>openExamDetails(item.examId);cell.onkeydown=event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();openExamDetails(item.examId)}}}
+  });
   document.querySelectorAll('#studentSubjectDetail .learning-cell:not(.locked)').forEach((cell,index) => {
     const item = learningContent.filter(entry => !learningCellState(entry,learningContent.indexOf(entry),learningContent).locked)[index];
-    if (item && !item.collapsible) {
-      cell.open = true;
-      cell.classList.add('always-open');
-      cell.addEventListener('toggle', () => { if (!cell.open) cell.open = true; });
+    if (item) {
+      cell.dataset.learningBlock=item.id;
+      cell.open = !item.collapsible || !!preservedView?.openBlockIds?.includes(item.id);
+      cell.querySelector(':scope>summary')?.addEventListener('click',event=>{event.preventDefault();focusStudentLearningCell(item.id)});
+      if(!item.collapsible){cell.classList.add('always-open');cell.addEventListener('toggle',()=>{if(!cell.open)cell.open=true})}
     }
   });
+  detailRoot.tabIndex=-1;
+  detailRoot.onkeydown=event=>{if(event.key==='ArrowLeft'||event.key==='ArrowRight'){event.preventDefault();navigateStudentSubjectWeek(event.key==='ArrowLeft'?-1:1)}};
   studentNav.show('subject-detail-panel');
+  if(typeof markStudentSubjectNav==='function')markStudentSubjectNav(code);
+  if(preservedView){
+    if(preservedView.activeWeek)focusStudentSubjectWeek(preservedView.activeWeek,{scroll:false});
+    if(preservedView.focusedBlockId)focusStudentLearningCell(preservedView.focusedBlockId,{scroll:false});
+    (window.requestAnimationFrame||window.setTimeout)(()=>window.scrollTo?.(0,preservedView.scrollY||0));
+  }
 }
 
 let relevantExams = [];
@@ -1054,6 +1299,7 @@ function loadExams() {
   tbody.innerHTML = '';
 
   relevantExams = exams.filter(ex => ex.status !== 'draft' && studentCanTakeExam(ex));
+  if(typeof refreshStudentSidebarExamCounts==='function')refreshStudentSidebarExamCounts();
 
   renderStudentDashboardSummary();
 
@@ -1376,6 +1622,7 @@ function openExamDetails(examId) {
   const canReviewCompleted = !!completedVisibility && (completedVisibility.showSubmittedAnswers || completedVisibility.showCorrectAnswers);
   const savedAnswerCount = savedAttempt ? Object.values(savedAttempt.answers || {}).filter(answer => answer && (Number.isInteger(answer.selectedIndex) || String(answer.response || '').trim() || (answer.matches || []).some(Number.isInteger))).length : 0;
   const completedAwarded = completedSubmission ? (completedSubmission.answers || []).reduce((total, answer) => total + (answer.awarded || 0), 0) : 0;
+  const learningRequirement = completedSubmission ? null : examLearningPrerequisite(examId);
 
   activeExamId = examId;
   document.getElementById('modalExamTitle').textContent = b.title;
@@ -1402,7 +1649,7 @@ function openExamDetails(examId) {
       ${row('Results', b.reviewPolicy)}
     </dl>
     <p class="brief-zone">Times are shown in your local time zone (${b.zone}).</p>
-    ${b.canStart ? '' : `<div class="brief-blocked">${b.blockedReason}</div>`}
+    ${learningRequirement ? `<section class="exam-prerequisite-lock"><div class="exam-prerequisite-icon" aria-hidden="true">&#128274;</div><div><span>Prerequisite required</span><strong>${escapeQuestionMedia(learningRequirement.title)}</strong><p>${escapeQuestionMedia(learningRequirement.description)}</p></div></section>` : b.canStart ? '' : `<div class="brief-blocked">${b.blockedReason}</div>`}
   `;
 
   // Briefing visible; paper hidden until Start is pressed.
@@ -1412,7 +1659,11 @@ function openExamDetails(examId) {
   document.getElementById('examResultSection').style.display = 'none';
   document.getElementById('examTimer').style.display = 'none';
 
-  document.getElementById('examModalActions').innerHTML = submitted
+  document.getElementById('examModalActions').innerHTML = learningRequirement
+    ? `<button class="btn-secondary" onclick="closeExamModal()"><span aria-hidden="true">&#8617;</span> Back</button>
+       <button class="btn-secondary prerequisite-redirect" onclick="goToExamPrerequisite('${examId}')">Go to ${escapeQuestionMedia(learningRequirement.title)}</button>
+       <button class="btn-take-exam exam-prerequisite-disabled" disabled title="Complete ${escapeQuestionMedia(learningRequirement.title)} first"><span>Take exam</span><small>You need to do ${escapeQuestionMedia(learningRequirement.title)} first</small></button>`
+    : submitted
     ? `<button class="btn-secondary" onclick="closeExamModal()"><span aria-hidden="true">&#8617;</span> Back</button>
        <button class="btn-take-exam" ${canReviewCompleted ? `onclick="openCompletedExamReview('${examId}')"` : 'disabled'} title="${canReviewCompleted ? 'Review questions and answers' : 'Answer review is disabled by your professor'}">&#128065; ${canReviewCompleted ? 'Review this exam' : 'Review unavailable'}</button>`
     : savedAttempt
@@ -1457,6 +1708,9 @@ function startExam(examId) {
   const exam = exams.find(e => e.id === examId);
   if (!required(exam, 'That examination is no longer available.')) { loadExams(); return; }
 
+  const learningRequirement=examLearningPrerequisite(examId);
+  if(learningRequirement){notify(`Complete ${learningRequirement.title} before taking this examination.`,'error');openExamDetails(examId);return}
+
   // Re-check on entry rather than trusting the button state alone.
   if (attemptsForExam(examId) >= attemptsAllowed(exam)) {
     notify('You have used every allowed attempt for this examination.', 'error');
@@ -1493,12 +1747,13 @@ function startExam(examId) {
   const totalPts = currentExamQuestions.reduce((sum, q) => sum + (q.points || 5), 0);
 
   document.getElementById('modalExamTitle').textContent = exam.title || 'Examination';
-  // Schedule and total points, which the plan requires the student to see.
+  const scheduleLabel = exam.date
+    ? `${new Date(`${exam.date}T00:00:00`).toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'})} · ${formatScheduleTime(exam.start || '00:00')}–${formatScheduleTime(exam.end || '23:59')}`
+    : 'Always open';
   document.getElementById('modalExamMeta').textContent =
-    `${exam.date || 'Date TBA'} · ${exam.start || '—'} to ${exam.end || '—'} · `
-    + `${currentExamQuestions.length} question(s) · ${totalPts} point(s) total`;
+    `${exam.subjectCode}${sub?.name ? ` · ${sub.name}` : ''}`;
   document.getElementById('modalExamSub').textContent =
-    `${exam.subjectCode} - ${sub ? sub.name : ''} | Instructions: ${exam.desc || 'Answer all questions below.'}`;
+    `${scheduleLabel} · ${currentExamQuestions.length} question${currentExamQuestions.length === 1 ? '' : 's'} · ${totalPts} points`;
 
   const container = document.getElementById('examQuestionsContainer');
   const resultSec = document.getElementById('examResultSection');
@@ -1737,7 +1992,8 @@ function renderProgress() {
   el.style.display = 'flex';
   el.innerHTML = `
     <span class="prog-position">Question ${activeAttempt.currentIndex + 1} of ${p.total}</span>
-    <span class="prog-counts">${p.answered} answered &middot; ${p.unanswered} left${p.flagged ? ` &middot; ${p.flagged} flagged` : ''}</span>`;
+    <span class="prog-counts">${p.answered} answered &middot; ${p.unanswered} left${p.flagged ? ` &middot; ${p.flagged} flagged` : ''}</span>
+    <span class="exam-progress-track" aria-hidden="true"><span style="width:${p.total ? Math.round(p.answered / p.total * 100) : 0}%"></span></span>`;
 }
 
 function renderNavigator() {
@@ -1745,6 +2001,8 @@ function renderNavigator() {
   if (!nav || !activeAttempt || allOnOnePage) return;
   nav.style.display = 'block';
   const cells = questionStates(activeAttempt, currentExamQuestions, activeAttempt.currentIndex);
+  const handleCount = nav.querySelector('.nav-handle-count');
+  if (handleCount) handleCount.textContent = `${activeAttempt.currentIndex + 1}/${cells.length}`;
   nav.querySelector('.nav-cells').innerHTML = cells.map(c => {
     const locked = navigationMode === 'forward'
       ? c.index !== activeAttempt.currentIndex
@@ -1768,7 +2026,7 @@ function renderNavigator() {
 function placeNavigatorHandle(x, y, remember = true) {
   const nav = document.getElementById('examNavigator');
   if (!nav) return;
-  const width = 44, height = 48, edge = 8;
+  const width = 52, height = 48, edge = 8;
   const left = Math.max(edge, Math.min(Number(x) || edge, window.innerWidth - width - edge));
   const top = Math.max(edge, Math.min(Number(y) || edge, window.innerHeight - height - edge));
   nav.classList.add('is-positioned');
@@ -1783,8 +2041,9 @@ function enableNavigatorDrag() {
   if (!nav || !handle) return;
   try {
     const saved = JSON.parse(localStorage.getItem('studentExamNavigatorPosition') || 'null');
-    if (saved) placeNavigatorHandle(saved.left, saved.top, false);
-    else placeNavigatorHandle(8, Math.max(8,(window.innerHeight-48)/2), false);
+    const defaultLeft = Math.max(8, window.innerWidth - 60);
+    if (saved && Number(saved.left) > 16) placeNavigatorHandle(saved.left, saved.top, false);
+    else placeNavigatorHandle(defaultLeft, Math.max(88,(window.innerHeight-48)/2), false);
   } catch (_) {}
   let drag = null;
   handle.addEventListener('pointerdown', event => {
@@ -1824,7 +2083,7 @@ function enableNavigatorDrag() {
 function positionNavigatorPanel() {
   const nav=document.getElementById('examNavigator'),panel=nav?.querySelector('.nav-panel');
   if (!nav||!panel) return;
-  const gap=8,edge=8,handleWidth=44,handleHeight=48,left=parseFloat(nav.style.left)||edge,top=parseFloat(nav.style.top)||edge;
+  const gap=8,edge=8,handleWidth=52,handleHeight=48,left=parseFloat(nav.style.left)||edge,top=parseFloat(nav.style.top)||edge;
   const panelWidth=Math.min(300,window.innerWidth-36),panelHeight=Math.min(panel.scrollHeight||560,window.innerHeight*.7,560);
   let panelLeft=left+handleWidth+gap;
   if(panelLeft+panelWidth>window.innerWidth-edge)panelLeft=left-panelWidth-gap;
@@ -2121,8 +2380,17 @@ async function submitExamAnswers(opts = {}) {
   const savedSubmission = submissions[submissions.length - 1];
   const visibility = resultVisibility(activeExam, savedSubmission);
   const showScore = visibility.showScore;
+  const scorePercent = totalPoints ? Math.round(earnedPoints / totalPoints * 100) : 0;
 
   resultSec.innerHTML = `
+    <section class="exam-result-layout" aria-label="Examination result">
+      <div class="exam-result-copy"><span class="exam-result-kicker">Submission complete</span><h3>Examination submitted successfully</h3><p>Your answers were recorded and the available result is shown below.</p>
+        <div class="exam-result-metrics"><span>${currentExamQuestions.length} questions</span><span>${pendingPoints ? `${pendingPoints} points awaiting review` : 'Grading complete'}</span></div>
+        ${showScore ? `<p><strong>Your score:</strong> ${earnedPoints} &nbsp;/&nbsp; <strong>Total score:</strong> ${totalPoints}</p>` : '<p>Your instructor has hidden scores for this examination.</p>'}
+        ${finalGrade && showScore ? `<span class="grade-chip ${finalGrade.passed ? 'grade-pass' : 'grade-fail'}"><span class="grade-rating">${finalGrade.rating}</span><span class="grade-sub">${finalGrade.percentText}% &middot; ${finalGrade.remark}</span></span>` : ''}
+      </div>
+      <div class="exam-score-pie" style="--score-angle:${showScore ? scorePercent * 3.6 : 0}deg" role="img" aria-label="${showScore ? `${earnedPoints} out of ${totalPoints} points, ${scorePercent} percent` : 'Score hidden'}"><span>${showScore ? `<strong>${earnedPoints}/${totalPoints}</strong>${scorePercent}%` : '<strong>&mdash;</strong>Hidden'}</span></div>
+    </section>
     <div class="score-box">
       🎉 Examination Submitted Successfully!<br>
       <span style="font-size:15px; font-weight:normal; color:#444; margin-top:8px; display:block;">
@@ -2219,18 +2487,27 @@ function submitQuestionReport() {
   return true;
 }
 
+let activeStudentMailFilter='inbox',activeStudentMailKey=null;
+function studentMailRecords(){
+  const receipts=new Set(DB.read('inboxReadReceipts',[])),owner=`student:${currentStudent.id}:`,now=Date.now();
+  const announcements=DB.read('adminAnnouncements',[]).filter(item=>!item.archived&&(!item.publishAt||new Date(item.publishAt).getTime()<=now)&&(!item.audience||item.audience==='all'||item.audience==='student')).map(item=>({key:`announcement:${item.id}`,direction:'inbox',kind:'Announcement',title:item.title||'University announcement',message:item.message||'',at:item.createdAt,senderName:'New Era University',pending:!receipts.has(`${owner}announcement:${item.id}`)}));
+  const notices=DB.read('studentNotifications',[]).filter(item=>item.studentId===currentStudent.id).map(item=>{const sender=faculty.find(person=>person.id===item.facultyId);return{key:`student-notice:${item.id}`,direction:'inbox',kind:item.type==='faculty-mail'?'Faculty mail':'Report update',title:item.subject||'Question report update',message:item.message||'',at:item.createdAt,senderId:item.facultyId||'',senderName:sender?`Prof. ${sender.first} ${sender.last}`:'Faculty',pending:!receipts.has(`${owner}student-notice:${item.id}`)}});
+  const sent=DB.read('studentEmails',[]).filter(item=>item.studentId===currentStudent.id).map(item=>{const receiver=faculty.find(person=>person.id===item.facultyId);return{key:`student-mail:${item.id}`,direction:'sent',kind:'Sent mail',title:item.subject||'Message',message:item.message||'',at:item.sentAt,senderId:item.facultyId||'',senderName:receiver?`To Prof. ${receiver.first} ${receiver.last}`:'To Faculty',pending:false}});
+  return[...announcements,...notices,...sent].sort((a,b)=>String(b.at||'').localeCompare(String(a.at||'')));
+}
+function studentMailUnreadCount(){return studentMailRecords().filter(item=>item.direction==='inbox'&&item.pending).length}
+function refreshStudentMailBadge(){const link=document.querySelector('#sidebar [data-panel="mail-panel"]'),count=studentMailUnreadCount();if(!link)return;let badge=link.querySelector('.nav-count');if(!count){badge?.remove();return}if(!badge){badge=document.createElement('span');badge.className='nav-count';link.appendChild(badge)}badge.textContent=count;badge.setAttribute('aria-label',`${count} unread message${count===1?'':'s'}`)}
+function selectStudentMailFilter(filter){activeStudentMailFilter=filter==='sent'?'sent':'inbox';document.querySelectorAll('.student-mail-tabs button').forEach(button=>button.classList.toggle('active',button.dataset.mailFilter===activeStudentMailFilter));renderStudentMailPage()}
+function renderStudentMailPage(){const list=document.getElementById('studentMailList');if(!list)return;const records=studentMailRecords().filter(item=>item.direction===activeStudentMailFilter);list.innerHTML=records.length?records.map(item=>`<button type="button" class="student-mail-row ${item.pending?'unread':''} ${item.key===activeStudentMailKey?'active':''}" onclick="openStudentMailItem('${escapeQuestionMedia(item.key)}')"><span class="student-mail-avatar" aria-hidden="true">${escapeQuestionMedia(initialsFrom(item.senderName))}</span><span class="student-mail-row-copy"><span>${escapeQuestionMedia(item.senderName)}</span><strong>${escapeQuestionMedia(item.title)}</strong><small>${escapeQuestionMedia(item.message)}</small></span><time>${item.at?new Date(item.at).toLocaleDateString(undefined,{month:'short',day:'numeric'}):''}</time>${item.pending?'<i aria-label="Unread"></i>':''}</button>`).join(''):'<div class="student-mail-list-empty">No messages in this folder.</div>';refreshStudentMailBadge()}
+function openStudentMailItem(key){const item=studentMailRecords().find(record=>record.key===key);if(!item)return;activeStudentMailKey=key;if(item.direction==='inbox'){const receipts=new Set(DB.read('inboxReadReceipts',[]));receipts.add(`student:${currentStudent.id}:${item.key}`);DB.write('inboxReadReceipts',[...receipts])}const canReply=item.direction==='inbox'&&item.senderId;document.getElementById('studentMailReader').innerHTML=`<article class="student-mail-message"><header><div><span class="dashboard-eyebrow">${escapeQuestionMedia(item.kind)}</span><h2>${escapeQuestionMedia(item.title)}</h2><p>${escapeQuestionMedia(item.senderName)} · ${item.at?new Date(item.at).toLocaleString():''}</p></div></header><div class="student-mail-message-body">${escapeQuestionMedia(item.message)}</div>${canReply?`<div class="student-mail-reply"><label for="studentMailReply">Reply</label><textarea id="studentMailReply" placeholder="Write your reply…"></textarea><button type="button" class="btn-take-exam" onclick="sendStudentMailReply('${escapeQuestionMedia(item.senderId)}','${escapeQuestionMedia(item.title)}')">Send reply</button></div>`:''}</article>`;renderStudentMailPage()}
+function sendStudentMailReply(facultyId,title){const field=document.getElementById('studentMailReply'),message=field?.value.trim();if(!message){notify('Write a reply first.','error');return false}const outgoing=DB.read('studentEmails',[]);outgoing.push({id:`student-mail-${Date.now()}`,studentId:currentStudent.id,facultyId,subject:`Re: ${title}`,message,sentAt:new Date().toISOString(),read:false});if(!DB.write('studentEmails',outgoing))return false;notify('Reply sent.','success');field.value='';renderStudentMailPage();return true}
+function openStudentMailCompose(facultyId='',subjectCode=''){emailComposerFacultyId=facultyId||faculty[0]?.id||'';studentNav.show('mail-panel');activeStudentMailKey=null;const subject=subjects.find(item=>item.code===subjectCode);document.getElementById('studentMailReader').innerHTML=`<form class="student-mail-compose" onsubmit="event.preventDefault();sendStudentMailPage()"><span class="dashboard-eyebrow">New message</span><h2>Compose mail</h2><label>To<select id="studentMailTo">${faculty.map(person=>`<option value="${escapeQuestionMedia(person.id)}" ${person.id===emailComposerFacultyId?'selected':''}>Prof. ${escapeQuestionMedia(person.first)} ${escapeQuestionMedia(person.last)}</option>`).join('')}</select></label><label>Subject<input id="studentMailSubject" value="${escapeQuestionMedia(subject?`${subject.code} — ${subject.name}`:'')}"></label><label>Message<textarea id="studentMailMessage" placeholder="Write your message…"></textarea></label><div class="student-mail-compose-actions"><button type="button" class="btn-secondary" onclick="renderStudentMailReaderEmpty()">Cancel</button><button type="submit" class="btn-take-exam">Send mail</button></div></form>`;document.getElementById('studentMailMessage')?.focus();renderStudentMailPage()}
+function renderStudentMailReaderEmpty(){document.getElementById('studentMailReader').innerHTML='<div class="student-mail-empty"><span aria-hidden="true">&#9993;</span><h2>Select a message</h2><p>Choose a conversation from the mailbox to read it here.</p></div>'}
+function sendStudentMailPage(){const facultyId=document.getElementById('studentMailTo')?.value,subject=document.getElementById('studentMailSubject')?.value.trim(),message=document.getElementById('studentMailMessage')?.value.trim();if(!facultyId||!subject||!message){notify('Choose a professor and complete the subject and message.','error');return false}const messages=DB.read('studentEmails',[]);messages.push({id:`email_${Date.now()}`,studentId:currentStudent.id,facultyId,subject,message,sentAt:new Date().toISOString(),read:false});if(!DB.write('studentEmails',messages)){notify('The email could not be saved. Please try again.','error');return false}AuditLog.record('send-email','faculty',facultyId,{subject});notify('Email sent to your professor.','success');activeStudentMailFilter='sent';selectStudentMailFilter('sent');const saved=studentMailRecords().find(item=>item.direction==='sent'&&item.title===subject&&item.message===message);if(saved)openStudentMailItem(saved.key);return true}
+
 let emailComposerFacultyId = null;
 function openEmailComposer(facultyId, subjectCode) {
-  const person = faculty.find(item => item.id === facultyId);
-  const subject = subjects.find(item => item.code === subjectCode);
-  if (!person) return;
-  emailComposerFacultyId = facultyId;
-  const email = `${person.first}.${person.last}`.toLowerCase().replace(/[^a-z0-9.]/g,'') + '@lspu.edu.ph';
-  document.getElementById('emailComposerTo').value = `Prof. ${person.first} ${person.last} <${email}>`;
-  document.getElementById('emailComposerSubject').value = subject ? `${subject.code} — ${subject.name}` : subjectCode;
-  document.getElementById('emailComposerMessage').value = '';
-  document.getElementById('emailComposerModal').style.display = 'flex';
-  document.getElementById('emailComposerMessage').focus();
+  openStudentMailCompose(facultyId,subjectCode);
 }
 
 function closeEmailComposer() {
@@ -2239,6 +2516,7 @@ function closeEmailComposer() {
 }
 
 function sendProfessorEmail() {
+  if (document.getElementById('studentMailMessage')) return sendStudentMailPage();
   const message = document.getElementById('emailComposerMessage').value.trim();
   const subject = document.getElementById('emailComposerSubject').value.trim();
   if (!subject || !message) {
@@ -2511,20 +2789,50 @@ function renderExamCalendar() {
   }
   compact.innerHTML=weekdays+compactCells.join('');if(expanded)expanded.innerHTML=weekdays+expandedCells.join('');
   const label=selectedCalendarDate.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});document.getElementById('selectedDayTitle').textContent=label;document.getElementById('scheduleSelectedDayTitle').textContent=label;document.getElementById('selectedDayAgenda').innerHTML=examAgendaMarkup(selectedKey);document.getElementById('scheduleDayAgenda').innerHTML=classAgendaMarkup(selectedKey);
-  const permanent=relevantExams.filter(exam=>!exam.date),always=permanent.length?'<strong>Always open</strong>'+permanent.map(exam=>`<button type="button" class="calendar-exam" data-open-exam="${escapeQuestionMedia(exam.id)}">${escapeQuestionMedia(exam.title)}</button>`).join(''):'';document.getElementById('alwaysOpenExams').innerHTML=always;
+  const permanent=relevantExams.filter(exam=>!exam.date&&(exam.dashboardAlwaysOpen===true||exam.id==='DEMO-ALWAYS-OPEN')),always=permanent.length?'<strong>Always open</strong>'+permanent.map(exam=>`<button type="button" class="calendar-exam" data-open-exam="${escapeQuestionMedia(exam.id)}">${escapeQuestionMedia(exam.title)}</button>`).join(''):'';document.getElementById('alwaysOpenExams').innerHTML=always;
 }
 
+const studentSidebarIcon=path=>`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${path}"/></svg>`;
 const studentNav = mountSidebar({
   items: [
-    { id: 'overview-panel', label: 'Dashboard',        icon: '⌂' },
-    { id: 'subjects-panel', label: 'My Subjects',      icon: '📚' },
-    { id: 'exams-panel',    label: 'Examinations',     icon: '📝' },
-    { id: 'results-panel',  label: 'Results',          icon: '🎓' },
-    { id: 'schedule-panel', label: 'Schedule',         icon: '◷' }
+    { id: 'overview-panel', label: 'Dashboard', icon: studentSidebarIcon('M4 4h6v6H4V4Zm10 0h6v6h-6V4ZM4 14h6v6H4v-6Zm10 0h6v6h-6v-6Z') },
+    { id: 'subjects-panel', label: 'My Subjects', icon: studentSidebarIcon('M4 5.5A2.5 2.5 0 0 1 6.5 3H11a3 3 0 0 1 3 3v14a3.5 3.5 0 0 0-3-1.5H4v-13Zm16 0V18.5h-4.5c-.55 0-1.06.13-1.5.36V6a3 3 0 0 1 3-3h.5A2.5 2.5 0 0 1 20 5.5Z') },
+    { id: 'exams-panel', label: 'Examinations', icon: studentSidebarIcon('M7 3h10v2h3v16H4V5h3V3Zm2 2h6V4H9v1Zm-1 5h8V8H8v2Zm0 4h8v-2H8v2Zm0 4h5v-2H8v2Z') },
+    { id: 'results-panel', label: 'Results', icon: studentSidebarIcon('M4 19h16v2H2V3h2v16Zm3-2v-6h3v6H7Zm5 0V6h3v11h-3Zm5 0V9h3v8h-3Z') },
+    { id: 'schedule-panel', label: 'Schedule', icon: studentSidebarIcon('M7 2h2v2h6V2h2v2h3v18H4V4h3V2Zm11 8H6v10h12V10ZM6 8h12V6H6v2Z') },
+    { id: 'mail-panel', label: 'Mail', badge: studentMailUnreadCount(), icon: studentSidebarIcon('M3 5h18v14H3V5Zm2 2v1l7 4.5L19 8V7H5Zm14 10v-6.6l-7 4.4-7-4.4V17h14Z') }
   ],
-  panels: ['overview-panel','exams-panel','results-panel','subjects-panel','schedule-panel','subject-detail-panel','review-detail-panel'],
-  titleEl: null
+  panels: ['overview-panel','mail-panel','exams-panel','results-panel','subjects-panel','schedule-panel','subject-detail-panel','review-detail-panel'],
+  titleEl: null,
+  collapsedWidth: 76,
+  expandedWidth: 280,
+  onSelect(id){if(id!=='subject-detail-panel')document.querySelectorAll('.student-subject-tree-item').forEach(item=>item.classList.remove('active'))}
 });
+
+function availableSubjectExamCount(code){
+  return exams.filter(exam=>exam.status!=='draft'&&exam.subjectCode===code&&studentCanTakeExam(exam)&&attemptsForExam(exam.id)<attemptsAllowed(exam)).filter(exam=>{
+    const brief=examBriefing(exam,{questions:questions.filter(question=>question.examId===exam.id),faculty:faculty.find(person=>person.id===exam.facultyId),subject:subjects.find(subject=>subject.code===code),submitted:false,attemptsUsed:attemptsForExam(exam.id)});
+    return brief.canStart&&!examLearningPrerequisite(exam.id);
+  }).length;
+}
+function enhanceStudentSidebar(){
+  const sidebar=document.getElementById('sidebar'),close=sidebar?.querySelector('.close-x'),menu=document.querySelector('.menu-btn');if(!sidebar||!close||!menu)return;
+  sidebar.classList.add('student-app-sidebar');
+  const brand=document.createElement('header');brand.className='student-sidebar-brand';brand.innerHTML=`<img src="../assets/logo.PNG" alt="New Era University"><span class="student-sidebar-brand-copy"><strong>NEW ERA</strong><small>UNIVERSITY</small></span>`;brand.append(close);sidebar.prepend(brand);close.hidden=true;
+  const brandLogo=brand.querySelector('img');brandLogo.setAttribute('role','button');brandLogo.tabIndex=0;brandLogo.setAttribute('aria-label','Expand navigation');const toggleBrandNavigation=()=>{studentNav.toggle();brandLogo.setAttribute('aria-label',studentNav.isOpen()?'Collapse navigation':'Expand navigation')};brandLogo.onclick=toggleBrandNavigation;brandLogo.onkeydown=event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleBrandNavigation()}};
+  const subjectLink=sidebar.querySelector('[data-panel="subjects-panel"]'),group=document.createElement('section'),toggle=document.createElement('button'),tree=document.createElement('div');group.className='student-subject-nav-group';toggle.type='button';toggle.className='student-subject-tree-toggle';toggle.setAttribute('aria-label','Collapse subjects');toggle.setAttribute('aria-expanded','true');toggle.innerHTML='<span aria-hidden="true">&#8963;</span>';tree.className='student-subject-tree';
+  subjectLink.parentNode.insertBefore(group,subjectLink);group.append(subjectLink,toggle,tree);
+  const enrolledSidebarCodes=[...new Set([...studentSubjectCodes,...DB.read('studentEnrollments',[]).filter(item=>item.studentId===currentStudent.id).map(item=>item.subjectCode)])].filter(code=>subjects.some(subject=>subject.code===code));
+  enrolledSidebarCodes.forEach((code,index)=>{const subject=subjects.find(item=>item.code===code),count=availableSubjectExamCount(code),button=document.createElement('button');button.type='button';button.className='student-subject-tree-item';button.dataset.subject=code;button.style.setProperty('--tree-tone',['#2f8d83','#c76125','#6e5da8','#367b86'][index%4]);button.innerHTML=`<span class="subject-tree-dot" aria-hidden="true"></span><span class="subject-tree-name">${escapeQuestionMedia(subject?.name||code)}</span>${count?`<span class="subject-tree-count" aria-label="${count} available examination${count===1?'':'s'}">${count}</span>`:''}`;button.onclick=()=>{openStudentSubject(code);studentNav.close()};tree.appendChild(button)});
+  toggle.onclick=()=>{const expanded=toggle.getAttribute('aria-expanded')==='true';toggle.setAttribute('aria-expanded',String(!expanded));toggle.setAttribute('aria-label',expanded?'Expand subjects':'Collapse subjects');tree.hidden=expanded;toggle.firstElementChild.innerHTML=expanded?'&#8964;':'&#8963;'};
+  const profileFooter=document.createElement('footer');profileFooter.className='student-sidebar-profile';profileFooter.innerHTML=`<button type="button" class="student-sidebar-profile-main" aria-expanded="false"><span class="student-sidebar-avatar">${escapeQuestionMedia(initialsFrom(`${currentStudent.first} ${currentStudent.last}`))}</span><span class="student-sidebar-profile-copy"><strong>${escapeQuestionMedia(`${currentStudent.first} ${currentStudent.last}`)}</strong><small>${escapeQuestionMedia(currentStudent.id)} · Student</small></span><span class="student-sidebar-profile-caret" aria-hidden="true">&#8963;</span></button><div class="student-sidebar-profile-menu" hidden><button type="button" data-profile-action="theme"><span aria-hidden="true">&#9680;</span> Change theme</button><button type="button" data-profile-action="logout"><span aria-hidden="true">&#9211;</span> Log out</button></div>`;sidebar.appendChild(profileFooter);
+  const profileButton=profileFooter.querySelector('.student-sidebar-profile-main'),profileMenu=profileFooter.querySelector('.student-sidebar-profile-menu');profileButton.onclick=()=>{if(!document.body.classList.contains('sidebar-open')){studentNav.open();return}const open=profileMenu.hidden;profileMenu.hidden=!open;profileButton.setAttribute('aria-expanded',String(open))};profileFooter.querySelector('[data-profile-action="theme"]').onclick=()=>applyInterfaceTheme(currentInterfaceTheme()==='dark'?'light':'dark');profileFooter.querySelector('[data-profile-action="logout"]').onclick=()=>logout();
+  menu.classList.add('student-mobile-menu');document.body.appendChild(menu);document.querySelector('.topbar')?.remove();
+}
+function markStudentSubjectNav(code){document.querySelectorAll('.student-subject-tree-item').forEach(item=>item.classList.toggle('active',item.dataset.subject===code));document.querySelector('#sidebar [data-panel="subjects-panel"]')?.classList.add('active')}
+function refreshStudentSidebarExamCounts(){document.querySelectorAll('.student-subject-tree-item').forEach(item=>{const count=availableSubjectExamCount(item.dataset.subject),current=item.querySelector('.subject-tree-count');if(!count){current?.remove();return}if(current){current.textContent=count;current.setAttribute('aria-label',`${count} available examination${count===1?'':'s'}`);return}const badge=document.createElement('span');badge.className='subject-tree-count';badge.textContent=count;badge.setAttribute('aria-label',`${count} available examination${count===1?'':'s'}`);item.appendChild(badge)})}
+enhanceStudentSidebar();
+renderStudentMailPage();
 
 enableNavigatorDrag();
 
@@ -2551,6 +2859,27 @@ document.getElementById('studentSubjectTools')?.querySelectorAll('.table-group-t
 StudentCardTools.mount({toolsHost:document.getElementById('studentExamTools'),container:document.getElementById('examSubjectCards'),cardSelector:'.exam-list-row',values:card=>[card.dataset.subject,card.querySelector('.exam-list-title')?.textContent||'',card.textContent,'']});
 StudentCardTools.mount({toolsHost:document.getElementById('studentResultTools'),container:document.getElementById('resultSubjectCards'),cardSelector:'.subject-card',values:card=>[card.dataset.subject,card.querySelector('.subject-card-title strong')?.textContent||'',card.textContent,'']});
 StudentCardTools.mount({toolsHost:document.getElementById('studentSubjectTools'),container:document.getElementById('studentSubjectCards'),cardSelector:'.enrolled-subject-card',values:card=>[card.dataset.subject,card.querySelector('h4')?.textContent||'',card.querySelector('.enrolled-subject-meta strong:nth-of-type(1)')?.textContent||card.textContent,card.querySelector('.enrolled-subject-meta div:nth-child(2) strong')?.textContent||'']});
+
+/* Student pages are read-only outside actual form controls. */
+document.documentElement.setAttribute('contenteditable','false');
+document.addEventListener('beforeinput',event=>{
+  const target=event.target instanceof Element?event.target:null;
+  if(!target?.closest('input,textarea,select,[contenteditable="true"]'))event.preventDefault();
+},true);
+
+/* Preserve the visible position when the browser refreshes this page. */
+const studentScrollKey=`neu:student-scroll:${location.pathname}:${location.hash||'#overview-panel'}`;
+try{history.scrollRestoration='manual'}catch(_){}
+function saveStudentPageScroll(){try{sessionStorage.setItem(studentScrollKey,JSON.stringify({x:window.scrollX||0,y:window.scrollY||0}))}catch(_){}}
+window.addEventListener('pagehide',saveStudentPageScroll);
+window.addEventListener('beforeunload',saveStudentPageScroll);
+try{
+  const savedStudentScroll=JSON.parse(sessionStorage.getItem(studentScrollKey)||'null');
+  if(savedStudentScroll&&Number.isFinite(savedStudentScroll.y)){
+    const restoreScroll=()=>window.scrollTo?.(savedStudentScroll.x||0,savedStudentScroll.y);
+    window.requestAnimationFrame?window.requestAnimationFrame(()=>window.requestAnimationFrame(restoreScroll)):window.setTimeout(restoreScroll,0);
+  }
+}catch(_){}
 </script>
 </body>
 </html>

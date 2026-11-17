@@ -94,7 +94,7 @@ r.w.close();
 
 r=load('student.html',{...s,studentNotifications:[notice],currentUser:{username:'S1',role:'student'}});
 ok(!r.d.getElementById('studentNotificationsCard'),'Student dashboard does not duplicate mail notifications in a Report updates card');
-ok(/answer key was corrected/.test(r.d.querySelector('.header-inbox-panel')?.textContent||''),'Student header inbox includes the private report update');
+ok(/answer key was corrected/.test(r.d.getElementById('studentMailList')?.textContent||''),'Student Mail page includes the private report update');
 r.w.close();
 process.exit(0);
 })();

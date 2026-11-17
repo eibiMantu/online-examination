@@ -3,6 +3,8 @@ const { JSDOM } = require('jsdom');
 const R = require('path').join(__dirname, '..') + '/';
 const shared = fs.readFileSync(R + 'css/shared-ui.css', 'utf8');
 const base = fs.readFileSync(R + 'css/style.css', 'utf8');
+const student = fs.readFileSync(R + 'css/student-dashboard-redesign.css', 'utf8');
+const studentPage = fs.readFileSync(R + 'html/student.html', 'utf8');
 
 const ok = (c, m) => console.log(`  ${c ? '✅' : '❌'} ${m}`);
 
@@ -26,8 +28,15 @@ ok(capRule && /max-width:\s*calc\(100vw/.test(capRule[1]), 'and it caps to the v
 ok(/body\s*\{[^}]*overflow-x:\s*hidden/.test(shared), 'body cannot scroll sideways');
 ok(/body\.sidebar-layout-ready\.sidebar-open\s*\{[^}]*padding-left:\s*var\(--sidebar-shell-width\)/.test(shared), 'desktop drawer gives the main page real viewport space');
 ok(/body\.sidebar-layout-ready\s*>\s*\.topbar\s*\{[^}]*position:\s*sticky[^}]*max-width:\s*100%/s.test(shared), 'shared header remains clipped inside the viewport');
+ok(/body\.sidebar-layout-ready\s*>\s*\.topbar\s*\{[^}]*z-index:\s*40/s.test(shared), 'header account menu stays above cards and sticky tab rows');
 ok(/#sidebar\s*\{[^}]*position:\s*fixed[^}]*top:\s*0[^}]*height:\s*100dvh/s.test(shared), 'open sidebar uses the full viewport without an empty header-sized block');
 ok(/@media \(max-width:\s*760px\)[\s\S]*?body\.sidebar-layout-ready\.sidebar-open\s*\{[^}]*padding-left:\s*0/.test(shared), 'narrow screens overlay the drawer without pushing content out of bounds');
+ok(/#sidebar\.student-app-sidebar\s*\{[^}]*top:\s*14px[^}]*height:\s*calc\(100dvh\s*-\s*28px\)/.test(student), 'Student sidebar keeps balanced top and bottom viewport gutters');
+ok(/#page\s*\{[^}]*min-height:\s*calc\(100dvh\s*-\s*28px\)[^}]*margin:\s*14px\s+auto/.test(student), 'Student main body keeps matching top and bottom viewport gutters');
+ok(/sidebar-mini:not\(\.sidebar-open\)[^}]*\.student-subject-nav-group>a\s*\{[^}]*padding:\s*0!important/.test(student), 'collapsed My Subjects icon clears expanded-only padding and stays centered');
+ok(/#takeExamModal\.exam-page-shell[^}]*background:\s*var\(--student-cream/.test(student)&&/#examBriefing\s*\{[^}]*background:\s*var\(--student-card/.test(student),'exam briefing has an opaque themed workspace and card background');
+ok(/#takeExamModal \.brief\{[^}]*grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/.test(student)&&/#takeExamModal \.brief dd\{[^}]*font-size:11px/.test(student),'exam briefing uses the compact two-column Student hierarchy');
+ok(/#takeExamModal \.exam-navigator,#takeExamModal \.exam-navigator\.is-positioned\s*\{[^}]*position:fixed/.test(studentPage)&&/#takeExamModal \.exam-navigator \.nav-handle[^}]*display:grid!important/.test(studentPage),'exam quick navigation remains a collapsible draggable side control');
 
 // Which fixed-width selectors exist, and are they all in the cap list?
 const capped = ['.modal', '.question-modal', '.exam-box', '.login-container', '.confirm-box'];
