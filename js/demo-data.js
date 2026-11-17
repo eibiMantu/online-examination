@@ -176,6 +176,10 @@ const DemoData = {
     exams.push(practiceExam);for(let q=0;q<10;q++)questions.push(buildQuestion(practiceExam,q,practiceSubject));
     const mistakesExam={id:'DEMO-REVIEW-MISTAKES',facultyId:practiceOffer.facultyId,subjectCode:practiceSubject.code,title:'Human-Computer Interaction — Incorrect Answers Review Demo',desc:'A completed demonstration assessment containing both correct and incorrect responses.',date:isoDate(-1),start:'10:00',end:'11:00',durationMinutes:45,maxAttempts:1,passingPercent:70,materials:'No additional materials',questionLayout:'one',navigationMode:'free',status:'published',scoreRelease:'immediate',answerRelease:'immediate',showSubmittedAnswers:true,showFeedback:true,sections:['2BSCS-1']};
     exams.push(mistakesExam);for(let q=0;q<8;q++)questions.push(buildQuestion(mistakesExam,q,practiceSubject));
+    // Capture Maria's intended completed history before stale schedules move.
+    // Selecting by the post-move date previously produced an empty set and
+    // erased all of her seeded Results records.
+    const mariaHistoryExamIds=new Set(exams.filter(exam=>mariaCodes.includes(exam.subjectCode)&&exam.date&&exam.date<isoDate(0)).map(exam=>exam.id));
     // Keep the demo useful after the August 31 presentation date: old sample
     // schedules move to next week, with two completed expiries and two missed
     // assessments intentionally retained for Student status testing.
@@ -191,7 +195,7 @@ const DemoData = {
     // the actual questions, allowing the Results review to show choices,
     // responses, correct answers, and feedback instead of an aggregate score.
     for(let index=studentSubmissions.length-1;index>=0;index--)if(studentSubmissions[index].studentId==='2025-00002')studentSubmissions.splice(index,1);
-    const mariaPastExams=exams.filter(exam=>mariaCodes.includes(exam.subjectCode)&&exam.date&&exam.date<isoDate(0));
+    const mariaPastExams=exams.filter(exam=>mariaHistoryExamIds.has(exam.id));
     mariaPastExams.forEach((exam,examIndex)=>{
       exam.scoreRelease='immediate';exam.answerRelease='immediate';exam.showSubmittedAnswers=true;exam.showFeedback=true;
       const paper=questions.filter(question=>question.examId===exam.id),answers=paper.map((question,questionIndex)=>{

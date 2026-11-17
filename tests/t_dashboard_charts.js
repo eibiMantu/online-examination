@@ -14,7 +14,8 @@ ok(/<div class="subjects-grid" id="subjectList">/.test(faculty),'Professor dashb
 ok(faculty.indexOf('id="subjectList"')<faculty.indexOf('id="exams-tab"'),'Professor Subjects remain the first working dashboard view');
 
 const student=pages.find(page=>page.name==='student').html;
-ok(/class="stats-grid"/.test(student),'Student dashboard keeps the original statistics cells');
+ok(/class="student-status-grid"/.test(student),'Student dashboard keeps clickable status summary cells');
+ok(/id="studentProgressChart"/.test(student),'Student dashboard provides the redesigned status progress graph');
 ok(/id="studentSubjectCards"/.test(student)&&/id="resultSubjectCards"/.test(student),'Student Subjects and Results cells remain available');
 
 const dean=pages.find(page=>page.name==='dean').html,coordinator=pages.find(page=>page.name==='coordinator').html;

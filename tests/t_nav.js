@@ -3,7 +3,7 @@ const ok=(c,m)=>console.log(`  ${c?'✅':'❌'} ${m}`);
 const pages=[
   ['admin.html',  {username:'admin',role:'admin'}, 9, 'Dashboard'],
   ['faculty.html',{username:'F1',role:'faculty'},   4, 'My Subjects'],
-  ['student.html',{username:'S1',role:'student'},   4, 'Overview']
+  ['student.html',{username:'S1',role:'student'},   5, 'Dashboard']
 ];
 
 console.log('=== AAA. Every role now has the same navigation ===');
@@ -38,6 +38,10 @@ ok(coordinatorNavPage.d.querySelector('#sidebar [data-panel="sectionManagementSe
 ok(coordinatorNavPage.d.querySelectorAll('.role-action-card').length===6&&coordinatorNavPage.d.querySelector('.role-action-card-wide')?.textContent.includes('Coordinator logs'),'Coordinator dashboard combines assignment and enrollment applications while keeping Logs full-width');
 coordinatorNavPage.w.close();
 adminNavPage.w.close();
+
+const studentNavPage=load('student.html',{...SEED(),currentUser:{username:'S1',role:'student'}});
+ok([...studentNavPage.d.querySelectorAll('#sidebar a')].map(link=>link.children[1]?.textContent.trim()).join('|')==='Dashboard|My Subjects|Examinations|Results|Schedule','Student sidebar uses the requested order and labels');
+studentNavPage.w.close();
 
 console.log('\n=== BBB. Drawer opens, closes, and switches sections ===');
 let r=load('student.html',{...SEED(),currentUser:{username:'S1',role:'student'}});

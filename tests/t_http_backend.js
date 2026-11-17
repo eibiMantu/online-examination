@@ -117,6 +117,25 @@ async function waitForServer() {
       method: 'PUT', headers: { 'Content-Type': 'application/json', ...studentAuthorized }, body: JSON.stringify({ value: [] })
     });
     assert.strictEqual(response.status, 403, 'Student must not modify examinations');
+    const studentAudit = {
+      id: 'audit_student_owned', at: new Date().toISOString(), actorId: '2025-00002', actorRole: 'student',
+      action: 'profile-view', entityType: 'student-profile', entityId: '2025-00002', category: 'access/profile',
+      previousValue: null, newValue: null, result: 'success', reason: '', academicPeriod: '', details: {}
+    };
+    response = await fetch(`${origin}/api/storage/applicationAuditLog/append`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json', ...studentAuthorized }, body: JSON.stringify({ entry: studentAudit })
+    });
+    assert.strictEqual(response.status, 200, 'Student must be able to append an audit event owned by the signed-in account');
+    response = await fetch(`${origin}/api/storage/applicationAuditLog/append`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json', ...studentAuthorized }, body: JSON.stringify({ entry: { ...studentAudit, id: 'audit_student_forged', actorId: 'admin', actorRole: 'admin' } })
+    });
+    assert.strictEqual(response.status, 403, 'Student must not forge another audit actor');
+    response = await fetch(`${origin}/api/storage/applicationAuditLog`, { headers: studentAuthorized });
+    assert.strictEqual(response.status, 403, 'Student must not read audit history');
+    response = await fetch(`${origin}/api/storage/applicationAuditLog`, {
+      method: 'PUT', headers: { 'Content-Type': 'application/json', ...studentAuthorized }, body: JSON.stringify({ value: [] })
+    });
+    assert.strictEqual(response.status, 403, 'Student must not replace audit history');
     response = await fetch(`${origin}/api/storage/examAttempts`, {
       method: 'PUT', headers: { 'Content-Type': 'application/json', ...studentAuthorized }, body: JSON.stringify({ value: { draft: true } })
     });

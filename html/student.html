@@ -329,6 +329,7 @@
 </style>
 <!-- Loaded after the page styles so the shared tokens win on ties -->
 <link rel="stylesheet" href="../css/shared-ui.css?v=20260902-subject-profile-theme">
+<link rel="stylesheet" href="../css/student-dashboard-redesign.css?v=20261117">
 <script src="../js/dates.js"></script>
 <script src="../js/exam-timing.js"></script>
 <script src="../js/grading.js"></script>
@@ -379,42 +380,76 @@
 <div id="page">
   <!-- Overview -->
   <div id="overview-panel">
-    <div class="welcome-banner">
-      <h2 id="studentWelcome">Welcome, Student</h2>
-      <p id="studentInfo">Bachelor of Science in Computer Science</p>
-    </div>
+    <div class="student-dashboard-shell">
+      <main class="student-dashboard-main">
+        <section class="student-dashboard-welcome" aria-labelledby="studentWelcome">
+          <div><span class="dashboard-eyebrow">Student dashboard</span><h1 id="studentWelcome">Welcome, Student</h1><p id="studentInfo">Bachelor of Science in Computer Science</p></div>
+          <button type="button" class="dashboard-schedule-link" onclick="studentNav.show('schedule-panel')">View schedule <span aria-hidden="true">→</span></button>
+        </section>
 
-    <div class="stats-grid">
-      <button type="button" class="stat-card" onclick="studentNav.show('subjects-panel')" aria-label="Open my enrolled subjects">
-        <div class="stat-val" id="statSubjects">0</div>
-        <div class="stat-lbl">Enrolled Subjects</div>
-      </button>
-      <button type="button" class="stat-card" onclick="studentNav.show('exams-panel')" aria-label="Open my scheduled exams">
-        <div class="stat-val" id="statExams">0</div>
-        <div class="stat-lbl">Scheduled Exams</div>
-      </button>
-      <button type="button" class="stat-card" onclick="studentNav.show('results-panel')" aria-label="Open my completed exam results">
-        <div class="stat-val" id="statCompleted">0</div>
-        <div class="stat-lbl">Exams Completed</div>
-      </button>
-    </div>
+        <section class="student-status-grid" aria-label="Examination status summary">
+          <button type="button" class="student-status-card status-done" onclick="openStudentStatus('done')"><span class="status-ring" id="doneRing"><strong id="statDone">0</strong><small id="donePercent">0%</small></span><span><strong>Done</strong><small>Submitted examinations</small></span></button>
+          <button type="button" class="student-status-card status-missed" onclick="openStudentStatus('missed')"><span class="status-ring" id="missedRing"><strong id="statMissed">0</strong><small id="missedPercent">0%</small></span><span><strong>Missed</strong><small>Windows that have closed</small></span></button>
+          <button type="button" class="student-status-card status-todo" onclick="openStudentStatus('todo')"><span class="status-ring" id="todoRing"><strong id="statTodo">0</strong><small id="todoPercent">0%</small></span><span><strong>To do</strong><small>Upcoming or available</small></span></button>
+          <span class="sr-only" id="statSubjects">0</span><span class="sr-only" id="statExams">0</span><span class="sr-only" id="statCompleted">0</span>
+        </section>
 
-    <div class="section-card">
-      <h3>📌 Next up</h3>
-      <div id="nextUp"></div>
+        <section class="student-dashboard-card progress-card" aria-labelledby="progressTitle">
+          <div class="dashboard-section-heading"><div><span class="dashboard-eyebrow">This academic period</span><h2 id="progressTitle">Examination progress</h2></div><div class="progress-legend" aria-label="Chart legend"><span class="legend-done">Done</span><span class="legend-missed">Missed</span><span class="legend-todo">To do</span></div></div>
+          <div id="studentProgressChart" class="student-progress-chart" role="img" aria-label="Weekly examination status chart"></div>
+          <p id="studentProgressSummary" class="sr-only"></p>
+        </section>
+
+        <section class="student-dashboard-card dashboard-classes" aria-labelledby="dashboardClassesTitle">
+          <div class="dashboard-section-heading"><div><span class="dashboard-eyebrow">Current enrollment</span><h2 id="dashboardClassesTitle">My classes</h2></div><button type="button" class="text-link" onclick="studentNav.show('subjects-panel')">View all</button></div>
+          <div id="dashboardClassCards" class="dashboard-class-row"></div>
+        </section>
+      </main>
+
+      <aside class="student-calendar-rail" aria-label="Calendar and selected day schedule">
+        <button type="button" class="calendar-rail-toggle" onclick="toggleCalendarRail()" aria-expanded="true" aria-controls="studentCalendarRailContent"><span aria-hidden="true">›</span><span class="calendar-rail-toggle-label">Hide schedule</span></button>
+        <div id="studentCalendarRailContent" class="student-calendar-rail-content">
+        <section class="student-dashboard-card compact-calendar-card">
+          <div class="calendar-head"><div><span class="dashboard-eyebrow">Calendar</span><h2 id="calendarTitle">Month Year</h2></div><div class="calendar-nav"><button type="button" onclick="changeCalendarMonth(-1)" aria-label="Previous month">‹</button><button type="button" onclick="changeCalendarMonth(1)" aria-label="Next month">›</button></div></div>
+          <div id="examCalendar" class="compact-exam-calendar" aria-labelledby="calendarTitle"></div>
+        </section>
+        <section class="student-dashboard-card selected-day-card" aria-labelledby="selectedDayTitle">
+          <div class="dashboard-section-heading"><div><span class="dashboard-eyebrow">Selected day</span><h2 id="selectedDayTitle">Schedule</h2></div><button type="button" class="calendar-today-button" onclick="selectCalendarToday()">Today</button></div>
+          <div id="selectedDayAgenda" class="selected-day-agenda"></div>
+        </section>
+        <div id="alwaysOpenExams" class="always-open-list compact-always-open"></div>
+        </div>
+      </aside>
     </div>
-    <div class="section-card" id="calendarCard">
-      <div class="calendar-head"><h3 id="calendarTitle">Monthly exam calendar</h3><div class="calendar-nav"><button type="button" onclick="changeCalendarMonth(-1)" aria-label="Previous month">‹</button><button type="button" onclick="changeCalendarMonth(1)" aria-label="Next month">›</button></div></div>
-      <div class="calendar-scroll"><div id="examCalendar" class="exam-calendar" aria-labelledby="calendarTitle"></div></div>
-      <div id="alwaysOpenExams" class="always-open-list"></div>
+    <div id="nextUp" class="sr-only" aria-live="polite"></div>
+  </div>
+
+  <!-- Schedule -->
+  <div id="schedule-panel" class="section-card student-schedule-page">
+    <div class="schedule-page-heading"><div><span class="dashboard-eyebrow">Plan your week</span><h1>Schedule</h1><p>Choose a date to see its examinations and class activity.</p></div><button type="button" class="dashboard-schedule-link" onclick="selectCalendarToday(true)">Go to today</button></div>
+    <div class="schedule-page-grid">
+      <section class="student-dashboard-card schedule-calendar-card"><div class="calendar-head"><h2 id="scheduleCalendarTitle">Month Year</h2><div class="calendar-nav"><button type="button" onclick="changeCalendarMonth(-1)" aria-label="Previous month">‹</button><button type="button" onclick="changeCalendarMonth(1)" aria-label="Next month">›</button></div></div><div id="scheduleCalendar" class="schedule-exam-calendar" aria-labelledby="scheduleCalendarTitle"></div></section>
+      <section class="student-dashboard-card schedule-agenda-card"><span class="dashboard-eyebrow">Class agenda</span><h2 id="scheduleSelectedDayTitle">Selected date</h2><div id="scheduleDayAgenda" class="selected-day-agenda expanded-agenda"></div></section>
     </div>
   </div>
 
   <!-- Examinations -->
-  <div id="exams-panel" class="section-card">
-    <h3>📝 My Examinations</h3>
-    <div class="role-table-tools" id="studentExamTools"></div>
-    <nav id="examFilterTabs" class="exam-filter-tabs" aria-label="Filter examinations"></nav>
+  <div id="exams-panel" class="section-card student-examinations-page">
+    <header class="student-page-heading">
+      <div><span class="dashboard-eyebrow">Assessment center</span><h1>Examinations</h1><p>Review upcoming assessments, continue available attempts, and revisit completed work.</p></div>
+    </header>
+    <section class="examination-status-overview" aria-label="Examination status overview">
+      <div class="student-status-grid examination-status-grid">
+        <button type="button" class="student-status-card status-done" onclick="openStudentStatus('done')"><span class="status-ring" id="examDoneRing"><strong id="examStatDone">0</strong><small id="examDonePercent">0%</small></span><span><strong>Done</strong><small>Submitted examinations</small></span></button>
+        <button type="button" class="student-status-card status-missed" onclick="openStudentStatus('missed')"><span class="status-ring" id="examMissedRing"><strong id="examStatMissed">0</strong><small id="examMissedPercent">0%</small></span><span><strong>Missed</strong><small>Windows that have closed</small></span></button>
+        <button type="button" class="student-status-card status-todo" onclick="openStudentStatus('todo')"><span class="status-ring" id="examTodoRing"><strong id="examStatTodo">0</strong><small id="examTodoPercent">0%</small></span><span><strong>To do</strong><small>Upcoming or available</small></span></button>
+      </div>
+      <div class="student-dashboard-card examination-progress-card"><div class="dashboard-section-heading"><div><span class="dashboard-eyebrow">This academic period</span><h2>Examination progress</h2></div><div class="progress-legend"><span class="legend-done">Done</span><span class="legend-missed">Missed</span><span class="legend-todo">To do</span></div></div><div id="examinationProgressChart" class="student-progress-chart" role="img" aria-label="Weekly examination status chart"></div></div>
+    </section>
+    <div class="examination-controls-row">
+      <nav id="examFilterTabs" class="exam-filter-tabs" aria-label="Filter examinations"></nav>
+      <div class="role-table-tools" id="studentExamTools"></div>
+    </div>
     <div id="examSubjectCards" class="exam-compact-list"></div>
     <div class="table-scroll compat-table">
       <table id="examTable" class="compat-table" aria-hidden="true">
@@ -434,10 +469,20 @@
   </div>
 
   <!-- Results -->
-  <div id="results-panel" class="section-card">
-    <h3>🎓 My Results</h3>
-    <p class="panel-description">Results are grouped by subject. Each subject has one combined rating.</p>
-    <div class="role-table-tools" id="studentResultTools"></div>
+  <div id="results-panel" class="section-card student-results-page">
+    <header class="student-page-heading">
+      <div><span class="dashboard-eyebrow">Academic performance</span><h1>Results</h1><p>Track overall performance, compare earned and available points, and review feedback by subject.</p></div>
+    </header>
+    <section class="results-analytics" aria-label="Results summary">
+      <div class="student-status-grid results-metric-grid">
+        <div class="student-status-card result-metric-card metric-accuracy"><span class="status-ring" id="resultAccuracyRing"><strong id="resultAccuracy">0%</strong><small>Accuracy</small></span><span><strong>Accuracy</strong><small>Earned versus available points</small></span></div>
+        <div class="student-status-card result-metric-card metric-points"><span class="status-ring" id="resultPointsRing"><strong id="resultTotalPoints">0</strong><small>Points</small></span><span><strong>Total points</strong><small>Cumulative earned points</small></span></div>
+        <button type="button" class="student-status-card result-metric-card metric-gwa result-gwa-button" onclick="showGwaNotice()" aria-label="About this estimated GWA"><span class="status-ring" id="resultGwaRing"><strong id="resultGwa">—</strong><small>GWA</small></span><span><strong>GWA <span class="metric-info-mark" aria-hidden="true">i</span></strong><small>Estimated from final exam ratings</small></span></button>
+      </div>
+      <div class="student-dashboard-card results-progress-card"><div class="dashboard-section-heading"><div><span class="dashboard-eyebrow">Subject performance</span><h2>Score comparison</h2></div><div class="progress-legend"><span class="legend-total-score">Total score</span><span class="legend-your-score">Your score</span></div></div><div id="resultsScoreChart" class="student-progress-chart results-score-chart" role="img" aria-label="Total score and your score by subject"></div></div>
+    </section>
+    <div class="results-controls-row"><div class="results-list-label">Results by subject</div><div class="role-table-tools" id="studentResultTools"></div></div>
+    <div class="result-subject-column-head" aria-hidden="true"><span>Subject</span><span>Points</span><span>Grade</span><span>Rating</span><span>Status</span></div>
     <div id="resultSubjectCards" class="subject-card-list"></div>
     <div class="table-scroll compat-table">
       <table id="resultsTable" class="compat-table" aria-hidden="true">
@@ -647,9 +692,12 @@ function loadResults() {
   tbody.innerHTML = '';
   remarksBox.innerHTML = '';
 
-  const mine = submissions
+  const submittedAttempts = submissions
     .filter(s => s.studentId === currentStudent.id)
     .sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
+  const mine = submittedAttempts;
+
+  renderResultsAnalytics(mine);
 
   if (mine.length === 0) {
     tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#999; padding:20px;">'
@@ -721,6 +769,29 @@ function loadResults() {
   renderResultSubjectCards(mine);
 }
 
+function renderResultsAnalytics(mine) {
+  const seenExams=new Set(),latestPerExam=(mine||[]).filter(submission=>{if(seenExams.has(submission.examId))return false;seenExams.add(submission.examId);return true});
+  const scored=latestPerExam.map(submission=>{const exam=exams.find(item=>item.id===submission.examId),answers=submission.answers||[],pending=answers.some(answer=>answer.needsManualGrading&&answer.awarded===null),visible=resultVisibility(exam,submission).showScore,awarded=answers.reduce((total,answer)=>total+Number(answer.awarded||0),0),total=Number(submission.total||0);return{submission,exam,pending,visible,awarded,total,grade:!pending&&visible&&total?gradeFor(awarded,total):null}}).filter(item=>item.visible);
+  const earned=scored.reduce((total,item)=>total+item.awarded,0),available=scored.reduce((total,item)=>total+item.total,0),accuracy=available?Math.round(earned/available*100):0,ratings=scored.filter(item=>item.grade).map(item=>Number(item.grade.rating)),gwa=ratings.length?ratings.reduce((total,value)=>total+value,0)/ratings.length:null;
+  document.getElementById('resultAccuracy').textContent=`${accuracy}%`;document.getElementById('resultTotalPoints').textContent=Number.isInteger(earned)?earned:earned.toFixed(1);document.getElementById('resultGwa').textContent=gwa===null?'—':gwa.toFixed(2);
+  document.getElementById('resultAccuracyRing').style.setProperty('--progress',accuracy);document.getElementById('resultPointsRing').style.setProperty('--progress',available?Math.round(earned/available*100):0);document.getElementById('resultGwaRing').style.setProperty('--progress',gwa===null?0:Math.max(0,Math.round((5-gwa)/4*100)));
+  renderResultsScoreChart(scored);
+}
+
+function showGwaNotice() {
+  notify('This GWA is an examination-based estimate and may not match your official final grade. Class standing, attendance, participation, performance tasks, projects, and your instructor’s grading weights may also affect the final result.', 'info');
+}
+
+function renderResultsScoreChart(scored) {
+  const host=document.getElementById('resultsScoreChart');if(!host)return;
+  if(!scored.length){host.innerHTML='<div class="agenda-empty">No visible scores are available yet.</div>';return}
+  const grouped=new Map();scored.forEach(item=>{const code=item.exam?.subjectCode||'Subject',current=grouped.get(code)||{code,awarded:0,total:0};current.awarded+=item.awarded;current.total+=item.total;grouped.set(code,current)});
+  const items=[...grouped.values()].slice(0,8),width=760,height=210,padX=44,padTop=23,padBottom=36,innerW=width-padX*2,innerH=height-padTop-padBottom,max=Math.max(1,...items.map(item=>item.total)),x=index=>items.length===1?width/2:padX+index*innerW/(items.length-1),y=value=>padTop+innerH-value/max*innerH;
+  const grid=Array.from({length:4},(_,index)=>{const value=Math.round(max*(3-index)/3),yy=padTop+index*innerH/3;return`<line class="chart-grid" x1="${padX}" y1="${yy}" x2="${width-padX}" y2="${yy}"/><text class="chart-label" x="8" y="${yy+4}">${value}</text>`}).join('');
+  const totalPoints=items.map((item,index)=>`${x(index)},${y(item.total)}`).join(' '),yourPoints=items.map((item,index)=>`${x(index)},${y(item.awarded)}`).join(' '),totalDots=items.map((item,index)=>`<circle class="chart-point" cx="${x(index)}" cy="${y(item.total)}" r="4" fill="#4f8988"><title>${escapeQuestionMedia(item.code)} total: ${item.total}</title></circle>`).join(''),yourDots=items.map((item,index)=>`<circle class="chart-point" cx="${x(index)}" cy="${y(item.awarded)}" r="4" fill="#0e564d"><title>${escapeQuestionMedia(item.code)} your score: ${item.awarded}</title></circle>`).join(''),labels=items.map((item,index)=>`<text class="chart-label" x="${x(index)}" y="${height-8}" text-anchor="middle">${escapeQuestionMedia(item.code)}</text>`).join('');
+  host.innerHTML=`<svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="xMidYMid meet" aria-hidden="true">${grid}<polyline class="chart-line result-total-line" points="${totalPoints}"/>${totalDots}<polyline class="chart-line result-score-line" points="${yourPoints}"/>${yourDots}${labels}</svg>`;
+}
+
 function renderResultSubjectCards(mine) {
   const container = document.getElementById('resultSubjectCards');
   const grouped = new Map();
@@ -741,7 +812,6 @@ function renderResultSubjectCards(mine) {
       const fullyGraded = pending.length === 0;
       const visibility = resultVisibility(exam, submission);
       const grade = fullyGraded && visibility.showScore ? gradeFor(awarded, submission.total) : null;
-      if (grade) { subjectAwarded += awarded; subjectTotal += submission.total; gradedCount += 1; }
       const reviewAllowed = visibility.showSubmittedAnswers || visibility.showCorrectAnswers;
       const reviewQuestions = answerReviewMarkup(answers, questions, visibility.showCorrectAnswers, visibility.showFeedback);
       const schedule = exam?.date ? `${exam.date} · ${exam.start || '09:00'}–${exam.end || '23:59'}` : 'Always open';
@@ -753,12 +823,15 @@ function renderResultSubjectCards(mine) {
         <div class="subject-exam-meta">${visibility.showFeedback && submission.remarks ? 'Feedback available' : ''}</div>
       </summary><div class="result-detail-body"><div class="result-detail-grid"><div><span>Schedule</span><strong>${escapeQuestionMedia(schedule)}</strong></div><div><span>Time limit</span><strong>${exam?.durationMinutes || 'No'} minutes</strong></div><div><span>Passing grade</span><strong>${exam?.passingPercent || 75}%</strong></div><div><span>Attempt</span><strong>Submitted ${new Date(submission.submittedAt).toLocaleString()}</strong></div></div>${visibility.showFeedback&&submission.remarks?`<div class="remark-box"><strong>Professor feedback</strong><p>${escapeQuestionMedia(submission.remarks)}</p></div>`:''}<div class="result-review-actions"><button type="button" class="btn-take-exam result-review-btn" ${reviewAllowed?'':'disabled'} onclick="openResultReviewPage('${submission.id}')" title="${reviewAllowed?'Review your answers':'Review is disabled by your professor'}">&#128065; Review</button></div><div id="resultReview_${submission.id}" class="inline-answer-review">${reviewAllowed?(reviewQuestions||'<div class="subject-empty">No saved answers are available.</div>'):'<div class="subject-empty">Review is disabled by your professor.</div>'}</div></div></details>`;
     }).join('');
+    const latestByExam=new Map();entries.forEach(entry=>{const prior=latestByExam.get(entry.submission.examId);if(!prior||new Date(entry.submission.submittedAt)>new Date(prior.submission.submittedAt))latestByExam.set(entry.submission.examId,entry)});
+    [...latestByExam.values()].forEach(({submission,exam})=>{const answers=submission.answers||[],pending=answers.some(answer=>answer.needsManualGrading&&answer.awarded===null),visibility=resultVisibility(exam,submission);if(!pending&&visibility.showScore){subjectAwarded+=answers.reduce((total,answer)=>total+Number(answer.awarded||0),0);subjectTotal+=Number(submission.total||0);gradedCount+=1}});
     const combined = gradedCount && subjectTotal ? gradeFor(subjectAwarded, subjectTotal) : null;
     const rating = combined
       ? `<span class="grade-chip ${combined.passed ? 'grade-pass' : 'grade-fail'}"><span class="grade-rating">${combined.rating}</span><span class="grade-sub">${combined.passed ? 'Passed' : 'Failed'}</span></span>`
       : '<span class="grade-chip grade-pending">Pending</span>';
+    const subjectStatus=combined?(combined.passed?'Passed':'Failed'):'Pending',points=subjectTotal?`${subjectAwarded} / ${subjectTotal}`:'—',grade=combined?`${combined.percentText}%`:'—';
     return `<details class="subject-card" data-subject="${escapeQuestionMedia(code)}" open>
-      <summary class="subject-card-head"><div class="subject-card-title"><strong>${escapeQuestionMedia(subject?.name || code)}</strong><span>${escapeQuestionMedia(code)} · ${entries.length} result${entries.length === 1 ? '' : 's'}</span></div><div class="subject-summary"><span class="subject-summary-label">Subject rating</span>${rating}</div></summary>
+      <summary class="subject-card-head result-subject-summary"><div class="subject-card-title"><strong>${escapeQuestionMedia(subject?.name || code)}</strong><span>${escapeQuestionMedia(code)} · ${entries.length} attempt${entries.length === 1 ? '' : 's'}</span></div><div class="result-subject-points"><span>Points</span><strong>${points}</strong></div><div class="result-subject-grade"><span>Grade</span><strong>${grade}</strong></div><div class="subject-summary"><span class="subject-summary-label">Rating</span>${rating}</div><div class="result-subject-status ${subjectStatus.toLowerCase()}">${subjectStatus}</div></summary>
       <div class="subject-exam-list">${rows}</div>
     </details>`;
   }).join('');
@@ -981,6 +1054,8 @@ function loadExams() {
   tbody.innerHTML = '';
 
   relevantExams = exams.filter(ex => ex.status !== 'draft' && studentCanTakeExam(ex));
+
+  renderStudentDashboardSummary();
 
   document.getElementById('statExams').textContent = relevantExams.length;
   
@@ -2334,42 +2409,127 @@ function loadNextUpEnhanced() {
   box.innerHTML = rows.join('') || '<div class="nextup-row"><span>Nothing needs your attention right now.</span></div>';
 }
 
+function studentExamStatus(exam) {
+  if (attemptsForExam(exam.id) > 0) return 'done';
+  return examWindow(exam).state === 'closed' ? 'missed' : 'todo';
+}
+
+function studentStatusGroups() {
+  const groups={done:[],missed:[],todo:[]};
+  relevantExams.forEach(exam=>groups[studentExamStatus(exam)].push(exam));
+  return groups;
+}
+
+function renderStudentDashboardSummary() {
+  const groups=studentStatusGroups(),total=relevantExams.length;
+  ['done','missed','todo'].forEach(status=>{
+    const count=groups[status].length,percent=total?Math.round(count/total*100):0;
+    const countEl=document.getElementById(`stat${status[0].toUpperCase()}${status.slice(1)}`);
+    if(countEl)countEl.textContent=count;
+    const percentEl=document.getElementById(`${status}Percent`);if(percentEl)percentEl.textContent=`${percent}%`;
+    document.getElementById(`${status}Ring`)?.style.setProperty('--progress',percent);
+    const examCountEl=document.getElementById(`examStat${status[0].toUpperCase()}${status.slice(1)}`);if(examCountEl)examCountEl.textContent=count;
+    const examPercentEl=document.getElementById(`exam${status[0].toUpperCase()}${status.slice(1)}Percent`);if(examPercentEl)examPercentEl.textContent=`${percent}%`;
+    document.getElementById(`exam${status[0].toUpperCase()}${status.slice(1)}Ring`)?.style.setProperty('--progress',percent);
+  });
+  renderStudentProgressChart(groups);
+  renderStudentProgressChart(groups,'examinationProgressChart');
+}
+
+function openStudentStatus(status) {
+  studentNav.show('exams-panel');
+  const groups=studentStatusGroups();
+  renderStudentExamList(groups[status]||[]);
+  document.getElementById('exams-panel')?.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function renderStudentProgressChart(groups,hostId='studentProgressChart') {
+  const host=document.getElementById(hostId);if(!host)return;
+  const dated=relevantExams.filter(exam=>exam.date||exam.datetime).map(exam=>({exam,date:new Date(exam.datetime||`${exam.date}T${exam.start||'09:00'}:00`)})).filter(item=>!isNaN(item.date));
+  const anchor=dated.length?new Date(Math.min(...dated.map(item=>item.date.getTime()))):new Date();anchor.setHours(0,0,0,0);anchor.setDate(anchor.getDate()-anchor.getDay());
+  const weeks=Array.from({length:6},(_,index)=>{const start=new Date(anchor);start.setDate(start.getDate()+index*7);const end=new Date(start);end.setDate(end.getDate()+7);return{start,end,label:start.toLocaleDateString(undefined,{month:'short',day:'numeric'}),done:0,missed:0,todo:0}});
+  dated.forEach(({exam,date})=>{const bucket=weeks.find(item=>date>=item.start&&date<item.end);if(bucket)bucket[studentExamStatus(exam)]++});
+  relevantExams.filter(exam=>!exam.date&&!exam.datetime).forEach(exam=>weeks[0][studentExamStatus(exam)]++);
+  const max=Math.max(1,...weeks.flatMap(week=>[week.done,week.missed,week.todo])),width=760,height=200,padX=38,padY=25,innerW=width-padX*2,innerH=height-padY*2;
+  const x=index=>padX+(weeks.length===1?0:index*innerW/(weeks.length-1)),y=value=>height-padY-value/max*innerH;
+  const colors={done:'#0e564d',missed:'#c45f22',todo:'#e89a45'};
+  const grid=Array.from({length:4},(_,i)=>{const value=Math.round(max*(3-i)/3);const yy=padY+i*innerH/3;return`<line class="chart-grid" x1="${padX}" y1="${yy}" x2="${width-padX}" y2="${yy}"/><text class="chart-label" x="8" y="${yy+4}">${value}</text>`}).join('');
+  const series=Object.keys(colors).map(status=>{const points=weeks.map((week,index)=>`${x(index)},${y(week[status])}`).join(' ');const dots=weeks.map((week,index)=>`<circle class="chart-point" cx="${x(index)}" cy="${y(week[status])}" r="4" fill="${colors[status]}"><title>${status}: ${week[status]} for week of ${week.label}</title></circle>`).join('');return`<polyline class="chart-line" stroke="${colors[status]}" points="${points}"/>${dots}`}).join('');
+  const labels=weeks.map((week,index)=>`<text class="chart-label" x="${x(index)}" y="${height-5}" text-anchor="middle">${week.label}</text>`).join('');
+  host.innerHTML=`<svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" aria-hidden="true">${grid}${series}${labels}</svg>`;
+  if(hostId==='studentProgressChart')document.getElementById('studentProgressSummary').textContent=`${groups.done.length} done, ${groups.missed.length} missed, and ${groups.todo.length} to do.`;
+}
+
+function renderDashboardClasses() {
+  const host=document.getElementById('dashboardClassCards');if(!host)return;
+  if(!studentSubjectCodes.length){host.innerHTML='<div class="agenda-empty">No enrolled classes yet.</div>';return;}
+  host.innerHTML=studentSubjectCodes.map(code=>{const subject=subjects.find(item=>item.code===code),enrollment=SectionService.enrollmentsForStudent(currentStudent.id).find(item=>item.subjectCode===code),offering=enrollment?SectionService.offeringFor(enrollment.sectionId,code,sectionSubjects):null,assignment=subjectAssignments.find(item=>item.subjectCode===code),facultyId=offering?.facultyId||assignment?.facultyIds?.[0]||assignment?.facultyId,person=faculty.find(item=>item.id===facultyId),instructor=person?`Prof. ${person.first} ${person.last}`:'Instructor to be assigned',color=studentSubjectAccent(subject);return`<button type="button" class="dashboard-class-card" style="--course-color:${color}" onclick="openStudentSubject('${escapeQuestionMedia(code)}')"><span class="dashboard-class-icon" aria-hidden="true">${studentSubjectIcon(subject?.workspaceIcon)}</span><span class="dashboard-class-code">${escapeQuestionMedia(code)}${enrollment?.sectionId?` · ${escapeQuestionMedia(enrollment.sectionId)}`:''}</span><h3>${escapeQuestionMedia(subject?.name||code)}</h3><p>${escapeQuestionMedia(instructor)}</p></button>`}).join('');
+}
+
 let calendarCursor=new Date();calendarCursor.setDate(1);
-function changeCalendarMonth(offset){calendarCursor.setMonth(calendarCursor.getMonth()+offset);renderExamCalendar();}
+let selectedCalendarDate=new Date();selectedCalendarDate.setHours(0,0,0,0);
+function dateKey(date){return`${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`}
+function changeCalendarMonth(offset){calendarCursor.setMonth(calendarCursor.getMonth()+offset);selectedCalendarDate=new Date(calendarCursor.getFullYear(),calendarCursor.getMonth(),1);renderExamCalendar();}
+function selectCalendarDate(key){const next=new Date(`${key}T00:00:00`);if(isNaN(next))return;selectedCalendarDate=next;calendarCursor=new Date(next.getFullYear(),next.getMonth(),1);renderExamCalendar();}
+function selectCalendarToday(openSchedule=false){selectedCalendarDate=new Date();selectedCalendarDate.setHours(0,0,0,0);calendarCursor=new Date(selectedCalendarDate.getFullYear(),selectedCalendarDate.getMonth(),1);renderExamCalendar();if(openSchedule)studentNav.show('schedule-panel')}
+function toggleCalendarRail(){const shell=document.querySelector('.student-dashboard-shell'),button=document.querySelector('.calendar-rail-toggle');if(!shell||!button)return;const collapsed=shell.classList.toggle('calendar-rail-collapsed');button.setAttribute('aria-expanded',String(!collapsed));button.querySelector('.calendar-rail-toggle-label').textContent=collapsed?'Show schedule':'Hide schedule'}
+
+function studentRecurringMeetings() {
+  const enrollments=SectionService.enrollmentsForStudent(currentStudent.id);
+  return enrollments.flatMap(enrollment=>{
+    const offering=SectionService.offeringFor(enrollment.sectionId,enrollment.subjectCode,sectionSubjects),schedule=offering?.schedule;
+    if(!schedule?.days?.length||!schedule.start||!schedule.end)return[];
+    const subject=subjects.find(item=>item.code===enrollment.subjectCode);
+    return schedule.days.map(day=>({type:'class',day:String(day),start:String(schedule.start),end:String(schedule.end),room:String(schedule.room||''),subjectCode:enrollment.subjectCode,subjectName:subject?.name||enrollment.subjectCode,sectionId:enrollment.sectionId,color:studentSubjectAccent(subject)}));
+  });
+}
+function recurringMeetingsForDate(date){const weekday=date.toLocaleDateString('en-US',{weekday:'long'});return studentRecurringMeetings().filter(meeting=>meeting.day.toLowerCase()===weekday.toLowerCase())}
+function formatScheduleTime(value){const parts=String(value||'').split(':').map(Number);if(parts.length<2||parts.some(Number.isNaN))return String(value||'');return new Date(2000,0,1,parts[0],parts[1]).toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'})}
+
+function examAgendaMarkup(key) {
+  const examsForDay=relevantExams.filter(exam=>(exam.date||'')===key).sort((a,b)=>String(a.start||'').localeCompare(String(b.start||'')));
+  if(!examsForDay.length)return'<div class="agenda-empty">No examinations scheduled for this day.</div>';
+  return examsForDay.map(exam=>{const status=studentExamStatus(exam),statusLabel=status==='todo'?'To do':status[0].toUpperCase()+status.slice(1),subject=subjects.find(item=>item.code===exam.subjectCode);return`<article class="agenda-event ${status}"><div class="agenda-time">${escapeQuestionMedia(formatScheduleTime(exam.start||'Any time'))}<br>${exam.end?escapeQuestionMedia(formatScheduleTime(exam.end)):''}</div><div><strong>${escapeQuestionMedia(exam.title||'Examination')}</strong><small>${escapeQuestionMedia(exam.subjectCode||'')} ${subject?`· ${escapeQuestionMedia(subject.name)}`:''} · ${statusLabel}</small><button type="button" data-open-exam="${escapeQuestionMedia(exam.id)}">${status==='todo'?'View examination':'View details'} →</button></div></article>`}).join('');
+}
+function classAgendaMarkup(key) {
+  const meetings=recurringMeetingsForDate(new Date(`${key}T00:00:00`)).sort((a,b)=>a.start.localeCompare(b.start));
+  if(!meetings.length)return'<div class="agenda-empty">No classes scheduled for this day.</div>';
+  return meetings.map(item=>`<article class="agenda-event class-meeting" style="--event-color:${item.color}"><div class="agenda-time">${escapeQuestionMedia(formatScheduleTime(item.start))}<br>${escapeQuestionMedia(formatScheduleTime(item.end))}</div><div><strong>${escapeQuestionMedia(item.subjectName)}</strong><small>${escapeQuestionMedia(item.subjectCode)} · ${escapeQuestionMedia(item.sectionId)}${item.room?` · ${escapeQuestionMedia(item.room)}`:''} · Repeats every ${escapeQuestionMedia(item.day)}</small><button type="button" onclick="openStudentSubject('${escapeQuestionMedia(item.subjectCode)}')">Open class →</button></div></article>`).join('');
+}
+
 function renderExamCalendar() {
-  const host = document.getElementById('examCalendar'), always = document.getElementById('alwaysOpenExams');
-  if (!host) return;
-  const year = calendarCursor.getFullYear(), month = calendarCursor.getMonth(), today = new Date();
-  const firstDay = new Date(year, month, 1).getDay(), days = new Date(year, month + 1, 0).getDate();
-  document.getElementById('calendarTitle').textContent = new Date(year, month, 1).toLocaleDateString(undefined,{month:'long',year:'numeric'}) + ' exam calendar';
-  const cells = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(day => `<div class="calendar-weekday">${day}</div>`);
-  for (let blank = 0; blank < firstDay; blank++) cells.push('<div class="calendar-day outside" aria-hidden="true"></div>');
-  for (let day = 1; day <= days; day++) {
-    const key = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-    const dayExams = relevantExams.filter(exam => exam.date === key);
-    const isToday = day === today.getDate() && month === today.getMonth() && year === today.getFullYear();
-    const buttons = dayExams.map(exam => `<button type="button" class="calendar-exam" data-open-exam="${escapeQuestionMedia(exam.id)}" title="${escapeQuestionMedia(exam.title)}">${escapeQuestionMedia(exam.title)}</button>`).join('');
-    cells.push(`<div class="calendar-day${isToday?' today':''}"><span class="calendar-number">${day}</span>${buttons}</div>`);
+  const compact=document.getElementById('examCalendar'),expanded=document.getElementById('scheduleCalendar');if(!compact)return;
+  const year=calendarCursor.getFullYear(),month=calendarCursor.getMonth(),todayKey=dateKey(new Date()),selectedKey=dateKey(selectedCalendarDate),firstDay=new Date(year,month,1).getDay(),days=new Date(year,month+1,0).getDate(),monthLabel=new Date(year,month,1).toLocaleDateString(undefined,{month:'long',year:'numeric'});
+  document.getElementById('calendarTitle').textContent=monthLabel;const scheduleTitle=document.getElementById('scheduleCalendarTitle');if(scheduleTitle)scheduleTitle.textContent=monthLabel;
+  const weekdays=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(day=>`<div class="calendar-weekday">${day}</div>`).join(''),compactCells=[],expandedCells=[];
+  for(let blank=0;blank<firstDay;blank++){compactCells.push('<span></span>');expandedCells.push('<div class="schedule-calendar-day" aria-hidden="true"></div>')}
+  for(let day=1;day<=days;day++){
+    const key=`${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`,date=new Date(`${key}T00:00:00`),events=relevantExams.filter(exam=>exam.date===key),meetings=recurringMeetingsForDate(date),compactClasses=[key===todayKey?'today':'',key===selectedKey?'selected':'',events.length?'has-events':''].filter(Boolean).join(' '),scheduleClasses=[key===todayKey?'today':'',key===selectedKey?'selected':'',meetings.length?'has-events':''].filter(Boolean).join(' ');
+    compactCells.push(`<button type="button" class="compact-calendar-day ${compactClasses}" onclick="selectCalendarDate('${key}')" aria-label="${date.toLocaleDateString()}${events.length?`, ${events.length} examination${events.length===1?'':'s'}`:''}">${day}</button>`);
+    const chips=meetings.slice(0,2).map(meeting=>`<span class="schedule-subject-chip" style="--chip-color:${meeting.color}" title="${escapeQuestionMedia(meeting.subjectName)} · ${escapeQuestionMedia(formatScheduleTime(meeting.start))}–${escapeQuestionMedia(formatScheduleTime(meeting.end))}">${escapeQuestionMedia(meeting.subjectCode)} · ${escapeQuestionMedia(formatScheduleTime(meeting.start))}</span>`).join('');
+    expandedCells.push(`<button type="button" class="schedule-calendar-day ${scheduleClasses}" onclick="selectCalendarDate('${key}')"><span class="schedule-day-number">${day}</span>${chips}</button>`)
   }
-  host.innerHTML = cells.join('');
-  const permanent = relevantExams.filter(exam => !exam.date);
-  always.innerHTML = permanent.length ? '<strong>Always open:</strong>' + permanent.map(exam => `<button type="button" class="calendar-exam" data-open-exam="${escapeQuestionMedia(exam.id)}">${escapeQuestionMedia(exam.title)}</button>`).join('') : '';
+  compact.innerHTML=weekdays+compactCells.join('');if(expanded)expanded.innerHTML=weekdays+expandedCells.join('');
+  const label=selectedCalendarDate.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});document.getElementById('selectedDayTitle').textContent=label;document.getElementById('scheduleSelectedDayTitle').textContent=label;document.getElementById('selectedDayAgenda').innerHTML=examAgendaMarkup(selectedKey);document.getElementById('scheduleDayAgenda').innerHTML=classAgendaMarkup(selectedKey);
+  const permanent=relevantExams.filter(exam=>!exam.date),always=permanent.length?'<strong>Always open</strong>'+permanent.map(exam=>`<button type="button" class="calendar-exam" data-open-exam="${escapeQuestionMedia(exam.id)}">${escapeQuestionMedia(exam.title)}</button>`).join(''):'';document.getElementById('alwaysOpenExams').innerHTML=always;
 }
 
 const studentNav = mountSidebar({
   items: [
-    { id: 'overview-panel', label: 'Overview',         icon: '🏠' },
-    { id: 'exams-panel',    label: 'My Examinations',  icon: '📝' },
-    { id: 'results-panel',  label: 'My Results',       icon: '🎓' },
-    { id: 'subjects-panel', label: 'My Subjects',      icon: '📚' }
+    { id: 'overview-panel', label: 'Dashboard',        icon: '⌂' },
+    { id: 'subjects-panel', label: 'My Subjects',      icon: '📚' },
+    { id: 'exams-panel',    label: 'Examinations',     icon: '📝' },
+    { id: 'results-panel',  label: 'Results',          icon: '🎓' },
+    { id: 'schedule-panel', label: 'Schedule',         icon: '◷' }
   ],
-  panels: ['overview-panel','exams-panel','results-panel','subjects-panel','subject-detail-panel','review-detail-panel'],
+  panels: ['overview-panel','exams-panel','results-panel','subjects-panel','schedule-panel','subject-detail-panel','review-detail-panel'],
   titleEl: null
 });
 
 enableNavigatorDrag();
 
 loadStudentSubjects();
+renderDashboardClasses();
 loadExams();
 loadResults();
 loadNextUpEnhanced();

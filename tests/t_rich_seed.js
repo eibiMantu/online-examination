@@ -57,6 +57,7 @@ ok(new Set(reyesOfferings.map(item=>item.subjectCode)).size>=5&&new Set(reyesOff
 ok(new Set(reyesOfferings.filter(item=>santosCodes.has(item.subjectCode)).map(item=>item.subjectCode)).size>=1,'Maria Reyes teaches a subject enrolled by Maria Santos');
 const mariaSubs=demoSubs.filter(item=>item.studentId==='2025-00002');
 ok(demoAudit.filter(item=>item.actorId==='2025-00002').length>=3,'demo student retains realistic activity history');
+ok(mariaSubs.length>=3&&mariaSubs.some(item=>item.examId==='DEMO-REVIEW-MISTAKES')&&mariaSubs.every(item=>demoExams.some(exam=>exam.id===item.examId&&santosCodes.has(exam.subjectCode))),'demo refresh preserves Maria Santos quiz results after schedule changes');
 ok(demoAudit.filter(item=>item.actorId==='23-32534-345').length>=5,'demo faculty has login, exam, publish, and grading activity');
 const offeredCodes=new Set(directRecords.flatMap(record=>record.assignments.map(item=>item.subjectCode)));
 ok(directSubjects.filter(subject=>offeredCodes.has(subject.code)).every(subject=>{const count=demoExams.filter(exam=>exam.subjectCode===subject.code).length;return count>=1&&count<=4;}),'every offered subject has one to four assessments, including shared curriculum codes');

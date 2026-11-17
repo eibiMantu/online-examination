@@ -15,7 +15,9 @@ function stu(examOverrides={}){
 
 console.log('=== UUU. Selecting an exam shows details, not the paper ===');
 let r=stu();
-ok(r.d.querySelectorAll('#overview-panel button.stat-card').length===3,'overview statistic cards are clickable navigation controls');
+ok(r.d.querySelectorAll('#overview-panel button.student-status-card').length===3,'overview status cards are clickable navigation controls');
+ok(r.d.querySelectorAll('#exams-panel .examination-status-grid .student-status-card').length===3&&!!r.d.getElementById('examinationProgressChart').querySelector('svg'),'Examinations reuses the shared status summary and progress graph');
+ok(r.d.querySelector('.examination-controls-row')?.firstElementChild?.id==='examFilterTabs'&&r.d.querySelector('.examination-controls-row')?.lastElementChild?.id==='studentExamTools','underlined tabs stay left of the bare action icons');
 ok(r.d.querySelector('#examTable .exam-clickable-row')?.tabIndex===0,'an exam table row is clickable and keyboard accessible');
 ok(r.d.querySelectorAll('#examSubjectCards .exam-list-row').length===1,'examinations use a compact list');
 ok(/2 items/.test(r.d.querySelector('#examSubjectCards .exam-list-row').textContent),'list shows the actual number of questions');
@@ -28,8 +30,11 @@ const examinationCell=r.d.querySelector('#examSubjectCards [data-open-exam]');
 examinationCell.click();
 ok(r.d.getElementById('takeExamModal').classList.contains('active'),'clicking a My Examinations cell opens the shared details dialog');
 r.w.closeExamModal();
-const calendarExam=r.d.querySelector('#examCalendar .calendar-exam');
-ok(!!calendarExam,'the monthly calendar places the exam in its date cell');
+const calendarDay=r.d.querySelector('#examCalendar .compact-calendar-day.has-events');
+ok(!!calendarDay,'the monthly calendar marks the date containing the exam');
+calendarDay.click();
+const calendarExam=r.d.querySelector('#selectedDayAgenda [data-open-exam]');
+ok(!!calendarExam,'selecting a calendar date shows its exam in the synced agenda');
 calendarExam.click();
 ok(r.d.getElementById('takeExamModal').classList.contains('active'),'clicking a calendar exam opens the shared details dialog');
 ok(r.d.getElementById('takeExamModal').classList.contains('exam-page-shell'),'the examination opens as a dedicated full-page workspace');
