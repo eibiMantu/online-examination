@@ -1,0 +1,93 @@
+/* Faculty Coordinator dashboard: banner, main (attention + charts), side cards.
+   Coordinator theme tokens (--role-shell-*) and prompt tokens (--pr-*). */
+body.role-shell-ready:is([data-role="coordinator"],[data-role="dean"]) #dashboardSection.cd-page{display:block}
+body.role-shell-ready:is([data-role="coordinator"],[data-role="dean"]) .cd-hero{display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:132px;margin:0 0 18px;padding:27px 29px!important;border-radius:21px!important}
+.cd-hero h1{margin:4px 0 0!important;font-size:clamp(24px,2.4vw,32px)!important;font-weight:700!important;letter-spacing:-.035em}
+.cd-hero .role-page-copy{max-width:640px;margin-top:8px!important;font-size:12px!important}
+.cd-hero .role-page-copy strong{color:var(--role-shell-yellow)}
+.cd-hero-stats{display:flex;flex-wrap:wrap;gap:10px}
+.cd-hero-stats>div{min-width:86px;padding:10px 14px;border:1px solid rgba(255,255,255,.18);border-radius:13px;background:rgba(255,255,255,.1);color:#fff}
+.cd-hero-stats strong{display:block;font-size:20px;font-weight:650;line-height:1.1}
+.cd-hero-stats span{display:block;margin-top:3px;color:rgba(255,255,255,.7);font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+
+.cd-layout{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:18px;align-items:start}
+.cd-main,.cd-side{display:grid;gap:18px;min-width:0}
+.cd-card{min-width:0;padding:20px 22px;border:1px solid var(--pr-line);border-radius:18px;background:var(--pr-surface);box-shadow:0 7px 20px rgba(28,36,42,.06);color:var(--pr-ink);font-family:var(--pr-font)}
+:root[data-theme="dark"] .cd-card{box-shadow:0 8px 22px rgba(0,0,0,.22)}
+.cd-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}
+.cd-card-head h2{margin:0;color:var(--pr-ink);font-size:16px;font-weight:650}
+.cd-card-head p{margin:4px 0 0;color:var(--pr-muted);font-size:11px}
+.cd-link{flex:0 0 auto;margin:0;padding:4px 0;border:0;background:transparent;color:var(--pr-accent);font:650 11px var(--pr-font);cursor:pointer}
+.cd-select{height:34px;padding:0 28px 0 12px;border:1px solid var(--pr-line);border-radius:10px;background:var(--pr-soft);color:var(--pr-ink);font:600 11px var(--pr-font)}
+.cd-empty{margin:6px 0;color:var(--pr-muted);font-size:12px}
+
+/* Needs attention cells. */
+.cd-attention{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.cd-cell{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:12px;width:100%;margin:0;padding:12px 14px;border:1px solid var(--pr-line);border-radius:14px;background:var(--pr-surface);color:var(--pr-ink);font:inherit;text-align:left;cursor:pointer;transition:border-color .15s,transform .15s}
+.cd-cell:hover{transform:translateY(-1px);border-color:var(--pr-accent)}
+.cd-cell-count{display:grid;min-width:40px;height:40px;place-items:center;padding:0 8px;border-radius:12px;background:var(--pr-soft);color:var(--pr-muted);font-size:16px;font-weight:700}
+.cd-cell.has .cd-cell-count{background:color-mix(in srgb,var(--role-shell-yellow,#c89571) 26%,transparent);color:var(--pr-ink)}
+.cd-cell strong{display:block;font-size:12px;font-weight:650}
+.cd-cell small{display:block;margin-top:2px;color:var(--pr-muted);font-size:10px}
+.cd-cell-arrow{color:var(--pr-accent);font-size:18px}
+
+/* Bar charts. */
+.cd-scroll{max-height:330px;overflow-y:auto;padding-right:6px}
+.cd-bars{display:grid;gap:11px}
+.cd-bar-row{display:grid;grid-template-columns:minmax(80px,170px) minmax(0,1fr) 56px;align-items:center;gap:12px}
+.cd-bar-label{overflow:hidden;color:var(--pr-muted);font-size:11px;font-weight:600;text-overflow:ellipsis;white-space:nowrap}
+.cd-bar-track{height:10px;border-radius:999px;background:var(--pr-soft)}
+.cd-bar-track i{display:block;height:100%;border-radius:inherit;background:var(--pr-accent)}
+.cd-bar-track i.high{background:var(--role-shell-yellow,#c89571)}
+.cd-bar-track i.over{background:#b5534b}
+.cd-bar-row b{color:var(--pr-ink);font-size:11px;font-weight:700;text-align:right}
+.cd-legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:12px;color:var(--pr-muted);font-size:10px;font-weight:600}
+.cd-legend i{display:inline-block;width:9px;height:9px;margin-right:5px;border-radius:3px;background:var(--pr-accent);vertical-align:-1px}
+.cd-legend i.high{background:var(--role-shell-yellow,#c89571)}
+.cd-legend i.over{background:#b5534b}
+
+/* Side: requests, donut, lists. */
+.cd-req-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.cd-req-stats div{padding:10px;border-radius:12px;background:var(--pr-soft);text-align:center}
+.cd-req-stats strong{display:block;font-size:18px;font-weight:700}
+.cd-req-stats span{display:block;margin-top:2px;color:var(--pr-muted);font-size:10px;font-weight:600}
+.cd-list{display:grid;gap:2px;margin:0;padding:0;list-style:none}
+.cd-list li{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid color-mix(in srgb,var(--pr-line) 60%,transparent)}
+.cd-list li:last-child{border-bottom:0}
+.cd-list strong{display:block;font-size:12px;font-weight:600;text-transform:capitalize}
+.cd-list small{display:block;margin-top:2px;color:var(--pr-muted);font-size:10px}
+.cd-status{padding:3px 9px;border-radius:999px;background:var(--pr-soft);color:var(--pr-muted);font-size:10px;font-style:normal;font-weight:700;text-transform:capitalize}
+.cd-status.pending{background:color-mix(in srgb,var(--role-shell-yellow,#c89571) 24%,transparent);color:var(--pr-ink)}
+.cd-status.approved{background:color-mix(in srgb,var(--pr-accent) 15%,transparent);color:var(--pr-accent)}
+.cd-status.rejected{background:rgba(181,83,75,.13);color:#a3463f}
+.cd-donut{display:grid;grid-template-columns:120px minmax(0,1fr);align-items:center;gap:16px}
+.cd-donut svg{width:120px;height:120px}
+.cd-donut-track{stroke:var(--pr-soft)}
+.cd-donut text{fill:var(--pr-ink);font:700 20px var(--pr-font)}
+.cd-donut ul{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.cd-donut li{display:grid;grid-template-columns:10px minmax(0,1fr) auto;align-items:center;gap:8px;color:var(--pr-muted);font-size:11px}
+.cd-donut li i{width:10px;height:10px;border-radius:3px}
+.cd-donut li b{color:var(--pr-ink)}
+.cd-note{border-left:3px solid var(--role-shell-yellow,#c89571)}
+.cd-note strong{font-size:13px}
+.cd-note p{margin:6px 0 0;color:var(--pr-muted);font-size:11px;line-height:1.6}
+
+@media(max-width:1180px){.cd-layout{grid-template-columns:1fr}.cd-side{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}}
+@media(max-width:760px){body.role-shell-ready:is([data-role="coordinator"],[data-role="dean"]) .cd-hero{flex-direction:column;align-items:flex-start}.cd-bar-row{grid-template-columns:90px minmax(0,1fr) 48px}}
+/* Quick links: the original workspace cards, in the dashboard card style. */
+.cd-quick .role-action-grid{display:grid!important;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px!important;margin:0!important}
+.cd-quick .role-action-card{display:grid!important;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:4px 12px;min-height:0!important;margin:0!important;padding:12px 14px!important;border:1px solid var(--pr-line)!important;border-radius:14px!important;background:var(--pr-surface)!important;box-shadow:none!important;color:var(--pr-ink)!important;text-align:left;cursor:pointer}
+.cd-quick .role-action-card:hover{border-color:var(--pr-accent)!important}
+.cd-quick .role-action-card .role-action-icon{grid-row:span 2;display:grid;width:38px;height:38px;place-items:center;border-radius:11px;background:var(--pr-soft)!important;color:var(--pr-accent)!important}
+.cd-quick .role-action-card strong{font-size:12px!important;font-weight:650}
+.cd-quick .role-action-card span:not(.role-action-icon){color:var(--pr-muted)!important;font-size:10px!important;line-height:1.45}
+.cd-quick .role-action-card-wide{grid-column:auto!important}
+/* Quick links in the side column: one compact column. */
+.cd-side .cd-quick .role-action-grid{grid-template-columns:1fr!important;gap:8px!important}
+.cd-side .cd-quick .role-action-card{padding:10px 12px!important}
+.cd-side .cd-quick .role-action-card .role-action-icon{width:34px;height:34px}
+@media(max-width:1180px){.cd-side .cd-quick .role-action-grid{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))!important}}
+.cd-quick .role-action-card.role-action-card-wide{grid-template-columns:auto minmax(0,1fr)!important;gap:4px 12px!important;padding:10px 12px!important;text-align:left!important}
+.cd-quick .role-action-card.role-action-card-wide>*{margin:0!important;padding:0!important;justify-self:start}
+.cd-quick .role-action-card.role-action-card-wide .role-action-icon{grid-row:span 2;justify-self:center}
+.dd-note{margin:12px 0 0;color:var(--pr-muted);font-size:11px}

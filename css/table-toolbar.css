@@ -1,0 +1,47 @@
+/* ==================================================================
+   One table toolbar for every page: borderless icons with soft round
+   corners, top-right of each table card. Order: add, import, search,
+   sort, direction, group by, export (CSV / Word).
+   The doubled classes and :not(#tt) only raise specificity above the
+   older per-page toolbar rules.
+   ================================================================== */
+html body .table-tools{display:flex!important;align-items:center;gap:2px!important;margin:0 0 0 auto!important}
+html body :is(.table-tools,.action-box,.table-corner-actions,.professor-table-actions-left) :is(.tool-icon,.icon-action,.corner-icon-btn,.professor-icon-action).tool-icon-reset:not(#tt),
+html body :is(.table-tools,.action-box,.table-corner-actions) :is(.tool-icon.tool-icon,.icon-action.icon-action,.corner-icon-btn.corner-icon-btn):not(#tt){display:inline-grid!important;width:34px!important;height:34px!important;min-width:34px!important;min-height:34px!important;place-items:center;margin:0!important;padding:0!important;border:0!important;border-radius:10px!important;background:transparent!important;box-shadow:none!important;color:var(--pr-accent,var(--accent))!important;font-size:15px!important;line-height:1!important;cursor:pointer;transition:background .15s,color .15s}
+html body :is(.table-tools,.action-box,.table-corner-actions) :is(.tool-icon.tool-icon,.icon-action.icon-action,.corner-icon-btn.corner-icon-btn):not(#tt):hover,
+html body .table-tools .tool-icon.tool-icon.active:not(#tt),
+html body .table-tools .tool-icon.tool-icon.has-query:not(#tt){background:color-mix(in srgb,var(--pr-accent,var(--accent)) 12%,transparent)!important;box-shadow:none!important}
+html body :is(.table-tools,.action-box,.table-corner-actions) svg{width:17px!important;height:17px!important;fill:currentColor}
+html body .table-tools .table-direction.descending svg{transform:scaleY(-1)}
+/* Add / import sit first, with a hairline before the view tools. */
+html body .table-tools .table-import-action+*:not(.table-import-action),html body .table-tools .table-add-action+*:not(.table-import-action):not(.table-add-action){margin-left:8px!important}
+html body .table-tools .table-import-action input{display:none}
+/* Popovers (search box, sort/group select, export menu). */
+html body .table-tools{position:relative}
+html body .table-tools :is(.table-search-box,.table-tool-select,.table-export-menu){position:absolute!important;top:42px!important;right:0!important;left:auto!important;z-index:30!important;display:flex;align-items:center;gap:8px;padding:9px!important;border:1px solid var(--pr-line,var(--line))!important;border-radius:12px!important;background:var(--pr-surface,var(--surface))!important;box-shadow:0 14px 34px rgba(0,0,0,.16)!important;white-space:nowrap}
+html body .table-tools :is(.table-search-box,.table-tool-select,.table-export-menu)[hidden]{display:none!important}
+html body .table-tools .table-search-box input{width:min(260px,60vw)!important;height:36px!important;margin:0!important;padding:0 11px!important;border:1px solid var(--pr-line,var(--line))!important;border-radius:9px!important;background:var(--pr-surface,var(--surface))!important;color:var(--pr-ink,var(--ink))!important;font-size:12px!important}
+html body .table-tools .table-tool-select span{color:var(--pr-muted,var(--ink-soft));font-size:11px;font-weight:600}
+html body .table-tools .table-tool-select select{height:36px!important;margin:0!important;padding:0 10px!important;border:1px solid var(--pr-line,var(--line))!important;border-radius:9px!important;background:var(--pr-surface,var(--surface))!important;color:var(--pr-ink,var(--ink))!important;font-size:12px!important}
+html body .table-export-wrap{position:relative}
+html body .table-tools .table-export-menu{flex-direction:column;align-items:stretch;gap:2px;min-width:190px}
+html body .table-export-menu button{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;margin:0;padding:9px 11px;border:0;border-radius:8px;background:transparent;color:var(--pr-ink,var(--ink));font:600 12px var(--pr-font,inherit);text-align:left;cursor:pointer}
+html body .table-export-menu button:hover{background:var(--pr-soft,var(--surface-soft))}
+html body .table-export-menu small{color:var(--pr-muted,var(--ink-soft));font-size:10px;font-weight:500}
+
+/* Old separate export buttons are replaced by the export menu. */
+html body :is(.action-box,.table-corner-actions):has(.table-export-action) :is(.export-action,[onclick*="exportTableCsv"]):not(#tt):not(#tt2){display:none!important}
+/* Admin: add / import also moved into the toolbar; the old buttons go. */
+html body :is(.action-box,.table-corner-actions):has(.table-add-action)>:is(.icon-action,.corner-icon-btn,.upload-action):not(#tt):not(#tt2){display:none!important}
+html body :is(.action-box,.table-corner-actions):has(.table-tools){display:flex!important;justify-content:flex-end!important}
+/* Coordinator Professor Management: its add / import / export moved into the toolbar. */
+html body #professorManagementSection .professor-table-actions-left{display:none!important}
+html body #professorManagementSection .professor-table-actions{justify-content:flex-end!important}
+/* Coordinator Section / Student Management: the icon toolbar replaces the big search box and curriculum dropdown. */
+html body .ck-page :is(.section-table-tools,.student-management-tools)>:is(input,select,label:not(.table-import-action)){display:none!important}
+html body .ck-page :is(.section-table-tools,.student-management-tools){justify-content:flex-end!important;padding:12px 16px!important}
+html body .ck-page .ck-tools .table-search-toggle{display:inline-grid!important}
+html body .ck-page .section-workspace-head{display:none!important}
+/* Dark mode: stay borderless (outranks the shared dark chip rule). */
+:root[data-theme="dark"] body :is(.table-tools,.action-box,.table-corner-actions) :is(.tool-icon,.icon-action,.corner-icon-btn):not(#tt):not(#tt2){background:transparent!important;border-color:transparent!important;color:color-mix(in srgb,var(--pr-accent,var(--accent)) 70%,#eef0f3)!important}
+:root[data-theme="dark"] body :is(.table-tools,.action-box,.table-corner-actions) :is(.tool-icon,.icon-action,.corner-icon-btn):not(#tt):not(#tt2):is(:hover,.active,.has-query){background:color-mix(in srgb,var(--pr-accent,var(--accent)) 22%,transparent)!important}

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Online Examination</title>
     <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/shared-ui.css?v=20261118-keep-search"><link rel="stylesheet" href="../css/responsive-shell.css?v=20261118-4"><link rel="stylesheet" href="../css/prompts.css?v=20261118-2"><link rel="stylesheet" href="../css/profile-popup.css?v=20261118-3"><link rel="stylesheet" href="../css/profile-oversight.css?v=20261118-2">
+    <link rel="stylesheet" href="../css/shared-ui.css?v=20261118-keep-search"><link rel="stylesheet" href="../css/responsive-shell.css?v=20261118-4"><link rel="stylesheet" href="../css/prompts.css?v=20261119-1"><link rel="stylesheet" href="../css/table-toolbar.css?v=20261118-4"><link rel="stylesheet" href="../css/profile-popup.css?v=20261118-3"><link rel="stylesheet" href="../css/profile-oversight.css?v=20261118-2">
     <link rel="stylesheet" href="../css/admin-modern.css?v=20261118-banner-themes">
     <link rel="stylesheet" href="../css/admin-workspaces.css">
     <link rel="stylesheet" href="../css/system-management.css?v=20260902-announcement-menu-right">
@@ -24,7 +24,7 @@
     <script src="../js/permission-service.js"></script>
     <script src="../js/approval-service.js"></script>
     <script src="../js/academic-workflow-service.js"></script>
-    <script src="../js/admin-table-tools.js?v=20261118-keep-search"></script>
+    <script src="../js/admin-table-tools.js?v=20261118-export2"></script>
 <script src="../js/auth.js"></script>
     <script src="../js/ui.js?v=20261118-rail"></script>
     <script src="../js/system-management.js"></script>
@@ -1300,10 +1300,10 @@ if(fsEl)fsEl.innerHTML = `<tr><th>Subject</th><th>Faculty</th></tr>` + fsRows;
       allotEl.innerHTML = `<tr><th>Student</th><th>Subject</th><th>Faculty</th></tr>` + allotRows;
     }
     renderAuditLog();
-    AdminTableTools.mount('faculty',document.getElementById('facultyTable'),document.querySelector('#facultySection .action-box'));
-    AdminTableTools.mount('students',document.getElementById('studentTable'),document.querySelector('#studentSection .action-box'));
-    AdminTableTools.mount('sections',document.getElementById('sectionTable'),document.querySelector('#sectionSection .table-corner-actions'));
-    AdminTableTools.mount('subjects',document.getElementById('subjectTable'),document.querySelector('#subjectSection .action-box'));
+    AdminTableTools.mount('faculty',document.getElementById('facultyTable'),document.querySelector('#facultySection .action-box'),{exportName:'faculty',add:{label:'Add faculty',onClick:()=>openFacultyModal()},importer:{label:'Import faculty CSV',accept:'.csv',onFile:input=>handleCSV('faculty',input)}});
+    AdminTableTools.mount('students',document.getElementById('studentTable'),document.querySelector('#studentSection .action-box'),{exportName:'students',add:{label:'Add student',onClick:()=>openStudentModal()},importer:{label:'Import students CSV',accept:'.csv',onFile:input=>handleCSV('students',input)}});
+    AdminTableTools.mount('sections',document.getElementById('sectionTable'),document.querySelector('#sectionSection .table-corner-actions'),{exportName:'sections',add:{label:'Add section',onClick:()=>openSectionModal()}});
+    AdminTableTools.mount('subjects',document.getElementById('subjectTable'),document.querySelector('#subjectSection .action-box'),{exportName:'subjects',add:{label:'Add subject',onClick:()=>openModal('subjectModal')},importer:{label:'Import subjects CSV',accept:'.csv',onFile:input=>handleCSV('subjects',input)}});
   }
 
   const auditEsc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
@@ -1317,7 +1317,7 @@ if(fsEl)fsEl.innerHTML = `<tr><th>Subject</th><th>Faculty</th></tr>` + fsRows;
     const visibleRows=visibleEntries.map(entry=>`<tr><td>${auditEsc(new Date(entry.at).toLocaleString())}</td><td><strong>${auditEsc(entry.actorId)}</strong><br>${auditEsc(entry.actorRole)}</td><td>${auditEsc(entry.category)}</td><td>${auditEsc(entry.action)}</td><td>${auditEsc(entry.entityType)}${entry.entityId?' · '+auditEsc(entry.entityId):''}</td><td>${auditEsc(entry.result||'success')}</td><td>${auditEsc(entry.reason||'—')}</td></tr>`).join('');
     document.getElementById('auditFilterSummary').textContent=`Showing ${visibleEntries.length} of ${all.length} audit event${all.length===1?'':'s'}.`;
     document.getElementById('auditTable').innerHTML='<tr><th>Date and time</th><th>Actor</th><th>Category</th><th>Action</th><th>Target</th><th>Result</th><th>Reason</th></tr>'+(visibleRows||'<tr><td colspan="7" class="muted-cell">No audit events match the selected filters.</td></tr>');
-    AdminTableTools.mount('audit',document.getElementById('auditTable'),document.getElementById('auditTableTools'));
+    AdminTableTools.mount('audit',document.getElementById('auditTable'),document.getElementById('auditTableTools'),{exportName:'audit-log'});
   }
 
   /* ===== Navigation =====

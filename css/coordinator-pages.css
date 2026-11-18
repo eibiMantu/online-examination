@@ -1,0 +1,65 @@
+/* Coordinator Section / Professor / Student Management: charts row,
+   card table with initials, mini load bars and table tools. */
+/* The page banner already names the page: hide the repeated title,
+   keep its action button (Add section). */
+body.role-shell-ready[data-role="coordinator"] .ck-page :is(.section-workspace-head,.professor-workspace-head,.student-management-head)>div:first-child{display:none!important}
+body.role-shell-ready[data-role="coordinator"] .ck-page :is(.section-workspace-head,.professor-workspace-head,.student-management-head){display:flex;justify-content:flex-end;min-height:0;margin:0 0 12px!important;padding:0!important;border:0!important;background:none!important}
+body.role-shell-ready[data-role="coordinator"] .ck-page :is(.professor-workspace-head,.student-management-head):not(:has(button)){display:none!important}
+/* Stat tiles are replaced by the charts. */
+body.role-shell-ready[data-role="coordinator"] .ck-page :is(.section-summary,.professor-summary){display:none!important}
+
+.ck-insights{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:0 0 18px}
+.ck-card{min-width:0;padding:18px 20px;border:1px solid var(--pr-line);border-radius:18px;background:var(--pr-surface);box-shadow:0 7px 20px rgba(28,36,42,.06);color:var(--pr-ink);font-family:var(--pr-font)}
+:root[data-theme="dark"] .ck-card{box-shadow:0 8px 22px rgba(0,0,0,.22)}
+.ck-card>header{margin-bottom:14px}
+.ck-card h3{margin:0;color:var(--pr-ink);font-size:15px;font-weight:650}
+.ck-card>header p{margin:4px 0 0;color:var(--pr-muted);font-size:11px}
+.ck-empty{color:var(--pr-muted);font-size:12px}
+.ck-bars{display:grid;gap:10px;max-height:210px;overflow-y:auto;padding-right:6px}
+.ck-bar{display:grid;grid-template-columns:minmax(80px,140px) minmax(0,1fr) 54px;align-items:center;gap:10px}
+.ck-bar span{overflow:hidden;color:var(--pr-muted);font-size:11px;font-weight:600;text-overflow:ellipsis;white-space:nowrap}
+.ck-bar i{height:10px;border-radius:999px;background:var(--pr-soft)}
+.ck-bar b{display:block;height:100%;border-radius:inherit;background:var(--role-shell-role)}
+.ck-bar b.high{background:var(--role-shell-yellow)}
+.ck-bar b.over{background:#b5534b}
+.ck-bar em{color:var(--pr-ink);font-size:11px;font-style:normal;font-weight:700;text-align:right}
+.ck-donut{display:grid;grid-template-columns:120px minmax(0,1fr);align-items:center;gap:18px}
+.ck-donut svg{width:120px;height:120px}
+.ck-track{stroke:var(--pr-soft)}
+.ck-donut text{fill:var(--pr-ink);font:700 20px var(--pr-font)}
+.ck-donut text.ck-sub{fill:var(--pr-muted);font-size:9px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.ck-donut ul{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.ck-donut li{display:grid;grid-template-columns:10px minmax(0,1fr) auto;align-items:center;gap:8px;color:var(--pr-muted);font-size:11px}
+.ck-donut li i{width:10px;height:10px;border-radius:3px}
+.ck-donut li b{color:var(--pr-ink)}
+
+/* Table card. */
+.ck-page :is(.section-table-shell,.professor-table-shell,.student-management-table-shell){overflow:visible!important;border:1px solid var(--pr-line)!important;border-radius:18px!important;background:var(--pr-surface)!important;box-shadow:0 7px 20px rgba(28,36,42,.06)!important}
+.ck-page :is(.section-table-tools,.professor-table-actions,.student-management-tools){display:flex!important;align-items:center;gap:10px;padding:14px 18px!important;border-bottom:1px solid var(--pr-line)!important;background:transparent!important}
+.ck-page :is(.section-table-tools,.student-management-tools) :is(input,select){height:36px!important;margin:0!important;padding:0 12px!important;border:1px solid var(--pr-line)!important;border-radius:10px!important;background:var(--pr-surface)!important;color:var(--pr-ink)!important;font:12px var(--pr-font)!important}
+.ck-page :is(.section-table-tools,.student-management-tools) input{flex:1;min-width:0}
+.ck-tools{position:relative;display:flex;align-items:center}
+.ck-tools .table-tools{position:relative;display:flex;align-items:center;gap:6px;margin:0}
+.ck-page :is(.ck-tools,#professorTableTools) .tool-icon{display:grid;width:36px!important;height:36px!important;min-height:36px!important;place-items:center;padding:0!important;border:1px solid var(--pr-line)!important;border-radius:10px!important;background:var(--pr-surface)!important;color:var(--pr-accent)!important;box-shadow:none!important}
+.ck-tools .tool-icon svg{width:16px;height:16px;fill:currentColor}
+.ck-tools :is(.table-search-box,.table-tool-select){position:absolute;top:44px;right:0;z-index:8;display:flex;align-items:center;gap:8px;padding:9px;border:1px solid var(--pr-line);border-radius:12px;background:var(--pr-surface);box-shadow:0 12px 30px rgba(0,0,0,.16);white-space:nowrap}
+.ck-tools :is(.table-search-box,.table-tool-select)[hidden]{display:none}
+.ck-tools .table-tool-select span{color:var(--pr-muted);font-size:11px;font-weight:600}
+.ck-page :is(#coordinatorSectionTable,#coordinatorProfessorTable,#coordinatorStudentTable){width:100%;border-collapse:collapse;font-size:12px}
+.ck-page :is(#coordinatorSectionTable,#coordinatorProfessorTable,#coordinatorStudentTable) :is(thead,thead tr,th){background:transparent!important}
+.ck-page :is(#coordinatorSectionTable,#coordinatorProfessorTable,#coordinatorStudentTable) th{padding:10px 18px!important;border-bottom:1px solid var(--pr-line)!important;color:var(--pr-muted)!important;font-size:9px!important;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.ck-page :is(#coordinatorSectionTable,#coordinatorProfessorTable,#coordinatorStudentTable) tbody tr{background:transparent!important}
+.ck-page :is(#coordinatorSectionTable,#coordinatorProfessorTable,#coordinatorStudentTable) td{padding:10px 18px!important;border-top:0!important;border-bottom:1px solid color-mix(in srgb,var(--pr-line) 60%,transparent)!important;background:transparent!important;color:var(--pr-ink)!important;font-size:12px!important}
+.ck-page :is(#coordinatorSectionTable,#coordinatorProfessorTable,#coordinatorStudentTable) tbody tr:hover td{background:color-mix(in srgb,var(--pr-accent) 8%,transparent)!important;cursor:pointer}
+.ck-page .table-group-row td{background:var(--pr-soft)!important;font-weight:650}
+.ck-person{display:inline-flex;align-items:center;gap:10px}
+.ck-avatar{display:grid;flex:0 0 auto;width:30px;height:30px;place-items:center;border-radius:50%;background:color-mix(in srgb,var(--role-shell-role) 16%,transparent);color:var(--role-shell-role);font-size:10px;font-weight:700}
+:root[data-theme="dark"] .ck-avatar{color:color-mix(in srgb,var(--role-shell-role) 55%,#eef0f3)}
+.ck-mini{display:inline-block;width:70px;height:5px;margin-left:10px;border-radius:999px;background:var(--pr-soft);vertical-align:middle}
+.ck-mini b{display:block;height:100%;border-radius:inherit;background:var(--role-shell-role)}
+.ck-mini b.high{background:var(--role-shell-yellow)}
+.ck-mini b.over{background:#b5534b}
+@media(max-width:900px){.ck-insights{grid-template-columns:1fr}}
+/* Student Management: search bar and table read as one card. */
+.ck-page .student-management-tools{margin:0!important;border:1px solid var(--pr-line)!important;border-bottom:0!important;border-radius:18px 18px 0 0!important;background:var(--pr-surface)!important}
+.ck-page .student-management-table-shell{border-top:1px solid var(--pr-line)!important;border-radius:0 0 18px 18px!important}

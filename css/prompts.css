@@ -75,3 +75,9 @@ body.role-shell-ready.sidebar-open #sidebar a.active,
 .student-mail-compose-actions{display:flex!important;justify-content:flex-end;gap:10px}
 .student-mail-compose-actions .btn-secondary{display:inline-flex;align-items:center;justify-content:center;min-width:96px;height:40px;margin:0!important;padding:0 18px!important;border:1px solid var(--pr-line)!important;border-radius:11px!important;background:transparent!important;color:var(--pr-ink)!important;font:600 12px/1 var(--pr-font)!important}
 .student-mail-compose-actions .btn-take-exam{display:inline-flex;align-items:center;justify-content:center;min-width:110px;height:40px;margin:0!important;padding:0 18px!important;border:0!important;border-radius:11px!important;background:var(--pr-accent)!important;color:#fff!important;font:600 12px/1 var(--pr-font)!important}
+/* Dean: accent follows the gold banner (darker for legible text on cream). */
+body[data-role="dean"]{--pr-accent:#8a6a2e}
+:root[data-theme="dark"] body[data-role="dean"]{--pr-accent:#d2ae63;--pr-on-accent:#2a2015}
+/* Outlined Cancel / Skip stay outlined in dark mode (an older dark rule filled them). */
+:root[data-theme="dark"] .confirm-box :is(.confirm-cancel,.confirm-skip):not(#pr):not(#pr2){border:1px solid var(--pr-line)!important;background:transparent!important;color:var(--pr-ink)!important}
+:root[data-theme="dark"] .confirm-box :is(.confirm-cancel,.confirm-skip):not(#pr):not(#pr2):hover{background:var(--pr-soft)!important}

@@ -1,0 +1,72 @@
+/* Coordinator Applications / Subject Schedule / Logs: shared card look,
+   status counts, schedule heatmap, weekly activity columns, icon tools. */
+
+/* The page banner already names each page. */
+body[data-role="coordinator"] #applicationsSection .application-page-head,
+body[data-role="coordinator"] #applicationsSection [data-application-pane]>:is(h2,p),
+body[data-role="coordinator"] #subjectScheduleRoot .subject-schedule-head,
+body[data-role="coordinator"] #logsSection>:is(h2,p),
+body[data-role="coordinator"] .cw-page .cw-emptied{display:none!important}
+
+/* Tab rows carry the tools on their right. */
+.cw-page :is(.application-tabs,.subject-schedule-tabs){display:flex!important;align-items:center;gap:6px;margin:0 0 16px!important}
+.cw-page :is(.application-tabs,.subject-schedule-tabs)>.cw-tools{margin-left:auto!important}
+.cw-tools .cw-tool{position:relative}
+.cw-tools .cw-filter-panel{flex-direction:column;align-items:stretch!important;gap:10px!important;min-width:240px;padding:12px!important}
+.cw-tools .cw-filter-panel label{display:grid!important;gap:5px;margin:0!important;color:var(--pr-muted);font-size:11px;font-weight:600}
+.cw-tools .cw-filter-panel label>span{color:var(--pr-muted)!important;font-size:11px!important;font-weight:600!important}
+.cw-tools .cw-filter-panel :is(select,input){width:100%!important;min-width:0!important;height:36px!important;margin:0!important;padding:0 10px!important;border:1px solid var(--pr-line)!important;border-radius:9px!important;background:var(--pr-surface)!important;color:var(--pr-ink)!important;font:12px var(--pr-font)!important}
+.cw-tools .table-search-box input{width:min(280px,64vw)!important;height:36px!important;margin:0!important;padding:0 11px!important;border:1px solid var(--pr-line)!important;border-radius:9px!important;background:var(--pr-surface)!important;color:var(--pr-ink)!important;font:12px var(--pr-font)!important}
+.cw-tools .cw-reset{height:34px;margin-top:2px;border:0!important;border-radius:9px!important;background:var(--pr-soft)!important;color:var(--pr-accent)!important;font:600 12px var(--pr-font)!important;cursor:pointer}
+/* Logs: the filter popover lays its eight fields out in two columns. */
+#logsSection .cw-filter-panel:not([hidden]){display:grid!important;grid-template-columns:repeat(2,minmax(150px,1fr));min-width:min(380px,86vw)}
+#logsSection .cw-filter-panel .cw-reset{grid-column:1/-1}
+
+/* Applications: status counts. */
+.cw-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:0 0 18px}
+.cw-stat{display:grid;gap:3px;min-width:0;padding:14px 16px;border:1px solid var(--pr-line);border-radius:16px;background:var(--pr-surface);box-shadow:0 7px 20px rgba(28,36,42,.06);color:var(--pr-ink);font-family:var(--pr-font);text-align:left;cursor:pointer;transition:border-color .15s,box-shadow .15s}
+.cw-stat:hover{border-color:color-mix(in srgb,var(--pr-accent) 40%,var(--pr-line))}
+.cw-stat.active{border-color:var(--pr-accent);box-shadow:0 0 0 2px color-mix(in srgb,var(--pr-accent) 22%,transparent)}
+.cw-stat span{color:var(--pr-muted);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.cw-stat strong{font-size:26px;font-weight:700;line-height:1.1}
+.cw-stat span::before{content:"";display:inline-block;width:8px;height:8px;margin-right:7px;border-radius:50%;background:var(--tone,#8a8f99);vertical-align:1px}
+.cw-stat[data-tone="pending"]{--tone:#d39a2c}
+.cw-stat[data-tone="approved"]{--tone:#2f8d83}
+.cw-stat[data-tone="rejected"]{--tone:#b5534b}
+.cw-stat small{color:var(--pr-ink);font-size:11px}
+.cw-stat em{color:var(--pr-muted);font-size:10px;font-style:normal}
+:root[data-theme="dark"] .cw-stat{box-shadow:0 8px 22px rgba(0,0,0,.22)}
+/* Applications: form and list as the same soft cards. */
+.cw-page .role-workflow-grid{gap:16px!important;align-items:start}
+.cw-page :is(.role-workflow-form,.role-workflow-list){margin:0!important;padding:18px 20px!important;border:1px solid var(--pr-line)!important;border-radius:18px!important;background:var(--pr-surface)!important;box-shadow:0 7px 20px rgba(28,36,42,.06)!important}
+.cw-page :is(.role-workflow-form,.role-workflow-list) h3{margin:0 0 14px!important;color:var(--pr-ink)!important;font-size:15px!important;font-weight:650!important}
+
+/* Subject Schedule: heatmap. */
+.cw-heat{display:grid;grid-template-columns:34px repeat(var(--cols),minmax(0,1fr));gap:3px;align-items:center}
+.cw-heat span{color:var(--pr-muted);font-size:9px;font-weight:600;text-align:center}
+.cw-heat .cw-heat-d{text-align:left}
+.cw-heat i,.cw-heat-key i{display:block;height:20px;border-radius:5px;background:color-mix(in srgb,var(--role-shell-role) calc(var(--a) * 100%),var(--pr-soft))}
+.cw-heat-key{display:flex;align-items:center;justify-content:flex-end;gap:4px;margin-top:10px;color:var(--pr-muted);font-size:9px}
+.cw-heat-key i{width:16px;height:10px;border-radius:3px}
+:root[data-theme="dark"] .cw-heat i,:root[data-theme="dark"] .cw-heat-key i{background:color-mix(in srgb,color-mix(in srgb,var(--role-shell-role) 70%,#9fb4d0) calc(var(--a) * 100%),var(--pr-soft))}
+
+/* Logs: weekly activity columns. */
+.cw-cols{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:4px;align-items:end;height:150px;padding-bottom:4px;border-bottom:1px solid var(--pr-line)}
+.cw-cols span{display:flex;align-items:flex-end;height:100%}
+.cw-cols i{display:block;width:100%;border-radius:5px 5px 2px 2px;background:var(--role-shell-role)}
+.cw-cols-axis{display:flex;justify-content:space-between;margin-top:6px;color:var(--pr-muted);font-size:10px}
+/* Logs: table card. */
+.cw-log-card{border:1px solid var(--pr-line);border-radius:18px;background:var(--pr-surface);box-shadow:0 7px 20px rgba(28,36,42,.06);font-family:var(--pr-font)}
+:root[data-theme="dark"] .cw-log-card{box-shadow:0 8px 22px rgba(0,0,0,.22)}
+.cw-log-head{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--pr-line)}
+.cw-log-head h3{margin:0;color:var(--pr-ink);font-size:15px;font-weight:650}
+.cw-log-head .panel-help{margin:3px 0 0!important;color:var(--pr-muted)!important;font-size:11px!important}
+.cw-log-card .role-log-table{margin:0!important;border:0!important;border-radius:0 0 18px 18px!important;background:transparent!important;box-shadow:none!important;overflow-x:auto}
+.cw-log-card table{width:100%;border-collapse:collapse}
+.cw-log-card :is(thead,thead tr,th){background:transparent!important}
+.cw-log-card th{padding:10px 18px!important;border-bottom:1px solid var(--pr-line)!important;color:var(--pr-muted)!important;font-size:9px!important;font-weight:700;letter-spacing:.08em;text-align:left;text-transform:uppercase}
+.cw-log-card td{padding:11px 18px!important;border:0!important;border-bottom:1px solid color-mix(in srgb,var(--pr-line) 60%,transparent)!important;background:transparent!important;color:var(--pr-ink)!important;font-size:12px!important}
+.cw-log-card tbody tr:last-child td{border-bottom:0!important}
+
+@media(max-width:900px){.cw-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+:root[data-theme="dark"] #logsSection .cw-log-card :is(table,thead,thead tr,th,tbody tr){background:transparent!important}

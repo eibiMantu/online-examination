@@ -1,0 +1,95 @@
+/* ==================================================================
+   Dean pages (Members, Approvals, Statistics, Logs) in the shared look:
+   banner names the page (no repeated heading), charts row, card tables
+   with the icon toolbar top right, soft pills, 40px buttons.
+   ================================================================== */
+/* The banner already names each page. */
+body[data-role="dean"] :is(#membersSection,#approvalsSection,#statisticsSection,#logsSection)>:is(h2,p:not([id])){display:none!important}
+
+/* ---------- table card (Members, Statistics) ---------- */
+.dp-table-card{overflow:visible;margin:0 0 18px;border:1px solid var(--pr-line);border-radius:18px;background:var(--pr-surface);box-shadow:0 7px 20px rgba(28,36,42,.06);color:var(--pr-ink);font-family:var(--pr-font)}
+:root[data-theme="dark"] .dp-table-card{box-shadow:0 8px 22px rgba(0,0,0,.22)}
+.dp-table-head{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--pr-line)}
+.dp-table-head h3{margin:0;color:var(--pr-ink);font:650 15px/1.3 var(--pr-font)}
+.dp-table-head p{margin:3px 0 0;color:var(--pr-muted);font:400 11px/1.4 var(--pr-font)}
+.dp-tools{margin-left:auto}
+.dp-table-scroll{overflow-x:auto;border-radius:0 0 18px 18px}
+body[data-role="dean"] .dp-table:not(#dp){width:100%;border-collapse:collapse;background:transparent!important;font-family:var(--pr-font)}
+body[data-role="dean"] .dp-table :is(thead,thead tr,th,tbody tr):not(#dp){background:transparent!important}
+body[data-role="dean"] .dp-table th:not(#dp){padding:10px 18px!important;border:0!important;border-bottom:1px solid var(--pr-line)!important;color:var(--pr-muted)!important;font:700 9px/1.3 var(--pr-font)!important;letter-spacing:.08em!important;text-align:left;text-transform:uppercase}
+body[data-role="dean"] .dp-table td:not(#dp){padding:10px 18px!important;border:0!important;border-bottom:1px solid color-mix(in srgb,var(--pr-line) 60%,transparent)!important;background:transparent!important;color:var(--pr-ink)!important;font:400 12px/1.45 var(--pr-font)!important;vertical-align:middle}
+body[data-role="dean"] .dp-table tbody tr:last-child td:not(#dp){border-bottom:0!important}
+body[data-role="dean"] .dp-table tbody tr:not(.table-group-row):hover td:not(#dp){background:color-mix(in srgb,var(--pr-accent) 7%,transparent)!important}
+body[data-role="dean"] .dp-table .table-group-row td:not(#dp){background:var(--pr-soft)!important;font-weight:650!important}
+.dp-muted{color:var(--pr-muted);font-size:11px}
+.dp-pill{display:inline-block;padding:3px 9px;border-radius:999px;background:var(--pr-soft);color:var(--pr-ink);font:600 10.5px/1.4 var(--pr-font);white-space:nowrap}
+.dp-pill.gold{background:color-mix(in srgb,var(--role-shell-yellow) 30%,transparent)}
+.dp-pill.good{background:color-mix(in srgb,#2f8d83 15%,transparent);color:#2f7d74}
+.dp-pill.bad{background:color-mix(in srgb,#b5534b 14%,transparent);color:#a3463f}
+:root[data-theme="dark"] .dp-pill.good{color:#8fd3c9}
+:root[data-theme="dark"] .dp-pill.bad{color:#f0a49c}
+.dp-load{font-variant-numeric:tabular-nums}
+body[data-role="dean"] .dp-row-action:not(#dp):not(#dp2){height:30px!important;min-height:30px!important;padding:0 12px;border:1px solid var(--pr-line);border-radius:9px;background:transparent;color:var(--pr-accent);font:600 11px var(--pr-font);white-space:nowrap;cursor:pointer;box-shadow:none}
+body[data-role="dean"] .dp-row-action:not(#dp):hover{border-color:var(--pr-accent);background:color-mix(in srgb,var(--pr-accent) 8%,transparent)}
+
+/* ---------- dialogs (Add Professor, Appoint) ---------- */
+.dp-form.confirm-box{width:min(560px,calc(100vw - 32px))!important}
+.dp-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;padding:0 24px}
+.dp-form-grid label{display:grid;gap:6px;margin:0!important;padding:0!important;color:var(--pr-muted)!important;font:600 12px/1.3 var(--pr-font)!important}
+.confirm-box .dp-form-grid :is(input,select){width:100%!important;height:40px;margin:0!important;padding:0 12px!important}
+.dp-form-note{margin:14px 24px 0!important;padding:10px 12px!important;border-radius:10px;background:var(--pr-soft);color:var(--pr-muted)!important;font:400 11px/1.5 var(--pr-font)!important}
+@media(max-width:640px){.dp-form-grid{grid-template-columns:1fr}}
+
+/* ---------- Approvals ---------- */
+body[data-role="dean"] #approvalsSection .role-workflow-list:not(#dp){margin:0!important;padding:16px 18px 18px!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}
+body[data-role="dean"] #deanApprovalList:not(#dp){display:grid!important;gap:12px!important}
+body[data-role="dean"] #deanApprovalList .role-request-card:not(#dp):not(#dp2){display:grid;gap:10px;margin:0!important;padding:16px 18px!important;border:1px solid var(--pr-line)!important;border-left:3px solid var(--tone,var(--pr-line))!important;border-radius:14px!important;background:var(--pr-surface)!important;box-shadow:none!important}
+body[data-role="dean"] .role-request-card[data-status="pending"]{--tone:#d39a2c}
+body[data-role="dean"] .role-request-card[data-status="approved"]{--tone:#2f8d83}
+body[data-role="dean"] .role-request-card[data-status="rejected"]{--tone:#b5534b}
+body[data-role="dean"] .role-request-card :is(p,ol,li,summary,details):not(#dp){margin:0!important;font-family:var(--pr-font)!important}
+body[data-role="dean"] .role-request-head:not(#dp){display:flex!important;align-items:center;justify-content:space-between;gap:10px;margin:0!important}
+body[data-role="dean"] .role-request-head strong:not(#dp):not(#dp2){color:var(--pr-ink)!important;font:650 15px/1.3 var(--pr-font)!important}
+body[data-role="dean"] .role-request-status:not(#dp):not(#dp2){padding:3px 10px!important;border-radius:999px!important;background:color-mix(in srgb,var(--tone,#8a8f99) 16%,transparent)!important;color:var(--pr-ink)!important;font:600 10.5px/1.4 var(--pr-font)!important;letter-spacing:.02em!important;text-transform:capitalize!important}
+body[data-role="dean"] .role-request-card>p:not(#dp){color:var(--pr-muted)!important;font-size:12px!important;line-height:1.5}
+/* Facts as soft chips (no blue boxes). */
+body[data-role="dean"] .role-request-meta:not(#dp):not(#dp2){display:flex!important;flex-wrap:wrap;gap:6px!important;margin:0!important;padding:0!important;background:transparent!important}
+body[data-role="dean"] .role-request-meta>span:not(#dp):not(#dp2){min-height:0!important;padding:5px 10px!important;border:0!important;border-radius:8px!important;background:var(--pr-soft)!important;color:var(--pr-ink)!important;font:500 11px/1.4 var(--pr-font)!important}
+body[data-role="dean"] .role-request-meta>span.role-review-warning:not(#dp):not(#dp2){background:color-mix(in srgb,#b5534b 13%,transparent)!important;color:#a3463f!important}
+body[data-role="dean"] .role-request-meta>span.role-review-clear:not(#dp):not(#dp2){background:color-mix(in srgb,#2f8d83 13%,transparent)!important;color:#2f7d74!important}
+:root[data-theme="dark"] body[data-role="dean"] .role-request-meta>span.role-review-warning:not(#dp):not(#dp2){color:#f0a49c!important}
+:root[data-theme="dark"] body[data-role="dean"] .role-request-meta>span.role-review-clear:not(#dp):not(#dp2){color:#8fd3c9!important}
+body[data-role="dean"] .role-review-blocked:not(#dp):not(#dp2){margin:0!important;padding:10px 12px!important;border:0!important;border-radius:10px!important;background:color-mix(in srgb,#b5534b 11%,transparent)!important;color:var(--pr-ink)!important;font:400 12px/1.5 var(--pr-font)!important}
+body[data-role="dean"] .role-review-blocked strong:not(#dp){color:#a3463f!important}
+:root[data-theme="dark"] body[data-role="dean"] .role-review-blocked strong:not(#dp){color:#f0a49c!important}
+body[data-role="dean"] .role-history summary:not(#dp){color:var(--pr-accent)!important;font:600 11px var(--pr-font)!important;cursor:pointer}
+body[data-role="dean"] .role-history ol:not(#dp){margin:8px 0 0 18px!important;color:var(--pr-muted)!important;font-size:11px!important}
+/* Review row: remarks + Approve (primary) + Reject (danger outline). */
+body[data-role="dean"] .role-request-actions:not(#dp):not(#dp2){display:flex!important;align-items:stretch;gap:10px!important;margin:4px 0 0!important;padding:12px 0 0!important;border-top:1px solid var(--pr-line)!important}
+body[data-role="dean"] .role-request-actions textarea:not(#dp):not(#dp2){flex:1;min-height:40px!important;height:40px;margin:0!important;padding:10px 12px!important;border:1px solid var(--pr-line)!important;border-radius:11px!important;background:var(--pr-surface)!important;color:var(--pr-ink)!important;font:400 12px/1.4 var(--pr-font)!important;resize:vertical}
+body[data-role="dean"] .role-request-actions button:not(#dp):not(#dp2){height:40px!important;min-width:96px;margin:0!important;padding:0 18px!important;border:1px solid transparent!important;border-radius:11px!important;background:var(--pr-accent)!important;box-shadow:none!important;color:var(--pr-on-accent,#fff)!important;font:600 12px/1 var(--pr-font)!important;cursor:pointer}
+body[data-role="dean"] .role-request-actions button.reject:not(#dp):not(#dp2){border-color:color-mix(in srgb,#b5534b 45%,transparent)!important;background:transparent!important;color:#b5534b!important}
+body[data-role="dean"] .role-request-actions button.reject:not(#dp):not(#dp2):hover{background:color-mix(in srgb,#b5534b 10%,transparent)!important}
+:root[data-theme="dark"] body[data-role="dean"] .role-request-actions button.reject:not(#dp):not(#dp2){color:#f0a49c!important}
+body[data-role="dean"] .role-request-actions button:disabled:not(#dp):not(#dp2){opacity:.45;cursor:not-allowed}
+body[data-role="dean"] #deanApprovalList .role-empty:not(#dp){padding:28px 0!important;color:var(--pr-muted)!important;font-size:12px!important;text-align:center}
+
+/* ---------- Statistics: tiles ---------- */
+body[data-role="dean"] .dean-stat-grid:not(#dp){display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px!important;margin:0 0 18px!important}
+body[data-role="dean"] .dean-stat-grid>article:not(#dp):not(#dp2){display:grid;gap:3px;min-height:0!important;padding:14px 16px!important;border:1px solid var(--pr-line)!important;border-radius:16px!important;background:var(--pr-surface)!important;box-shadow:0 7px 20px rgba(28,36,42,.06)!important;font-family:var(--pr-font)}
+body[data-role="dean"] .dean-stat-grid span:not(#dp){color:var(--pr-muted)!important;font:700 10px/1.3 var(--pr-font)!important;letter-spacing:.08em;text-transform:uppercase}
+body[data-role="dean"] .dean-stat-grid strong:not(#dp){color:var(--pr-ink)!important;font:700 26px/1.15 var(--pr-font)!important}
+body[data-role="dean"] .dean-stat-grid small:not(#dp){color:var(--pr-muted)!important;font:400 11px/1.4 var(--pr-font)!important}
+body[data-role="dean"] .dp-stat-table:not(#dp){padding:0!important}
+body[data-role="dean"] .dp-stat-table .role-log-table:not(#dp){margin:0!important;border:0!important;border-radius:0 0 18px 18px!important;background:transparent!important;box-shadow:none!important;overflow-x:auto}
+@media(max-width:900px){body[data-role="dean"] .dean-stat-grid:not(#dp){grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* ---------- moved-out controls and Logs ---------- */
+body[data-role="dean"] .cw-emptied{display:none!important}
+:root[data-theme="dark"] body[data-role="dean"] #logsSection .cw-log-card :is(table,thead,thead tr,th,tbody tr){background:transparent!important}
+body[data-role="dean"] .role-request-card :is(.role-history,hr,.role-request-meta+*):not(#dp){border-color:var(--pr-line)!important}
+body[data-role="dean"] .role-history:not(#dp):not(#dp2){margin:0!important;padding:10px 0 0!important;border:0!important;border-top:1px solid var(--pr-line)!important;background:transparent!important}
+/* Dark sidebar icons follow the gold theme (a shared rule painted them with the base blue). */
+:root[data-theme="dark"] body[data-role="dean"] #sidebar a:not(.active) .nav-icon{color:color-mix(in srgb,var(--role-shell-yellow) 70%,#fff)!important}
+/* Mail: header divider uses the theme line. */
+body[data-role="dean"] .role-mail-list>header{border-color:var(--pr-line)!important}

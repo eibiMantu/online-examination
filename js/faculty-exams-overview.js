@@ -88,21 +88,23 @@ const FacultyExamsOverview = (() => {
     sort: '<path d="M7 4h2v13l3-3 1.4 1.4L8 21l-5.4-5.6L4 14l3 3V4Zm7 1h7v2h-7V5Zm0 6h5v2h-5v-2Zm0 6h3v2h-3v-2Z"/>',
     dir: '<path d="m7 4 4 4H8v12H6V8H3l4-4Zm8 1h6v2h-6V5Zm0 6h5v2h-5v-2Zm0 6h4v2h-4v-2Z"/>',
     group: '<path d="M4 4h7v7H4V4Zm2 2v3h3V6H6Zm7-2h7v7h-7V4Zm2 2v3h3V6h-3ZM4 13h7v7H4v-7Zm2 2v3h3v-3H6Zm7-2h7v7h-7v-7Zm2 2v3h3v-3h-3Z"/>',
-    add: '<path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6V5Z"/>'
+    add: '<path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6V5Z"/>',
+    export: '<path d="M11 3h2v8.2l2.6-2.6L17 10l-5 5-5-5 1.4-1.4 2.6 2.6V3ZM5 19v-4h2v2h10v-2h2v4H5Z"/>'
   };
   const icon = path => `<svg viewBox="0 0 24 24" aria-hidden="true">${path}</svg>`;
   function controls(ctx) {
     const count = key => key === 'all' ? ctx.rows.length : ctx.rows.filter(row => row.status === key).length;
     const tabs = [['all', 'All'], ['open', 'Open'], ['upcoming', 'Upcoming'], ['closed', 'Closed'], ['draft', 'Drafts']]
       .map(([key, label]) => `<button type="button" class="fx-tab${state.filter === key ? ' active' : ''}" data-fx-filter="${key}" aria-pressed="${state.filter === key}">${label}<span>${count(key)}</span></button>`).join('');
-    return `<div class="fx-controls"><nav class="fx-tabs" aria-label="Filter examinations">${tabs}</nav><div class="fx-tools role-table-tools">
+    return `<div class="fx-controls"><nav class="fx-tabs" aria-label="Filter examinations">${tabs}</nav><div class="fx-tools table-tools role-table-tools">
+      <button type="button" class="tool-icon table-add-action add-exam-btn exam-icon-btn fx-add" onclick="openExamModal()" aria-label="Create exam" title="Create exam">${icon(ICONS.add)}</button>
       <div class="table-search-box"${state.searchOpen ? '' : ' hidden'}><input type="search" id="fxSearch" placeholder="Search title or subject…" aria-label="Search examinations" value="${esc(state.query)}"></div>
       <button type="button" class="tool-icon${state.searchOpen ? ' active' : ''}" data-fx-tool="search" aria-label="Search" title="Search">${icon(ICONS.search)}</button>
       <label class="table-tool-select"${state.sortOpen ? '' : ' hidden'}><span>Sort by</span><select id="fxSort"><option value="date"${state.sort === 'date' ? ' selected' : ''}>Date</option><option value="title"${state.sort === 'title' ? ' selected' : ''}>Title</option><option value="subject"${state.sort === 'subject' ? ' selected' : ''}>Subject</option><option value="average"${state.sort === 'average' ? ' selected' : ''}>Class average</option></select></label>
       <button type="button" class="tool-icon${state.sortOpen ? ' active' : ''}" data-fx-tool="sort" aria-label="Choose sort field" title="Sort">${icon(ICONS.sort)}</button>
       <button type="button" class="tool-icon${state.dir < 0 ? ' descending' : ''}" data-fx-tool="dir" aria-label="${state.dir > 0 ? 'Sort ascending' : 'Sort descending'}" title="${state.dir > 0 ? 'Ascending' : 'Descending'}">${icon(ICONS.dir)}</button>
       <button type="button" class="tool-icon${state.group ? ' active' : ''}" data-fx-tool="group" aria-pressed="${state.group}" aria-label="Group by subject" title="Group by subject">${icon(ICONS.group)}</button>
-      <button type="button" class="add-exam-btn exam-icon-btn fx-add" onclick="openExamModal()" aria-label="Create exam" title="Create exam">${icon(ICONS.add)}</button>
+      <div class="table-export-wrap"><button type="button" class="tool-icon table-export-action${state.exportOpen ? ' active' : ''}" data-fx-tool="export" aria-label="Export examinations" title="Export" aria-haspopup="menu" aria-expanded="${!!state.exportOpen}">${icon(ICONS.export)}</button><div class="table-export-menu" role="menu"${state.exportOpen ? '' : ' hidden'}><button type="button" role="menuitem" data-fx-export="csv">Export as CSV <small>.csv</small></button><button type="button" role="menuitem" data-fx-export="doc">Export as Word <small>.doc</small></button></div></div>
     </div></div>`;
   }
 
@@ -119,12 +121,24 @@ const FacultyExamsOverview = (() => {
       <div class="exam-item-actions">${examActionsMenu(exam.id)}</div>
     </div>`;
   }
-  function list(ctx) {
+  function visible(ctx) {
     const q = state.query.trim().toLowerCase();
     let rows = ctx.rows.filter(item => (state.filter === 'all' || item.status === state.filter) &&
       (!q || `${item.exam.title} ${item.exam.subjectCode} ${item.subject?.name || ''} ${item.exam.desc || ''}`.toLowerCase().includes(q)));
     const key = item => state.sort === 'title' ? item.exam.title : state.sort === 'subject' ? item.exam.subjectCode : state.sort === 'average' ? (item.average ?? -1) : (item.exam.date || '9999-12-31');
     rows.sort((a, b) => { const ka = key(a), kb = key(b); return (typeof ka === 'number' ? ka - kb : String(ka).localeCompare(String(kb), undefined, { numeric: true })) * state.dir; });
+    return rows;
+  }
+  /* Export the examinations in the current view (filter, search, sort) as CSV or Word. */
+  function exportRows(format) {
+    const rows = visible(context()), table = document.createElement('table');
+    const head = ['Title', 'Subject', 'Status', 'Date', 'Items', 'Duration (min)', 'Submitted', 'Class average'];
+    const cells = item => [item.exam.title, `${item.exam.subjectCode} — ${item.subject?.name || ''}`, STATUS_LABEL[item.status], item.exam.date || 'Always open', item.items, Number(item.exam.durationMinutes) || '', item.takers ? `${item.submitted}/${item.takers}` : item.submitted, item.average === null ? '' : `${item.average.toFixed(1)}%`];
+    table.innerHTML = `<thead><tr>${head.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.map(item => `<tr>${cells(item).map(v => `<td>${esc(v)}</td>`).join('')}</tr>`).join('')}</tbody>`;
+    if (typeof AdminTableTools !== 'undefined') AdminTableTools.exportTable(table, 'examinations', format);
+  }
+  function list(ctx) {
+    const rows = visible(ctx);
     if (!rows.length) return `<div class="no-exams fx-empty-list">${ctx.rows.length ? 'No examinations match this view.' : 'No exams created yet. Use the + button to create one.'}</div>`;
     if (!state.group) return `<div class="fx-list">${rows.map(row).join('')}</div>`;
     const groups = new Map(); rows.forEach(item => groups.set(item.exam.subjectCode, [...(groups.get(item.exam.subjectCode) || []), item]));
@@ -147,8 +161,11 @@ const FacultyExamsOverview = (() => {
       if (!host.querySelector('.fx-page')) return;
       const filter = event.target.closest('[data-fx-filter]');
       if (filter) { state.filter = state.filter === filter.dataset.fxFilter && filter.classList.contains('fx-status-card') ? 'all' : filter.dataset.fxFilter; render(); return; }
+      const fmt = event.target.closest('[data-fx-export]');
+      if (fmt) { state.exportOpen = false; render(); exportRows(fmt.dataset.fxExport); return; }
       const tool = event.target.closest('[data-fx-tool]'); if (!tool) return;
       const kind = tool.dataset.fxTool;
+      if (kind === 'export') { state.exportOpen = !state.exportOpen; state.searchOpen = false; state.sortOpen = false; } else state.exportOpen = false;
       if (kind === 'search') { state.searchOpen = !state.searchOpen; state.sortOpen = false; state.justOpened = state.searchOpen; if (!state.searchOpen) state.query = ''; }
       if (kind === 'sort') { state.sortOpen = !state.sortOpen; state.searchOpen = false; }
       if (kind === 'dir') state.dir *= -1;

@@ -1,0 +1,156 @@
+/* ==================================================================
+   Coordinator: one look for every dialog, tab row and button, matching
+   the themed prompts (css/prompts.css):
+   - dialogs: 20px corners, banner-gradient header with white text,
+     soft body, footer actions on the right;
+   - type: Poppins, titles 17px/700, card titles 15px/650, labels
+     12px/600, table heads 9px/700 caps, body 12-13px;
+   - buttons: 40px tall, 11px corners, 600 weight; the last footer button
+     is the primary (accent fill), the others are outlined.
+   :not(#cu) only raises specificity above older per-page rules.
+   ================================================================== */
+
+/* ---------- dialog shells ---------- */
+body:is([data-role="coordinator"],[data-role="dean"]) :is(.section-dialog-card,.subject-schedule-editor-card,.professor-load-card,.student-profile-card):not(#cu){padding:0!important;overflow:hidden auto;border:0!important;border-radius:20px!important;background:var(--pr-surface)!important;box-shadow:0 30px 80px rgba(0,0,0,.3)!important;color:var(--pr-ink)!important;font-family:var(--pr-font)!important}
+body:is([data-role="coordinator"],[data-role="dean"]) :is(.section-dialog-card,.subject-schedule-editor-card):not(#cu){width:min(560px,calc(100vw - 32px))!important}
+
+/* Banner header. */
+body:is([data-role="coordinator"],[data-role="dean"]) :is(.section-dialog-card,.subject-schedule-editor-card,.professor-load-card,.student-profile-card)>header:not(#cu){position:relative;display:flex!important;align-items:center;gap:14px;min-height:0!important;margin:0!important;padding:20px 24px!important;border:0!important;border-radius:0!important;background:linear-gradient(132deg,var(--pr-hero-a),var(--pr-hero-b))!important;color:#fff!important}
+body:is([data-role="coordinator"],[data-role="dean"]) :is(.section-dialog-card>header>h3,.subject-schedule-editor-card>header>div,.professor-profile-identity,.student-profile-identity):not(#cu){flex:1;min-width:0;margin:0!important}
+body:is([data-role="coordinator"],[data-role="dean"]) :is(.section-dialog-card>header>h3,.subject-schedule-editor-card>header h3,.professor-profile-identity :is(h2,h3,strong),.student-profile-identity h3):not(#cu){margin:0!important;color:#fff!important;font:700 17px/1.3 var(--pr-font)!important;letter-spacing:-.015em}
+body:is([data-role="coordinator"],[data-role="dean"]) :is(.subject-schedule-editor-card>header p,.student-profile-identity>p,.professor-profile-identity>:first-child:not(:only-child) :is(p,small):first-child):not(#cu){margin:0 0 3px!important;color:rgba(255,255,255,.72)!important;font:700 10px/1.3 var(--pr-font)!important;letter-spacing:.1em!important;text-transform:uppercase}
+body:is([data-role="coordinator"],[data-role="dean"]) :is(.subject-schedule-editor-card>header span,.student-profile-identity>span,.professor-profile-identity :is(span,small,p)):not(#cu){color:rgba(255,255,255,.78)!important;font:400 12px/1.4 var(--pr-font)!important}
+body:is([data-role="coordinator"],[data-role="dean"]) .professor-profile-identity :is(h2,h3,strong):not(#cu){display:block}
+/* Avatars on the banner. */
+body:is([data-role="coordinator"],[data-role="dean"]) :is(.student-profile-avatar,.professor-profile-identity .professor-profile-avatar,.professor-profile-identity>[class*="avatar"],.professor-load-card>header>[class*="avatar"]):not(#cu){display:grid!important;flex:0 0 auto;width:52px!important;height:52px!important;place-items:center;border:2px solid rgba(255,255,255,.3)!important;border-radius:50%!important;background:rgba(255,255,255,.14)!important;box-shadow:none!important;color:#fff!important;font:700 16px var(--pr-font)!important}
+/* Close and menu buttons on the banner. */
+body:is([data-role="coordinator"],[data-role="dean"]) :is(.section-dialog-close,.subject-schedule-close,.professor-load-close,.student-profile-card>header>button,.student-command-menu>summary):not(#cu){display:grid!important;flex:0 0 auto;width:34px!important;height:34px!important;min-width:34px!important;margin:0!important;padding:0!important;place-items:center;border:1px solid rgba(255,255,255,.24)!important;border-radius:10px!important;background:rgba(255,255,255,.12)!important;box-shadow:none!important;color:#fff!important;font:400 18px/1 var(--pr-font)!important;list-style:none;cursor:pointer}
+body:is([data-role="coordinator"],[data-role="dean"]) :is(.section-dialog-close,.subject-schedule-close,.professor-load-close,.student-profile-card>header>button,.student-command-menu>summary):not(#cu):hover{background:rgba(255,255,255,.22)!important}
+body:is([data-role="coordinator"],[data-role="dean"]) .student-command-menu>summary::-webkit-details-marker{display:none}
+body:is([data-role="coordinator"],[data-role="dean"]) .student-command-menu:not(#cu){margin-left:auto}
+
+/* ---------- tab rows (dialogs and pages) ---------- */
+body:is([data-role="coordinator"],[data-role="dean"]) :is(.professor-profile-tabs,.student-profile-tabs):not(#cu){display:flex!important;flex-wrap:wrap;gap:4px!important;margin:0!important;padding:0 24px!important;border:0!important;border-bottom:1px solid var(--pr-line)!important;border-radius:0!important;background:var(--pr-surface)!important}
+body:is([data-role="coordinator"],[data-role="dean"]) :is(.professor-profile-tabs,.student-profile-tabs,.application-tabs,.subject-schedule-tabs)>button:not(#cu){height:auto!important;min-height:0!important;margin:0 0 -1px!important;padding:13px 12px!important;border:0!important;border-bottom:2px solid transparent!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;color:var(--pr-muted)!important;font:600 13px/1.2 var(--pr-font)!important;letter-spacing:0!important;cursor:pointer}
+body:is([data-role="coordinator"],[data-role="dean"]) :is(.professor-profile-tabs,.student-profile-tabs,.application-tabs,.subject-schedule-tabs)>button:not(#cu):hover{color:var(--pr-ink)!important}
+body:is([data-role="coordinator"],[data-role="dean"]) :is(.professor-profile-tabs,.student-profile-tabs,.application-tabs,.subject-schedule-tabs)>button:is(.active,[aria-selected="true"]):not(#cu){border-bottom-color:var(--pr-accent)!important;color:var(--pr-accent)!important}
+body:is([data-role="coordinator"],[data-role="dean"]) :is(.application-tabs,.subject-schedule-tabs):not(#cu){border-bottom:1px solid var(--pr-line)!important}
+
+/* ---------- dialog bodies ---------- */
+body:is([data-role="coordinator"],[data-role="dean"]) :is(.professor-profile-pane,#coordinatorStudentProfileBody):not(#cu){margin:0!important;padding:20px 24px 24px!important;background:var(--pr-soft)!important}
+body:is([data-role="coordinator"],[data-role="dean"]) :is(.section-form-grid,.subject-schedule-editor-fields):not(#cu){display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:14px!important;margin:0!important;padding:20px 24px!important;border:0!important}
+/* Stat tiles. */
+body:is([data-role="coordinator"],[data-role="dean"]) :is(.student-profile-stats,.professor-admin-stats):not(#cu){gap:12px!important;margin:0 0 16px!important}
+body:is([data-role="coordinator"],[data-role="dean"]) :is(.student-profile-stats,.professor-admin-stats)>*:not(#cu){min-height:0!important;padding:14px 16px!important;border:1px solid var(--pr-line)!important;border-radius:14px!important;background:var(--pr-surface)!important;box-shadow:none!important}
+body:is([data-role="coordinator"],[data-role="dean"]) :is(.student-profile-stats,.professor-admin-stats)>* :is(strong,b):not(#cu){display:block;color:var(--pr-ink)!important;font:700 22px/1.2 var(--pr-font)!important}
+body:is([data-role="coordinator"],[data-role="dean"]) :is(.student-profile-stats,.professor-admin-stats)>* :is(span,small,p):not(#cu){margin:4px 0 0!important;color:var(--pr-muted)!important;font:500 11px/1.3 var(--pr-font)!important;letter-spacing:0!important;text-transform:none!important}
+/* Inner cards (enrolment, assigned subjects, lists). */
+body:is([data-role="coordinator"],[data-role="dean"]) :is(.student-enrollment-manager,.professor-assignment-table-card,.professor-performance-list,.professor-profile-table,.professor-load-list>*):not(#cu){margin:0 0 16px!important;overflow:hidden;border:1px solid var(--pr-line)!important;border-radius:16px!important;background:var(--pr-surface)!important;box-shadow:none!important}
+body:is([data-role="coordinator"],[data-role="dean"]) :is(.student-enrollment-manager,.professor-assignment-table-card)>header:not(#cu){display:flex;align-items:center;gap:10px;margin:0!important;padding:16px 18px!important;border:0!important;border-bottom:1px solid var(--pr-line)!important;background:transparent!important}
+body:is([data-role="coordinator"],[data-role="dean"]) :is(.student-profile-card,.professor-load-card) :is(.student-enrollment-manager,.professor-assignment-table-card) h3:not(#cu){margin:0!important;color:var(--pr-ink)!important;font:650 15px/1.3 var(--pr-font)!important;letter-spacing:0!important;text-transform:none!important}
+body:is([data-role="coordinator"],[data-role="dean"]) :is(.student-profile-card,.professor-load-card) :is(.student-enrollment-manager,.professor-assignment-table-card)>header p:not(#cu){margin:3px 0 0!important;color:var(--pr-muted)!important;font:400 11px/1.4 var(--pr-font)!important;letter-spacing:0!important;text-transform:none!important}
+/* Tables inside dialogs. */
+body:is([data-role="coordinator"],[data-role="dean"]) :is(.student-profile-card,.professor-load-card) table:not(#cu){width:100%;border-collapse:collapse;background:transparent!important}
+body:is([data-role="coordinator"],[data-role="dean"]) :is(.student-profile-card,.professor-load-card) :is(thead,thead tr,th):not(#cu){background:transparent!important}
+body:is([data-role="coordinator"],[data-role="dean"]) :is(.student-profile-card,.professor-load-card) th:not(#cu){padding:10px 18px!important;border:0!important;border-bottom:1px solid var(--pr-line)!important;color:var(--pr-muted)!important;font:700 9px/1.3 var(--pr-font)!important;letter-spacing:.08em!important;text-align:left;text-transform:uppercase}
+body:is([data-role="coordinator"],[data-role="dean"]) :is(.student-profile-card,.professor-load-card) td:not(#cu){padding:11px 18px!important;border:0!important;border-bottom:1px solid color-mix(in srgb,var(--pr-line) 60%,transparent)!important;background:transparent!important;color:var(--pr-ink)!important;font:400 12px/1.45 var(--pr-font)!important}
+body:is([data-role="coordinator"],[data-role="dean"]) :is(.student-profile-card,.professor-load-card) tbody tr:last-child td:not(#cu){border-bottom:0!important}
+
+/* ---------- form fields (dialogs and Applications) ---------- */
+body:is([data-role="coordinator"],[data-role="dean"]) :is(.section-form-grid,.subject-schedule-editor-fields,.role-workflow-form) label:not(#cu){display:grid!important;gap:6px!important;margin:0!important;color:var(--pr-muted)!important;font:600 12px/1.3 var(--pr-font)!important;letter-spacing:0!important;text-transform:none!important}
+body:is([data-role="coordinator"],[data-role="dean"]) :is(.section-form-grid,.subject-schedule-editor-fields,.role-workflow-form) :is(input,select,textarea):not(#cu){display:block;width:100%!important;max-width:none!important;height:40px;margin:0!important;padding:0 12px!important;border:1px solid var(--pr-line)!important;border-radius:11px!important;background:var(--pr-surface)!important;box-shadow:none!important;color:var(--pr-ink)!important;font:400 13px/1.4 var(--pr-font)!important;box-sizing:border-box}
+body:is([data-role="coordinator"],[data-role="dean"]) :is(.section-form-grid,.subject-schedule-editor-fields,.role-workflow-form) textarea:not(#cu){height:auto;min-height:90px;padding:10px 12px!important;resize:vertical}
+body:is([data-role="coordinator"],[data-role="dean"]) :is(.section-form-grid,.subject-schedule-editor-fields,.role-workflow-form) :is(input,select,textarea):not(#cu):focus{border-color:var(--pr-accent)!important;outline:0;box-shadow:0 0 0 3px color-mix(in srgb,var(--pr-accent) 18%,transparent)!important}
+
+/* ---------- buttons ---------- */
+/* Footers: primary is the last button, the rest are outlined. */
+body:is([data-role="coordinator"],[data-role="dean"]) :is(.section-dialog-actions,.subject-schedule-editor-card>footer):not(#cu){display:flex!important;justify-content:flex-end;gap:10px!important;margin:0!important;padding:16px 24px 20px!important;border:0!important;border-top:1px solid var(--pr-line)!important;background:transparent!important}
+body:is([data-role="coordinator"],[data-role="dean"]) :is(.section-dialog-actions,.subject-schedule-editor-card>footer,.role-workflow-form) button:not(#cu),
+body:is([data-role="coordinator"],[data-role="dean"]) .cw-page .role-workflow-button:not(#cu){display:inline-flex!important;align-items:center;justify-content:center;width:auto!important;min-width:96px;height:40px!important;margin:0!important;padding:0 18px!important;border:1px solid var(--pr-line)!important;border-radius:11px!important;background:transparent!important;box-shadow:none!important;color:var(--pr-ink)!important;font:600 12px/1 var(--pr-font)!important;letter-spacing:0!important;cursor:pointer}
+body:is([data-role="coordinator"],[data-role="dean"]) :is(.section-dialog-actions,.subject-schedule-editor-card>footer) button:last-child:not(#cu),
+body:is([data-role="coordinator"],[data-role="dean"]) :is(.role-workflow-form button[type="submit"],.role-workflow-button):not(#cu){min-width:110px;border-color:transparent!important;background:var(--pr-accent)!important;color:var(--pr-on-accent,#fff)!important}
+body:is([data-role="coordinator"],[data-role="dean"]) :is(.section-dialog-actions,.subject-schedule-editor-card>footer) button:not(:last-child):not(#cu):hover{background:var(--pr-soft)!important}
+body:is([data-role="coordinator"],[data-role="dean"]) :is(.section-dialog-actions,.subject-schedule-editor-card>footer) button:last-child:not(#cu):hover,
+body:is([data-role="coordinator"],[data-role="dean"]) :is(.role-workflow-form button[type="submit"],.role-workflow-button):not(#cu):hover{filter:brightness(1.08)}
+body:is([data-role="coordinator"],[data-role="dean"]) .role-workflow-form button[type="submit"]:not(#cu){justify-self:start}
+/* Inline load editor in the professor dialog. */
+body:is([data-role="coordinator"],[data-role="dean"]) .professor-assignment-editor:not(#cu){display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+body:is([data-role="coordinator"],[data-role="dean"]) .professor-assignment-editor select:not(#cu){height:34px;padding:0 10px!important;border:1px solid var(--pr-line)!important;border-radius:9px!important;background:var(--pr-surface)!important;color:var(--pr-ink)!important;font:400 12px var(--pr-font)!important}
+body:is([data-role="coordinator"],[data-role="dean"]) .professor-assignment-editor button:not(#cu){height:34px!important;padding:0 12px!important;border:1px solid transparent!important;border-radius:9px!important;background:var(--pr-accent)!important;color:var(--pr-on-accent,#fff)!important;font:600 12px var(--pr-font)!important}
+body:is([data-role="coordinator"],[data-role="dean"]) .professor-assignment-editor button.secondary:not(#cu){border-color:var(--pr-line)!important;background:transparent!important;color:var(--pr-ink)!important}
+
+/* ---------- request cards (Applications) ---------- */
+body:is([data-role="coordinator"],[data-role="dean"]) .role-request-card:not(#cu){padding:14px 16px!important;border:1px solid var(--pr-line)!important;border-radius:14px!important;background:var(--pr-surface)!important;box-shadow:none!important;color:var(--pr-ink)!important;font-family:var(--pr-font)!important}
+body:is([data-role="coordinator"],[data-role="dean"]) .role-request-card :is(strong):not(#cu){font:650 13px var(--pr-font)!important}
+body:is([data-role="coordinator"],[data-role="dean"]) .role-request-card p:not(#cu){color:var(--pr-muted)!important;font-size:12px!important}
+body:is([data-role="coordinator"],[data-role="dean"]) .role-request-status:not(#cu){padding:3px 9px!important;border-radius:999px!important;background:var(--pr-soft)!important;color:var(--pr-accent)!important;font:600 10px var(--pr-font)!important;letter-spacing:.04em;text-transform:capitalize}
+
+/* ---------- Mail: same card surface as the other pages ---------- */
+body:is([data-role="coordinator"],[data-role="dean"]) #role-mail-panel :is(.role-mail-list,.role-mail-reader,.role-mail-inbox,.role-mail-view,[class*="role-mail-"][class*="card"]):not(#cu){border:1px solid var(--pr-line)!important;border-radius:18px!important;background:var(--pr-surface)!important;box-shadow:0 7px 20px rgba(28,36,42,.06)!important}
+
+@media(max-width:640px){
+  body:is([data-role="coordinator"],[data-role="dean"]) :is(.section-form-grid,.subject-schedule-editor-fields):not(#cu){grid-template-columns:1fr!important}
+}
+/* Professor dialog eyebrow ("Faculty profile") matches the others. */
+body:is([data-role="coordinator"],[data-role="dean"]) .professor-profile-identity>div>p:first-child:not(#cu):not(#cu2){margin:0 0 3px!important;color:rgba(255,255,255,.72)!important;font:700 10px/1.3 var(--pr-font)!important;letter-spacing:.1em!important;text-transform:uppercase}
+body:is([data-role="coordinator"],[data-role="dean"]) .professor-profile-identity:not(#cu){display:flex!important;align-items:center;gap:14px}
+/* Tables sit flush inside their card (no second border). */
+body:is([data-role="coordinator"],[data-role="dean"]) :is(.student-enrollment-manager,.professor-assignment-table-card) :is(.table-scroll,.professor-assignment-table,table):not(#cu){margin:0!important;border:0!important;border-radius:0!important;box-shadow:none!important;background:transparent!important}
+/* Mail rows sit on the card surface instead of white. */
+body:is([data-role="coordinator"],[data-role="dean"]) .role-mail-list>div:not(#cu){background:transparent!important}
+body:is([data-role="coordinator"],[data-role="dean"]) .role-mail-row:not(#cu){background:transparent!important;font-family:var(--pr-font)!important}
+body:is([data-role="coordinator"],[data-role="dean"]) .role-mail-row:not(#cu):hover,body:is([data-role="coordinator"],[data-role="dean"]) .role-mail-row.active:not(#cu){background:var(--pr-soft)!important}
+body:is([data-role="coordinator"],[data-role="dean"]) .role-mail-read-all:not(#cu){height:32px!important;padding:0 12px!important;border:1px solid var(--pr-line)!important;border-radius:10px!important;background:transparent!important;color:var(--pr-ink)!important;font:600 11px var(--pr-font)!important}
+/* Dialog tables never keep a white band in dark mode. */
+body:is([data-role="coordinator"],[data-role="dean"]) :is(.student-profile-card,.professor-load-card) :is(table,thead,tbody,tr,.table-scroll):not(#cu):not(#cu2){background:transparent!important}
+/* Unit and status pills follow the theme in both modes. */
+body:is([data-role="coordinator"],[data-role="dean"]) .professor-load-pill:not(#cu){padding:4px 10px!important;border:0!important;border-radius:999px!important;background:color-mix(in srgb,var(--pr-accent) 14%,transparent)!important;color:var(--pr-accent)!important;font:600 11px/1.3 var(--pr-font)!important}
+:root[data-theme="dark"] body:is([data-role="coordinator"],[data-role="dean"]) .professor-load-pill:not(#cu){background:color-mix(in srgb,var(--pr-accent) 26%,transparent)!important;color:color-mix(in srgb,var(--pr-accent) 45%,#eef0f3)!important}
+body:is([data-role="coordinator"],[data-role="dean"]) .professor-assignment-table-card>header>span:not(#cu){margin-left:auto;padding:4px 10px!important;border:0!important;border-radius:999px!important;background:color-mix(in srgb,#2f8d83 14%,transparent)!important;color:#2f8d83!important;font:600 11px/1.3 var(--pr-font)!important}
+:root[data-theme="dark"] body:is([data-role="coordinator"],[data-role="dean"]) .professor-assignment-table-card>header>span:not(#cu){background:color-mix(in srgb,#2f8d83 26%,transparent)!important;color:#8fd3c9!important}
+
+/* ---------- Student oversight: Overview / History / Grades / Actions / Login ---------- */
+/* Every block is a card with the same gap. */
+body:is([data-role="coordinator"],[data-role="dean"]) #coordinatorStudentProfileBody>*:not(#cu){margin:0 0 16px!important}
+body:is([data-role="coordinator"],[data-role="dean"]) #coordinatorStudentProfileBody>*:last-child:not(#cu){margin-bottom:0!important}
+body:is([data-role="coordinator"],[data-role="dean"]) :is(.student-profile-details,.student-subject-panel,#coordinatorStudentProfileBody .rp-card,#coordinatorStudentProfileBody>.profile-empty):not(#cu){overflow:hidden;padding:0!important;border:1px solid var(--pr-line)!important;border-radius:16px!important;background:var(--pr-surface)!important;box-shadow:none!important;color:var(--pr-ink)!important;font-family:var(--pr-font)!important}
+/* Card headings and subtitles. */
+body:is([data-role="coordinator"],[data-role="dean"]) :is(.student-profile-details>h4,.student-subject-panel>header):not(#cu){display:block;margin:0!important;padding:16px 18px!important;border:0!important;border-bottom:1px solid var(--pr-line)!important;background:transparent!important}
+body:is([data-role="coordinator"],[data-role="dean"]) :is(.student-profile-details>h4,.student-subject-panel h4,#coordinatorStudentProfileBody .rp-section-title,#coordinatorStudentProfileBody .rp-card h3):not(#cu){color:var(--pr-ink)!important;font:650 15px/1.3 var(--pr-font)!important;letter-spacing:0!important;text-transform:none!important}
+body:is([data-role="coordinator"],[data-role="dean"]) .student-subject-panel>header p:not(#cu){margin:3px 0 0!important;color:var(--pr-muted)!important;font:400 11px/1.4 var(--pr-font)!important;letter-spacing:0!important;text-transform:none!important}
+/* Academic details: four compact facts in a row. */
+body:is([data-role="coordinator"],[data-role="dean"]) .student-profile-details>dl:not(#cu){display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:0!important;margin:0!important;padding:0!important}
+body:is([data-role="coordinator"],[data-role="dean"]) .student-profile-details>dl>div:not(#cu){display:grid!important;gap:4px;margin:0!important;padding:14px 18px!important;border:0!important;border-right:1px solid var(--pr-line)!important}
+body:is([data-role="coordinator"],[data-role="dean"]) .student-profile-details>dl>div:last-child:not(#cu){border-right:0!important}
+body:is([data-role="coordinator"],[data-role="dean"]) .student-profile-details dt:not(#cu){margin:0!important;color:var(--pr-muted)!important;font:500 11px/1.3 var(--pr-font)!important}
+body:is([data-role="coordinator"],[data-role="dean"]) .student-profile-details dd:not(#cu){margin:0!important;color:var(--pr-ink)!important;font:650 14px/1.3 var(--pr-font)!important;text-align:left!important}
+/* Subject table flush in its card. */
+body:is([data-role="coordinator"],[data-role="dean"]) .student-subject-table:not(#cu){margin:0!important;padding:0!important;border:0!important;overflow-x:auto}
+body:is([data-role="coordinator"],[data-role="dean"]) :is(.student-subject-table,#coordinatorStudentProfileBody .rp-table) table:not(#cu){margin:0!important}
+body:is([data-role="coordinator"],[data-role="dean"]) #coordinatorStudentProfileBody td small:not(#cu),body:is([data-role="coordinator"],[data-role="dean"]) #coordinatorStudentProfileBody td :is(span,p):not(#cu){color:var(--pr-muted)!important;font-size:11px!important}
+/* Performance block: same tiles and cards. */
+body:is([data-role="coordinator"],[data-role="dean"]) #coordinatorStudentProfileBody .rp-performance:not(#cu){padding:0!important;border:0!important;background:transparent!important}
+body:is([data-role="coordinator"],[data-role="dean"]) #coordinatorStudentProfileBody .rp-section-title:not(#cu){margin:4px 0 12px!important}
+body:is([data-role="coordinator"],[data-role="dean"]) #coordinatorStudentProfileBody .rp-stats:not(#cu){display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px!important;margin:0 0 16px!important}
+body:is([data-role="coordinator"],[data-role="dean"]) #coordinatorStudentProfileBody .rp-stats>div:not(#cu){padding:14px 16px!important;border:1px solid var(--pr-line)!important;border-radius:14px!important;background:var(--pr-surface)!important;box-shadow:none!important}
+body:is([data-role="coordinator"],[data-role="dean"]) #coordinatorStudentProfileBody .rp-stats strong:not(#cu){display:block;color:var(--pr-ink)!important;font:700 22px/1.2 var(--pr-font)!important}
+body:is([data-role="coordinator"],[data-role="dean"]) #coordinatorStudentProfileBody .rp-stats span:not(#cu){margin:4px 0 0!important;color:var(--pr-muted)!important;font:500 11px/1.3 var(--pr-font)!important;letter-spacing:0!important;text-transform:none!important}
+body:is([data-role="coordinator"],[data-role="dean"]) #coordinatorStudentProfileBody .rp-grid-2:not(#cu){gap:16px!important;margin:0 0 16px!important}
+body:is([data-role="coordinator"],[data-role="dean"]) #coordinatorStudentProfileBody .rp-card:not(#cu){margin:0 0 16px!important;padding:16px 18px!important}
+body:is([data-role="coordinator"],[data-role="dean"]) #coordinatorStudentProfileBody .rp-grid-2 .rp-card:not(#cu){margin:0!important}
+body:is([data-role="coordinator"],[data-role="dean"]) #coordinatorStudentProfileBody .rp-card>header:not(#cu){display:flex;align-items:center;justify-content:space-between;margin:0 0 12px!important}
+body:is([data-role="coordinator"],[data-role="dean"]) #coordinatorStudentProfileBody .rp-card .rp-table:not(#cu){margin:0 -18px -16px!important;border-top:1px solid var(--pr-line)}
+/* Empty states read as a quiet card, not bare text. */
+body:is([data-role="coordinator"],[data-role="dean"]) #coordinatorStudentProfileBody .profile-empty:not(#cu),body:is([data-role="coordinator"],[data-role="dean"]) #coordinatorStudentProfileBody .rp-empty:not(#cu){padding:28px 18px!important;color:var(--pr-muted)!important;font:400 12px/1.5 var(--pr-font)!important;text-align:center}
+body:is([data-role="coordinator"],[data-role="dean"]) #coordinatorStudentProfileBody .rp-card .rp-empty:not(#cu){padding:18px 0!important}
+/* Tabs: hover and keyboard focus don't look like a second active tab. */
+body:is([data-role="coordinator"],[data-role="dean"]) :is(.professor-profile-tabs,.student-profile-tabs)>button:not(.active):not([aria-selected="true"]):not(#cu):is(:hover,:focus){color:var(--pr-ink)!important;font-weight:600!important;outline:0}
+body:is([data-role="coordinator"],[data-role="dean"]) :is(.professor-profile-tabs,.student-profile-tabs)>button:not(#cu):focus-visible{outline:2px solid color-mix(in srgb,var(--pr-accent) 40%,transparent)!important;outline-offset:-4px;border-radius:8px 8px 0 0!important}
+@media(max-width:720px){
+  body:is([data-role="coordinator"],[data-role="dean"]) :is(.student-profile-details>dl,#coordinatorStudentProfileBody .rp-stats):not(#cu){grid-template-columns:repeat(2,minmax(0,1fr))}
+  body:is([data-role="coordinator"],[data-role="dean"]) .student-profile-details>dl>div:nth-child(2n):not(#cu){border-right:0!important}
+}
+/* Student dialog: only the body scrolls (one scrollbar). */
+body:is([data-role="coordinator"],[data-role="dean"]) .student-profile-card:not(#cu):not(#cu2){display:flex!important;flex-direction:column;overflow:hidden!important}
+body:is([data-role="coordinator"],[data-role="dean"]) .student-profile-card>:is(header,nav):not(#cu){flex:0 0 auto}
+body:is([data-role="coordinator"],[data-role="dean"]) #coordinatorStudentProfileBody:not(#cu):not(#cu2){flex:1 1 auto;min-height:0;overflow-y:auto!important}
