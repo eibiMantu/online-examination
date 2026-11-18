@@ -58,6 +58,15 @@ const StudentLessons = (() => {
     });
   }
 
+  /* Class tab: shared members table in place of the classmate list. */
+  function renderClassMembers() {
+    const code = selectedStudentSubjectCode, panel = document.querySelector('#studentSubjectDetail [data-subject-tab-panel="class"]');
+    if (!code || !panel || typeof ClassMembers === 'undefined') return;
+    const enrollment = SectionService.enrollmentsForStudent(currentStudent.id).find(item => item.subjectCode === code);
+    if (!enrollment) return;
+    ClassMembers.mountStudent(panel, code, enrollment.sectionId, currentStudent.id);
+  }
+
   /* Course path card (calendar of weeks) in place of the old week list. */
   function pathWeeks(code) {
     const content = ordered(code);
@@ -136,6 +145,7 @@ const StudentLessons = (() => {
   function decorate() {
     document.querySelectorAll('#studentSubjectDetail .learning-cell.locked[data-learning-block]:not(.locked-exam-row)').forEach(row => { row.setAttribute('role', 'button'); row.tabIndex = 0; });
     renderCoursePath();
+    renderClassMembers();
     const root = document.getElementById('studentSubjectDetail');
     if (typeof LessonViewMode !== 'undefined') LessonViewMode.mount(root, root?.querySelector('.weekly-learning-section>h3'));
   }

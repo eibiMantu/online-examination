@@ -1,0 +1,52 @@
+/* ==================================================================
+   Admin (#studentProfileModal) and Coordinator (student dialogs):
+   same banner / pill tabs / card layout as the shared profile popup
+   (profile-popup.css), in each role's colors (--pr-* from prompts.css).
+   ================================================================== */
+#studentProfileModal .student-profile-page,
+:is(#coordinatorStudentDialog,#coordinatorReadOnlyProfile) .student-profile-card{width:min(980px,calc(100vw - 32px))!important;max-height:calc(100dvh - 48px)!important;overflow:auto;padding:0!important;border:0!important;border-radius:22px!important;background:color-mix(in srgb,var(--pr-surface) 55%,var(--pr-soft))!important;box-shadow:0 30px 80px rgba(0,0,0,.32)!important;color:var(--pr-ink);font-family:var(--pr-font)}
+
+/* Banner header. */
+#studentProfileModal .student-profile-head,
+#coordinatorStudentHero,
+#coordinatorReadOnlyProfile .student-profile-card>header{position:relative;display:flex;align-items:center;gap:18px;margin:0!important;padding:26px 30px!important;border:0!important;background:linear-gradient(135deg,var(--pr-hero-a),var(--pr-hero-b))!important;color:#fff!important}
+:is(#studentProfileModal .student-profile-head,#coordinatorStudentHero,#coordinatorReadOnlyProfile .student-profile-card>header) :is(h2,strong){color:#fff!important;font-size:24px!important;font-weight:700!important;letter-spacing:-.025em}
+:is(#studentProfileModal .student-profile-head,#coordinatorStudentHero,#coordinatorReadOnlyProfile .student-profile-card>header) p{color:rgba(255,255,255,.78)!important;font-size:12px!important}
+#studentProfileModal .profile-eyebrow,
+#coordinatorStudentHero .student-profile-identity p:first-child,
+#coordinatorReadOnlyProfile .student-profile-card>header p:first-child{color:color-mix(in srgb,var(--role-shell-yellow,#f0c36d) 80%,#fff)!important;font-size:10px!important;font-weight:800!important;letter-spacing:.13em;text-transform:uppercase}
+#studentProfileModal .profile-avatar,
+#coordinatorStudentHero .student-profile-avatar{display:grid;width:58px;height:58px;place-items:center;border:2px solid rgba(255,255,255,.28)!important;border-radius:50%!important;background:rgba(255,255,255,.14)!important;color:#fff!important;font-size:17px;font-weight:700;box-shadow:none!important}
+#studentProfileModal .profile-close,
+#coordinatorStudentHero button,
+#coordinatorReadOnlyProfile .student-profile-card>header button{display:grid;width:36px;height:36px;place-items:center;padding:0!important;border:1px solid rgba(255,255,255,.24)!important;border-radius:11px!important;background:rgba(255,255,255,.12)!important;color:#fff!important;box-shadow:none!important}
+
+/* Pill tabs. */
+#studentProfileModal .profile-tabs,
+#coordinatorStudentDialog .student-profile-tabs{display:flex!important;flex-wrap:wrap;gap:6px!important;margin:0!important;padding:14px 30px!important;border-bottom:1px solid var(--pr-line)!important;background:var(--pr-surface)!important}
+#studentProfileModal .profile-tab,
+#coordinatorStudentDialog .student-profile-tabs button{height:32px!important;margin:0!important;padding:0 14px!important;border:1px solid var(--pr-line)!important;border-radius:999px!important;background:transparent!important;box-shadow:none!important;color:var(--pr-muted)!important;font:600 11px/1 var(--pr-font)!important}
+#studentProfileModal .profile-tab.active,
+#coordinatorStudentDialog .student-profile-tabs button.active{border-color:var(--pr-accent)!important;background:var(--pr-accent)!important;color:var(--pr-on-accent)!important}
+#studentProfileModal .profile-tab::after,
+#coordinatorStudentDialog .student-profile-tabs button::after{display:none!important}
+
+/* Content: cards, stat tiles, quiet tables. */
+:is(#studentProfileContent,#coordinatorStudentProfileBody,#coordinatorReadOnlyBody){padding:22px 30px 30px!important;background:transparent!important}
+:is(#studentProfileContent .profile-stat-grid,#coordinatorStudentProfileBody .student-profile-stats,#coordinatorReadOnlyBody .student-profile-stats)>div{border:1px solid var(--pr-line)!important;border-radius:16px!important;background:var(--pr-surface)!important;box-shadow:none!important}
+:is(#studentProfileContent,#coordinatorStudentProfileBody,#coordinatorReadOnlyBody) :is(.profile-stat-grid,.student-profile-stats) strong{color:var(--pr-ink)!important;font-size:24px!important;font-weight:700!important}
+:is(#studentProfileContent,#coordinatorStudentProfileBody,#coordinatorReadOnlyBody) :is(.profile-stat-grid,.student-profile-stats) span{color:var(--pr-muted)!important;font-size:11px!important;font-weight:600!important}
+:is(#studentProfileContent,#coordinatorStudentProfileBody,#coordinatorReadOnlyBody)>:is(section,div):not(.rp-performance):not(.profile-stat-grid):not(.student-profile-stats){border:1px solid var(--pr-line)!important;border-radius:16px!important;background:var(--pr-surface)!important;box-shadow:none!important}
+:is(#studentProfileContent,#coordinatorStudentProfileBody,#coordinatorReadOnlyBody) :is(thead,thead tr,th){background:transparent!important}
+:is(#studentProfileContent,#coordinatorStudentProfileBody,#coordinatorReadOnlyBody) th{color:var(--pr-muted)!important;font-size:9px!important;letter-spacing:.08em;text-transform:uppercase;border-bottom:1px solid var(--pr-line)!important}
+:is(#studentProfileContent,#coordinatorStudentProfileBody,#coordinatorReadOnlyBody) td{background:transparent!important;color:var(--pr-ink)!important;font-size:12px}
+:is(#studentProfileContent,#coordinatorStudentProfileBody,#coordinatorReadOnlyBody) :is(h3,h4){color:var(--pr-ink)!important;font-family:var(--pr-font)}
+
+/* Performance block appended to the Overview. */
+.rp-performance{margin-top:18px}
+.rp-section-title{margin:0 0 12px;color:var(--pr-ink);font:700 16px/1.3 var(--pr-font)}
+/* Tiles are <article> in the Coordinator views; rows can carry their own fill. */
+:is(#studentProfileContent,#coordinatorStudentProfileBody,#coordinatorReadOnlyBody) .student-profile-stats>article{border:1px solid var(--pr-line)!important;border-radius:16px!important;background:var(--pr-surface)!important;box-shadow:none!important}
+:is(#studentProfileContent,#coordinatorStudentProfileBody,#coordinatorReadOnlyBody) .student-profile-stats>article strong{color:var(--pr-ink)!important}
+:is(#studentProfileContent,#coordinatorStudentProfileBody,#coordinatorReadOnlyBody) :is(.student-profile-details,.student-subject-panel){border-color:var(--pr-line)!important;background:var(--pr-surface)!important}
+:is(#studentProfileContent,#coordinatorStudentProfileBody,#coordinatorReadOnlyBody) tbody tr{background:transparent!important}

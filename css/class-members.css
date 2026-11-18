@@ -1,0 +1,46 @@
+/* Class tab members table (Student + Professor), role theme tokens from prompts.css. */
+.cm-card{overflow:visible;border:1px solid var(--pr-line);border-radius:18px;background:var(--pr-surface);box-shadow:0 7px 20px rgba(44,40,35,.07);color:var(--pr-ink);font-family:var(--pr-font)}
+:root[data-theme="dark"] .cm-card{box-shadow:0 8px 22px rgba(0,0,0,.22)}
+.cm-head{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:18px 20px 12px}
+.cm-head h3{margin:0;color:var(--pr-ink);font-size:16px;font-weight:650}
+.cm-head p{margin:4px 0 0;color:var(--pr-muted);font-size:11px}
+.cm-tools{position:relative;display:flex;align-items:center}
+.cm-tools .table-tools{position:relative;display:flex;align-items:center;gap:6px;margin:0}
+.cm-tools .tool-icon{display:grid;width:36px!important;height:36px!important;min-height:36px!important;place-items:center;padding:0!important;border:1px solid var(--pr-line)!important;border-radius:10px!important;background:var(--pr-surface)!important;color:var(--pr-accent)!important;box-shadow:none!important}
+.cm-tools .tool-icon:hover,.cm-tools .tool-icon.active{background:color-mix(in srgb,var(--pr-accent) 12%,transparent)!important}
+.cm-tools .tool-icon svg{width:16px;height:16px;fill:currentColor}
+.cm-tools :is(.table-search-box,.table-tool-select){position:absolute;top:44px;right:0;z-index:8;padding:9px;border:1px solid var(--pr-line)!important;border-radius:12px;background:var(--pr-surface)!important;box-shadow:0 12px 30px rgba(0,0,0,.16)}
+.cm-tools :is(.table-search-box,.table-tool-select)[hidden]{display:none}
+.cm-tools .table-tool-select{display:flex;align-items:center;gap:8px;white-space:nowrap}
+.cm-tools .table-tool-select span{color:var(--pr-muted);font-size:11px;font-weight:600}
+.cm-tools :is(.table-search-box input,.table-tool-select select){height:36px;margin:0;padding:0 11px;border:1px solid var(--pr-line)!important;border-radius:9px;background:var(--pr-surface)!important;color:var(--pr-ink)!important;font:12px var(--pr-font)}
+.cm-tools .table-search-box input{width:min(260px,60vw)}
+.cm-filters{display:flex;flex-wrap:wrap;gap:6px;padding:0 20px 14px}
+.cm-filters button{height:30px;margin:0;padding:0 13px;border:1px solid var(--pr-line);border-radius:999px;background:transparent;color:var(--pr-muted);font:600 11px var(--pr-font);cursor:pointer}
+.cm-filters button.active{border-color:var(--pr-accent);background:var(--pr-accent);color:var(--pr-on-accent)}
+.cm-scroll{overflow-x:auto;border-top:1px solid var(--pr-line)}
+.cm-table{width:100%;border-collapse:collapse;font-size:12px}
+.cm-table :is(thead,thead tr,th){background:transparent!important}
+.cm-table th{padding:10px 20px;border-bottom:1px solid var(--pr-line);color:var(--pr-muted)!important;font-size:9px;font-weight:700;letter-spacing:.08em;text-align:left;text-transform:uppercase}
+.cm-table td{padding:10px 20px;border-bottom:1px solid color-mix(in srgb,var(--pr-line) 60%,transparent);background:transparent!important;color:var(--pr-ink)!important;vertical-align:middle}
+.cm-table tbody tr{background:transparent!important;cursor:pointer}
+.cm-table tbody tr:last-child td{border-bottom:0}
+.cm-table tbody tr:hover td{background:color-mix(in srgb,var(--pr-accent) 8%,transparent)!important}
+.cm-table tbody tr:focus-visible{outline:2px solid var(--pr-accent);outline-offset:-2px}
+.cm-table tr.cm-out{display:none}
+.cm-table .table-group-row td{padding:8px 20px;background:var(--pr-soft)!important;font-size:11px;font-weight:650;cursor:default}
+.cm-table .table-group-row strong{margin-left:8px;color:var(--pr-muted);font-weight:500}
+.cm-person{display:inline-flex;align-items:center;gap:11px}
+.cm-person strong{font-weight:600}
+.cm-avatar{display:grid;width:32px;height:32px;place-items:center;border-radius:50%;background:color-mix(in srgb,var(--pr-accent) 12%,transparent);color:var(--pr-accent);font-size:10px;font-weight:700}
+.cm-avatar.professor{background:var(--pr-accent);color:var(--pr-on-accent)}
+.cm-role{display:inline-block;padding:3px 9px;border-radius:999px;font-size:10px;font-weight:700}
+.cm-role.professor{background:color-mix(in srgb,var(--pr-accent) 16%,transparent);color:var(--pr-accent)}
+.cm-role.student{background:var(--pr-soft);color:var(--pr-muted)}
+.cm-empty{padding:26px!important;color:var(--pr-muted)!important;text-align:center}
+@media(max-width:700px){.cm-head{flex-direction:column;align-items:flex-start}.cm-table th:nth-child(2),.cm-table td:nth-child(2){display:none}}
+/* Student page legacy table styles must not reach the members table. */
+#studentSubjectDetail .cm-table :is(th,td){border-left:0!important;border-right:0!important;border-top:0!important}
+#studentSubjectDetail .cm-table th{border-bottom:1px solid var(--pr-line)!important}
+#studentSubjectDetail .cm-table thead tr{background:transparent!important}
+:root[data-theme="dark"] .cm-card .cm-table :is(thead,thead tr,th){background:transparent!important}

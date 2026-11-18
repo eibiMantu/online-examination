@@ -56,7 +56,7 @@ ok(r.d.getElementById('takeExamModal').classList.contains('active')&&r.d.getElem
 r.w.closeExamModal();
 ok(!r.d.querySelector('#sidebar [data-panel="subject-detail-panel"]'),'redundant Subject Details sidebar item is absent');
 ok(/Handles:/.test(r.d.querySelector('#studentSubjectDetail').textContent),'professor listing identifies handled sections');
-const classmate=r.d.querySelector('#studentSubjectDetail .classmate-row');
+const classmate=r.d.querySelector('#studentSubjectDetail .cm-classmate');
 ok(!!classmate,'subject page lists classmates as clickable limited profiles');
 ok(!classmate.closest('.student-subject-tab-panel').classList.contains('active'),'classmates are kept out of the Main tab');
 subjectTabs[1].click();

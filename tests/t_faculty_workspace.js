@@ -99,9 +99,10 @@ weekEditor.querySelector('.week-editor-close').click();
 
 r.w.FacultySubjectWorkspace.showTab('members');
 ok(/Prof\.|F1/.test(r.d.querySelector('.workspace-main').textContent),'Members lists faculty across the subject');
-ok(!!r.d.querySelector('.workspace-table table')&&!!r.d.querySelector('.member-row'),'Members use a professor table');
-r.d.querySelector('.member-row').click();
-ok(!!r.d.querySelector('.member-section-table'),'Professor row expands to a handled-sections table');
+ok(!!r.d.querySelector('.cm-table')&&!!r.d.querySelector('.cm-row[data-role="Professor"]'),'Class tab lists members in one table with roles');
+ok(!!r.d.querySelector('.cm-tools .table-search-toggle')&&!!r.d.querySelector('.cm-tools .table-group-toggle'),'members table has search, sort and group-by tools');
+r.d.querySelector('[data-cm-filter="Student"]')?.click();
+ok(!r.d.querySelector('.cm-row[data-role="Professor"]:not(.cm-out)'),'role pill filters the members table');
 r.w.FacultySubjectWorkspace.showTab('grades');
 ok(!!r.d.querySelector('.workspace-grade-table table'),'Grades provides a section assessment table');
 r.w.FacultySubjectWorkspace.showTab('logs');

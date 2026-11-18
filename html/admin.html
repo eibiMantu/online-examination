@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Online Examination</title>
     <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/shared-ui.css?v=20261118-keep-search"><link rel="stylesheet" href="../css/responsive-shell.css?v=20261118-4"><link rel="stylesheet" href="../css/prompts.css?v=20261118-2">
+    <link rel="stylesheet" href="../css/shared-ui.css?v=20261118-keep-search"><link rel="stylesheet" href="../css/responsive-shell.css?v=20261118-4"><link rel="stylesheet" href="../css/prompts.css?v=20261118-2"><link rel="stylesheet" href="../css/profile-popup.css?v=20261118-3"><link rel="stylesheet" href="../css/profile-oversight.css?v=20261118-2">
     <link rel="stylesheet" href="../css/admin-modern.css?v=20261118-banner-themes">
     <link rel="stylesheet" href="../css/admin-workspaces.css">
     <link rel="stylesheet" href="../css/system-management.css?v=20260902-announcement-menu-right">
@@ -18,7 +18,7 @@
     <script src="../js/demo-data.js"></script>
     <script src="../js/section-service.js"></script>
     <script src="../js/grading.js"></script>
-    <script src="../js/student-profile.js"></script>
+    <script src="../js/student-profile.js"></script><script src="../js/role-profile.js?v=20261118-overview-2"></script>
     <script src="../js/faculty-profile.js"></script>
     <script src="../js/audit-service.js"></script>
     <script src="../js/permission-service.js"></script>
@@ -585,6 +585,7 @@
     if(tab==='overview'){
       const subjectRows=p.subjectRows.map(row=>`<tr><td><strong>${row.code}</strong></td><td>${row.name}</td><td>${row.sections.join(', ')||'—'}</td><td>${row.professors.length?row.professors.map(prof=>`Prof. ${prof.first} ${prof.last}`).join(', '):'No professor assigned'}</td></tr>`).join('');
       document.getElementById('studentProfileContent').innerHTML=`<section class="profile-stat-grid"><div><strong>${p.stats.subjects}</strong><span>Subjects</span></div><div><strong>${p.stats.attempts}</strong><span>Attempts</span></div><div><strong>${p.stats.completed}</strong><span>Graded</span></div><div><strong>${p.stats.average===null?'—':p.stats.average.toFixed(1)+'%'}</strong><span>Average</span></div></section><section class="profile-relationship-card"><h3>Subjects, sections, and professors</h3><div class="table-scroll"><table class="profile-relationship-table"><thead><tr><th>Subject code</th><th>Subject name</th><th>Section</th><th>Professor</th></tr></thead><tbody>${subjectRows||'<tr><td colspan="4" class="profile-empty">No subjects assigned.</td></tr>'}</tbody></table></div></section>`;
+      if(typeof RoleProfileViewer!=='undefined'&&RoleProfileViewer.performance)document.getElementById('studentProfileContent').insertAdjacentHTML('beforeend',RoleProfileViewer.performance(p.student?.id||''));
     } else if(tab==='history'){
       renderStudentHistoryInto('studentProfileContent');
     } else if(tab==='grades') {

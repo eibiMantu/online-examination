@@ -32,6 +32,7 @@ const FACULTY_REPORTS_OVERVIEW=fs.readFileSync(DIR+'../js/faculty-reports-overvi
 const LESSON_VIEWER=fs.readFileSync(DIR+'../js/lesson-viewer.js','utf8');
 const LESSON_VIEW_MODE=fs.readFileSync(DIR+'../js/lesson-view-mode.js','utf8');
 const COURSE_PATH=fs.readFileSync(DIR+'../js/course-path.js','utf8');
+const CLASS_MEMBERS=fs.readFileSync(DIR+'../js/class-members.js','utf8');
 const STUDENT_LESSONS=fs.readFileSync(DIR+'../js/student-lessons.js','utf8');
 const FACULTY_LESSONS=fs.readFileSync(DIR+'../js/faculty-lessons.js','utf8');
 const STUDENT_CARD_TOOLS=fs.readFileSync(DIR+'../js/student-card-tools.js','utf8');
@@ -67,6 +68,7 @@ function load(page, seed, opts={}){
     .replace(/<script src="\.\.\/js\/lesson-viewer\.js(?:\?[^"]*)?"><\/script>/, () => `<script>${LESSON_VIEWER}</script>`)
     .replace(/<script src="\.\.\/js\/lesson-view-mode\.js(?:\?[^"]*)?"><\/script>/, () => `<script>${LESSON_VIEW_MODE}</script>`)
     .replace(/<script src="\.\.\/js\/course-path\.js(?:\?[^"]*)?"><\/script>/, () => `<script>${COURSE_PATH}</script>`)
+    .replace(/<script src="\.\.\/js\/class-members\.js(?:\?[^"]*)?"><\/script>/, () => `<script>${CLASS_MEMBERS}</script>`)
     .replace(/<script src="\.\.\/js\/student-lessons\.js(?:\?[^"]*)?"><\/script>/, () => `<script>${STUDENT_LESSONS}</script>`)
     .replace(/<script src="\.\.\/js\/faculty-lessons\.js(?:\?[^"]*)?"><\/script>/, () => `<script>${FACULTY_LESSONS}</script>`)
     .replace('<script src="../js/student-card-tools.js"></script>', `<script>${STUDENT_CARD_TOOLS}</script>`)
