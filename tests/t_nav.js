@@ -1,8 +1,8 @@
 const {load,SEED}=require('./harness');
 const ok=(c,m)=>console.log(`  ${c?'✅':'❌'} ${m}`);
 const pages=[
-  ['admin.html',  {username:'admin',role:'admin'}, 9, 'Dashboard'],
-  ['faculty.html',{username:'F1',role:'faculty'},   4, 'My Subjects'],
+  ['admin.html',  {username:'admin',role:'admin'}, 10, 'Dashboard'],
+  ['faculty.html',{username:'F1',role:'faculty'},   6, 'Dashboard'],
   ['student.html',{username:'S1',role:'student'},   6, 'Dashboard']
 ];
 
@@ -15,11 +15,12 @@ for(const [page,user,count,firstLabel] of pages){
   ok(!!bar,`${page}: has a sidebar`);
   ok(!!btn,`${page}: has a menu button`);
   ok(links.length===count,`${page}: ${links.length} sections (expected ${count})`);
-  ok(page==='student.html'?!r.d.querySelector('.topbar'):r.d.getElementById('pageTitle').textContent==='NEW ERA UNIVERSITY',page==='student.html'?`${page}: legacy top header is removed`:`${page}: site header shows the institution name`);
+  ok(page==='student.html'?!r.d.querySelector('.topbar'):/NEW ERA UNIVERSITY/.test(r.d.querySelector('#pageTitle,.page-title,.topbar-title')?.textContent||''),page==='student.html'?`${page}: legacy top header is removed`:`${page}: site header shows the institution name`);
   const headerControls=r.d.querySelector('.topbar-right .profile-wrap');
   ok(page==='student.html'?!headerControls:!!headerControls?.querySelector('.header-inbox-btn')&&headerControls.firstElementChild.classList.contains('header-inbox-wrap'),page==='student.html'?`${page}: legacy header controls are removed`:`${page}: inbox sits beside and before the profile icon`);
   ok(links[0].classList.contains('active'),`${page}: first section marked active`);
   ok([...links].every(a=>a.querySelector('.nav-icon')),`${page}: every link has an icon`);
+  ok(page==='student.html'||(r.d.body.classList.contains('role-shell-ready')&&!!r.d.querySelector('.role-sidebar-brand')&&!!r.d.querySelector('.role-sidebar-profile')&&!!r.d.getElementById('role-mail-panel')),`${page}: shared shell includes school identity, Mail page, and bottom profile`);
   r.w.close();
 }
 
@@ -36,7 +37,12 @@ const coordinatorSeed=SEED();coordinatorSeed.users.push({username:'coordinator.d
 const coordinatorNavPage=load('coordinator.html',{...coordinatorSeed,currentUser:{username:'coordinator.demo',role:'coordinator'}});
 ok(coordinatorNavPage.d.querySelector('#sidebar [data-panel="sectionManagementSection"]')?.textContent.includes('Section Management'),'Section Management is owned by the Faculty Coordinator');
 ok(coordinatorNavPage.d.querySelectorAll('.role-action-card').length===6&&coordinatorNavPage.d.querySelector('.role-action-card-wide')?.textContent.includes('Coordinator logs'),'Coordinator dashboard combines assignment and enrollment applications while keeping Logs full-width');
+ok(coordinatorNavPage.d.body.classList.contains('role-shell-ready')&&!!coordinatorNavPage.d.querySelector('.role-sidebar-profile')&&!!coordinatorNavPage.d.getElementById('role-mail-panel'),'Coordinator receives the shared shell, Mail page, and bottom profile');
 coordinatorNavPage.w.close();
+const deanSeed=SEED();deanSeed.users.push({username:'dean.demo',role:'dean',status:'active'});
+const deanNavPage=load('dean.html',{...deanSeed,currentUser:{username:'dean.demo',role:'dean'}});
+ok(deanNavPage.d.body.classList.contains('role-shell-ready')&&deanNavPage.d.querySelectorAll('#sidebar a').length===6&&!!deanNavPage.d.querySelector('.role-sidebar-profile')&&!!deanNavPage.d.getElementById('role-mail-panel'),'Dean receives the shared shell, Mail page, and bottom profile');
+deanNavPage.w.close();
 adminNavPage.w.close();
 
 const studentNavPage=load('student.html',{...SEED(),currentUser:{username:'S1',role:'student'}});

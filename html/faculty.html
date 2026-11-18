@@ -10,7 +10,7 @@
 <script src="../js/permission-service.js"></script>
 <script src="../js/approval-service.js"></script>
 <script src="../js/academic-workflow-service.js"></script>
-<script src="../js/admin-table-tools.js"></script>
+<script src="../js/admin-table-tools.js?v=20261118-keep-search"></script>
 <script src="../js/auth.js"></script>
 <script src="../js/weekly-learning.js"></script>
 <script src="../js/demo-data.js"></script>
@@ -912,15 +912,34 @@
     .exam-settings-nav button:hover { background:var(--surface-soft); color:var(--accent); }.exam-settings-nav button svg { width:18px; height:18px; flex:none; fill:currentColor; }.exam-settings-nav button.danger { color:var(--danger); }
 </style>
 <!-- Loaded after the page styles so the shared tokens win on ties -->
-<link rel="stylesheet" href="../css/shared-ui.css?v=20261105-header-layers">
+<link rel="stylesheet" href="../css/shared-ui.css?v=20261118-keep-search">
 <link rel="stylesheet" href="../css/faculty-subject-workspace.css?v=20261105-mobile-tabs">
 <link rel="stylesheet" href="../css/report-status.css?v=20260829-1">
+<link rel="stylesheet" href="../css/faculty-dashboard.css?v=20261118-3">
+<link rel="stylesheet" href="../css/faculty-pages.css?v=20261118-13">
+<link rel="stylesheet" href="../css/faculty-profile.css?v=20261118-4">
+<link rel="stylesheet" href="../css/faculty-exams.css?v=20261118-2">
+<link rel="stylesheet" href="../css/faculty-subject-page.css?v=20261118-3">
+<link rel="stylesheet" href="../css/faculty-exam-builder.css?v=20261118-2">
+<link rel="stylesheet" href="../css/faculty-subject-nav.css?v=20261118-2">
+<link rel="stylesheet" href="../css/faculty-subject-tabs.css?v=20261118-2">
+<link rel="stylesheet" href="../css/faculty-reports.css?v=20261118-3">
+<link rel="stylesheet" href="../css/lesson-viewer.css?v=20261118-3">
+<link rel="stylesheet" href="../css/responsive-shell.css?v=20261118-4">
 <script src="../js/dates.js"></script>
 <script src="../js/exam-timing.js"></script>
 <script src="../js/grading.js"></script>
-<script src="../js/ui.js"></script>
-<script src="../js/role-profile.js"></script>
-<script src="../js/faculty-subject-workspace.js?v=20260829-cell-menus"></script>
+<script src="../js/ui.js?v=20261118-rail"></script>
+<script src="../js/role-profile.js?v=20261118-tabs"></script>
+<script src="../js/faculty-subject-workspace.js?v=20261118-student-cells"></script>
+<script src="../js/faculty-dashboard.js?v=20261118-5"></script>
+<script src="../js/faculty-roster-insights.js?v=20261118-8"></script>
+<script src="../js/faculty-exams-overview.js?v=20261118-2"></script>
+<script src="../js/faculty-subject-nav.js?v=20261118-2"></script>
+<script src="../js/faculty-reports-overview.js?v=20261118-2"></script>
+<script src="../js/lesson-viewer.js?v=20261118-5"></script>
+<script src="../js/lesson-view-mode.js?v=20261118-1"></script>
+<script src="../js/faculty-lessons.js?v=20261118-2"></script>
 </head>
 <body data-role="faculty">
 
@@ -935,8 +954,44 @@
 
 <!-- PAGE CONTENT -->
 <div class="page">
+    <!-- Dashboard Tab -->
+    <div id="dashboard-tab" class="tab-content active">
+        <header class="role-page-hero faculty-dashboard-hero">
+            <div class="fd-hero-copy"><p class="role-page-eyebrow" id="fdDate">Today</p><h1 id="fdGreeting">Welcome back</h1><p class="role-page-copy" id="fdSummary"></p></div>
+            <div class="fd-hero-stats" id="fdHeroStats" aria-label="Teaching summary"></div>
+        </header>
+        <div class="fd-layout" id="facultyDashboard">
+            <div class="fd-main">
+                <section class="fd-card" aria-labelledby="fdTopTitle">
+                    <header class="fd-card-head"><div><h2 id="fdTopTitle">Top performing students</h2><p>Highest average examination scores among your students</p></div><select id="fdTopFilter" class="fd-select" aria-label="Show top performers for subject"></select></header>
+                    <div id="fdTopChart" class="fd-top-chart"></div>
+                </section>
+                <section class="fd-card" aria-labelledby="fdPerfTitle">
+                    <header class="fd-card-head"><div><h2 id="fdPerfTitle">Class performances</h2><p>Average score of each section across this subject's examinations</p></div><select id="fdPerfSubject" class="fd-select" aria-label="Subject for class performances"></select></header>
+                    <div id="fdPerfChart" class="fd-perf-chart"></div>
+                    <div id="fdPerfLegend" class="fd-legend" aria-label="Show or hide sections"></div>
+                    <div id="fdPerfTable" class="fd-perf-table"></div>
+                </section>
+                <section class="fd-card" aria-labelledby="fdClassesTitle">
+                    <header class="fd-card-head"><div><span class="fd-eyebrow">Current teaching load</span><h2 id="fdClassesTitle">My classes</h2></div><button type="button" class="fd-text-link" data-fd-subjects>View all</button></header>
+                    <div id="fdClassRow" class="fd-class-row"></div>
+                </section>
+            </div>
+            <aside class="fd-side" aria-label="Calendar and day schedule">
+                <section class="fd-card" aria-labelledby="fdCalendarTitle">
+                    <div class="fd-calendar-head"><div><span class="fd-eyebrow">Calendar</span><h2 id="fdCalendarTitle">Month</h2></div><div class="fd-calendar-nav"><button type="button" class="fd-icon-btn" data-fd-month="-1" aria-label="Previous month">‹</button><button type="button" class="fd-icon-btn" data-fd-month="1" aria-label="Next month">›</button></div></div>
+                    <div id="fdCalendar" class="fd-calendar"></div>
+                </section>
+                <section class="fd-card" aria-labelledby="fdDayTitle">
+                    <div class="fd-day-head"><div><span class="fd-eyebrow">Selected day</span><h2 id="fdDayTitle">Today</h2></div><button type="button" class="fd-today-btn" data-fd-today>Today</button></div>
+                    <div id="fdAgenda" class="fd-agenda" aria-live="polite"></div>
+                </section>
+            </aside>
+        </div>
+    </div>
+
     <!-- Subjects Tab -->
-    <div id="subjects-tab" class="tab-content active">
+    <div id="subjects-tab" class="tab-content">
         <div class="subjects-grid" id="subjectList">
             <!-- subject cards auto inserted here -->
         </div>
@@ -961,39 +1016,46 @@
 </div>
 
 <!-- Exam Creation/Edit Modal -->
-<div id="examModal" class="modal-bg">
-    <div class="modal">
-        <h3 id="examModalTitle">Create New Exam</h3>
-        <div class="form-group">
+<div id="examModal" class="modal-bg exam-builder-bg">
+    <div class="modal exam-builder" role="dialog" aria-modal="true" aria-labelledby="examModalTitle">
+        <header class="exam-builder-hero">
+            <div><p class="exam-builder-eyebrow" id="examModalEyebrow">Examination setup</p><h3 id="examModalTitle">Create New Exam</h3><p class="exam-builder-copy" id="examModalCopy">Set the subject, schedule, and rules. Questions are added after saving.</p></div>
+            <button type="button" class="exam-builder-close" onclick="closeExamModal()" aria-label="Close">&times;</button>
+        </header>
+        <div class="exam-builder-body">
+        <section class="exam-form-card">
+            <header><span>1</span><div><h4>Basics</h4><p>Which subject and sections take this exam, and what students will see.</p></div></header>
+            <div class="form-group">
             <label>Subject:</label>
             <select id="examSubject"></select>
         </div>
-        <fieldset class="inspector-group exam-section-field">
+            <fieldset class="inspector-group exam-section-field">
             <legend>Sections taking this exam</legend>
             <div id="examSectionChoices" class="exam-section-choices"></div>
             <small class="field-hint">Only students enrolled in the selected sections can take this exam.</small>
         </fieldset>
-        <div class="form-group">
+            <div class="form-group">
             <label>Exam Title:</label>
             <input type="text" id="examTitle" placeholder="e.g., Quiz 2 - Chapter 5">
         </div>
-        <div class="form-group">
+            <div class="form-group">
             <label>Description:</label>
             <textarea id="examDesc" placeholder="Exam description and instructions..."></textarea>
         </div>
-        <div class="form-group">
+        </section>
+        <section class="exam-form-card">
+            <header><span>2</span><div><h4>Schedule</h4><p>When the exam window opens and closes, and how long each attempt lasts.</p></div></header>
+            <div class="exam-form-row"><div class="form-group">
             <label>Date (YYYY-MM-DD):</label>
             <input type="date" id="examDate">
-        </div>
-        <div class="form-group">
+        </div><div class="form-group">
             <label>Start Time:</label>
             <input type="time" id="examStart">
-        </div>
-        <div class="form-group">
+        </div><div class="form-group">
             <label for="examEnd">End Time:</label>
             <input type="time" id="examEnd">
-        </div>
-        <div class="form-group">
+        </div></div>
+            <div class="form-group">
             <label for="examDuration">Attempt time limit (minutes):</label>
             <input type="number" id="examDuration" min="1" placeholder="Leave blank for no limit">
             <small class="field-hint">
@@ -1001,23 +1063,24 @@
                 the end time wins and the attempt is submitted then.
             </small>
         </div>
-        <div class="form-group">
+        </section>
+        <section class="exam-form-card">
+            <header><span>3</span><div><h4>Attempt rules</h4><p>Passing grade, allowed materials, and how students move through questions.</p></div></header>
+            <div class="exam-form-row"><div class="form-group">
             <label for="examPassing">Passing grade (%):</label>
             <input type="number" id="examPassing" min="1" max="100" value="75">
-        </div>
-        <div class="form-group">
+        </div><div class="form-group">
             <label for="examMaterials">Allowed materials:</label>
             <input type="text" id="examMaterials" placeholder="e.g. One A4 sheet of notes; no calculators">
-        </div>
-        <div class="form-group">
+        </div></div>
+            <div class="exam-form-row"><div class="form-group">
             <label for="examQuestionLayout">Question presentation:</label>
             <select id="examQuestionLayout">
                 <option value="paged">One question per page</option>
                 <option value="all">All questions on one page</option>
             </select>
             <small class="field-hint">One question per page is recommended for focus and smaller screens.</small>
-        </div>
-        <div class="form-group">
+        </div><div class="form-group">
             <label for="examNavigationMode">Student navigation:</label>
             <select id="examNavigationMode">
                 <option value="free">Free navigation</option>
@@ -1028,17 +1091,19 @@
                 Free allows any question. Sequential unlocks questions in order but permits review.
                 Forward-only prevents returning to earlier questions.
             </small>
-        </div>
-        <fieldset class="inspector-group">
-            <legend>After submission</legend>
+        </div></div>
+        </section>
+        <section class="exam-form-card">
+            <header><span>4</span><div><h4>After submission</h4><p>When students see their score, the correct answers, and feedback.</p></div></header>
             <div class="form-group"><label for="examScoreRelease">Release score and grade:</label><select id="examScoreRelease"><option value="immediate">Immediately</option><option value="after-deadline">After deadline</option><option value="after-grading">After manual grading</option><option value="date">On chosen date</option><option value="never">Never</option></select></div>
             <div class="form-group"><label for="examAnswerRelease">Release correct answers:</label><select id="examAnswerRelease"><option value="immediate">Immediately</option><option value="after-deadline">After deadline</option><option value="date">On chosen date</option><option value="never" selected>Never</option></select></div>
             <div class="form-group"><label for="examResultReleaseAt">Chosen release date and time:</label><input type="datetime-local" id="examResultReleaseAt"></div>
             <div class="checkbox-stack"><label><input type="checkbox" id="examShowSubmittedAnswers"> Show the student's submitted answers</label><label><input type="checkbox" id="examShowFeedback" checked> Show Faculty feedback</label></div>
-        </fieldset>
-        <div class="modal-buttons">
-            <button class="save-btn" onclick="saveExam()">Save Exam</button>
+        </section>
+        </div>
+        <div class="modal-buttons exam-builder-actions">
             <button class="cancel-btn" onclick="closeExamModal()">Cancel</button>
+            <button class="save-btn" onclick="saveExam()">Save Exam</button>
         </div>
     </div>
 </div>
@@ -1390,6 +1455,9 @@ function switchTab(tabName, btnEl) {
 }
 
 function onFacultySection(id) {
+    // Keep the nested subject highlighted only while its workspace is open.
+    if (typeof FacultySubjectNav !== 'undefined' && id !== 'subject-workspace-tab') FacultySubjectNav.mark(null);
+    if (id === 'dashboard-tab') FacultyDashboard.render();
     if (id === 'exams-tab') displayAllFacultyExams();
     if (id === 'students-tab') displayMyStudents();
     if (id === 'reports-tab') displayQuestionReports();
@@ -1437,6 +1505,7 @@ function displayQuestionReports() {
       const pill=card.querySelector('.report-status');
       if(pill)pill.textContent=visualStatus[0].toUpperCase()+visualStatus.slice(1);
     });
+    if(typeof FacultyReportsOverview!=='undefined')FacultyReportsOverview.decorate(host,allReports,activeReportTab);
 }
 
 function focusQuestionReport(reportId){
@@ -1597,7 +1666,7 @@ function beginExamFormSession() {
 
 function openExamModal(subjectCode = null) {
     currentEditingExamId = null;
-    document.getElementById('examModalTitle').textContent = 'Create New Exam';
+    document.getElementById('examModalTitle').textContent = 'Create New Exam'; document.getElementById('examModalEyebrow').textContent='Examination setup'; document.getElementById('examModalCopy').textContent='Set the subject, schedule, and rules. Questions are added after saving.';
    
     // Clear form
     document.getElementById('examSubject').value = subjectCode || '';
@@ -1633,7 +1702,7 @@ function editExam(examId) {
     if (!required(exam, 'That record no longer exists. The list has been refreshed.')) { displayAllFacultyExams(); return; }
 
     currentEditingExamId = examId;
-    document.getElementById('examModalTitle').textContent = 'Edit Exam';
+    document.getElementById('examModalTitle').textContent = 'Edit Exam'; document.getElementById('examModalEyebrow').textContent='Edit examination'; document.getElementById('examModalCopy').textContent='Changes apply to this exam only. Questions are managed from the question bank.';
    
     document.getElementById('examSubject').value = exam.subjectCode;
     document.getElementById('examTitle').value = exam.title;
@@ -1862,6 +1931,8 @@ function examActionsMenu(examId) {
 }
 
 function displayAllFacultyExams() {
+    // Student-Examinations layout (status cards, chart, filters, row cards).
+    if (typeof FacultyExamsOverview !== 'undefined') { FacultyExamsOverview.render(); return; }
     const myExams = exams.filter(e => e.facultyId === facultyId);
     const examsView = document.getElementById('examsView');
 
@@ -3171,12 +3242,14 @@ function renderStudentSectionTable() {
     const sectionIds=[...new Set(subjectOfferings.map(item=>item.sectionId).filter(Boolean))].sort();
     if(!sectionIds.includes(activeStudentRosterSection))activeStudentRosterSection=sectionIds[0];
     const studentsForSection=id=>freshStudents.filter(student=>freshEnrollments.some(item=>item.studentId===student.id&&item.sectionId===id&&item.subjectCode===activeStudentRosterSubject)).sort((a,b)=>a.last.localeCompare(b.last)||a.first.localeCompare(b.first)||a.id.localeCompare(b.id));
-    const roster=studentsForSection(activeStudentRosterSection);
+    const analytics=rosterAnalytics(myOfferings,freshEnrollments);
+    const {rows:roster,examCount:rosterExamCount}=rosterWithStats(studentsForSection(activeStudentRosterSection),analytics,activeStudentRosterSubject,activeStudentRosterSection);
     const subjectTabs=subjectCodes.map(code=>{const subject=freshSubjects.find(item=>item.code===code);return `<button type="button" class="student-section-tab ${code===activeStudentRosterSubject?'active':''}" onclick="selectStudentRosterSubject('${code}')" title="${subject?.name||code}">${code}</button>`}).join('');
     const sectionTabs=sectionIds.map(id=>`<button type="button" class="student-section-tab ${id===activeStudentRosterSection?'active':''}" onclick="selectStudentRosterSection('${id}')">${id}<span class="student-section-count">${studentsForSection(id).length}</span></button>`).join('');
-    const rows=roster.map(student=>`<tr role="link" tabindex="0" aria-label="Open profile for ${student.first} ${student.last}" onclick="RoleProfileViewer.openStudent('${student.id}',{viewerRole:'faculty',viewerId:'${facultyId}',subjectCode:'${activeStudentRosterSubject}',sectionId:'${activeStudentRosterSection}'})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}"><td><strong>${student.id}</strong></td><td><span class="roster-name">${student.last}, ${student.first}</span></td><td><span class="roster-subject-chip">${activeStudentRosterSection}</span></td><td><button type="button" class="roster-manage-button" onclick="event.stopPropagation();openStudentAssignModal('${student.id}')">Manage subjects</button></td></tr>`).join('');
+    const rows=roster.map((student,index)=>{const cells=rosterRowCells(student,index,rosterExamCount);return `<tr role="link" tabindex="0" data-search="${cells.search}" aria-label="Open profile for ${student.first} ${student.last}" onclick="RoleProfileViewer.openStudent('${student.id}',{viewerRole:'faculty',viewerId:'${facultyId}',subjectCode:'${activeStudentRosterSubject}',sectionId:'${activeStudentRosterSection}'})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}"><td>${cells.person}</td><td><strong>${student.id}</strong></td><td><span class="roster-subject-chip">${activeStudentRosterSection}</span></td>${cells.taken}${cells.score}</tr>`}).join('');
     const activeSubject=freshSubjects.find(item=>item.code===activeStudentRosterSubject);
-    studentsView.innerHTML=`<div class="exams-section"><header class="roster-page-head"><div><h2>My Students</h2><p>Browse students enrolled in your subjects, open profiles, or manage their enrollment.</p></div><button type="button" class="roster-manage-button primary" onclick="openStudentAssignModal()">Manage student subjects</button></header><div class="roster-tab-label">Subjects</div><div class="student-section-tabs" role="tablist" aria-label="Subjects">${subjectTabs}</div><div class="roster-subject-context"><strong>${activeSubject?.name||activeStudentRosterSubject}</strong><span>${activeStudentRosterSubject}</span></div><div class="roster-tab-label">Sections</div><div class="student-section-tabs" role="tablist" aria-label="Sections in ${activeStudentRosterSubject}">${sectionTabs}</div><div class="table-scroll student-roster-shell"><table class="student-roster-table"><thead><tr><th>Student ID</th><th>Student</th><th>Section</th><th>Subject management</th></tr></thead><tbody>${rows||'<tr><td colspan="4" class="muted-cell">No students enrolled in this subject and section.</td></tr>'}</tbody></table></div></div>`;
+    studentsView.innerHTML=`<div class="exams-section"><div class="roster-insights">${rosterPerformanceCard(analytics)}${rosterStudentsCard(analytics)}</div><section class="roster-card" aria-label="Student roster"><header class="roster-card-head"><div class="roster-subject-context"><strong>${activeSubject?.name||activeStudentRosterSubject}</strong><span>${activeStudentRosterSubject}</span></div>${rosterTableTools(roster.length,activeStudentRosterSection)}</header><div class="roster-filter-row"><div class="roster-tab-label">Subjects</div><div class="student-section-tabs roster-pills" role="tablist" aria-label="Subjects">${subjectTabs}</div></div><div class="roster-filter-row"><div class="roster-tab-label">Sections</div><div class="student-section-tabs roster-pills" role="tablist" aria-label="Sections in ${activeStudentRosterSubject}">${sectionTabs}</div></div><div class="table-scroll student-roster-shell"><table class="student-roster-table"><thead><tr><th scope="col">Student</th><th scope="col">Student ID</th><th scope="col">Section</th><th scope="col">Exams taken</th><th scope="col">Average score</th></tr></thead><tbody>${rows||'<tr><td colspan="5" class="muted-cell">No students enrolled in this subject and section.</td></tr>'}</tbody></table></div></section></div>`;
+    mountRosterTableTools();
 }
 
 function displayMyStudents() {
@@ -3256,14 +3329,37 @@ function openStudentAssignModal(studentId=''){
     select.innerHTML='<option value="">-- Select Student --</option>'+fresh.map(s=>`<option value="${s.id}" ${s.id===studentId?'selected':''}>${s.id} - ${s.last}, ${s.first}</option>`).join('');
     document.getElementById('studentAssignModal').classList.add('active');loadSubjectsForStudent();
 }
-function loadSubjectsForStudent(){
-    const studentId=document.getElementById('assignStudent').value,host=document.getElementById('subjectCheckboxList');if(!studentId){host.innerHTML='<p class="muted-cell">Choose a student to view subject details.</p>';return}
+/* Enrollment tools for one student, as separate panels so they can be shown
+   in the Manage Student Subjects modal and in the student profile tabs. */
+function facultyEnrollmentPanels(studentId){
     const offers=facultyActiveOfferings(),enrollments=DB.read('studentEnrollments',[]),catalog=DB.read('subjects',[]),owned=enrollments.filter(item=>item.studentId===studentId&&offers.some(offer=>facultyEnrollmentMatches(item,offer))),enrolledCodes=new Set(enrollments.filter(item=>item.studentId===studentId).map(item=>item.subjectCode)),available=[...new Set(offers.map(item=>item.subjectCode).filter(code=>!enrolledCodes.has(code)))].sort(),requests=ApprovalService.queryFor(session,{type:'faculty-student-enrollment'}).filter(item=>item.proposedChange?.studentId===studentId),pendingCodes=new Set(requests.filter(item=>item.status==='pending').map(item=>item.proposedChange.subjectCode));
     const rows=owned.map(item=>{const subject=catalog.find(entry=>entry.code===item.subjectCode),pending=pendingCodes.has(item.subjectCode);return `<tr><td><strong>${item.subjectCode}</strong><small>${subject?.name||'Subject'}</small></td><td>${item.sectionId}</td><td><button type="button" class="roster-manage-button" onclick="openFacultySectionPicker('${item.subjectCode}','change','${item.id||''}')" ${pending?'disabled':''}>${pending?'Pending':'Change section'}</button> <button type="button" class="roster-remove-button" onclick="removeStudentEnrollment('${item.id||''}','${item.subjectCode}','${item.sectionId}')" ${pending?'disabled':''}>Remove</button></td></tr>`}).join('');
     const choices=available.map(code=>{const subject=catalog.find(item=>item.code===code),count=offers.filter(item=>item.subjectCode===code).length,pending=pendingCodes.has(code);return `<button type="button" class="faculty-available-subject" onclick="openFacultySectionPicker('${code}','add','')" ${pending?'disabled':''}><span><strong>${code}</strong><small>${subject?.name||'Subject'}</small></span><em>${pending?'Pending':`${count} section${count===1?'':'s'} ›`}</em></button>`}).join('');
     const requestRows=requests.map(item=>`<tr><td><strong>${item.proposedChange.subjectCode}</strong><small>${item.proposedChange.action}</small></td><td>${item.proposedChange.sectionId||item.proposedChange.expectedEnrollment?.sectionId||'—'}</td><td><span>${item.status[0].toUpperCase()+item.status.slice(1)}</span></td></tr>`).join('');
-    host.innerHTML=`<section class="faculty-enrollment-panel"><header><h4>Enrolled with you</h4><span>${owned.length}</span></header><div class="table-scroll"><table class="faculty-enrollment-table"><thead><tr><th>Subject</th><th>Section</th><th>Change</th></tr></thead><tbody>${rows||'<tr><td colspan="3" class="muted-cell">No subjects under you yet.</td></tr>'}</tbody></table></div></section><section class="faculty-enrollment-panel"><header><h4>Available subjects</h4><span>Active semester</span></header><div class="faculty-available-list">${choices||'<p class="muted-cell">No additional active-semester subjects are available.</p>'}</div></section><section class="faculty-enrollment-panel"><header><h4>Requests</h4><span>${requests.length}</span></header><div class="table-scroll"><table class="faculty-enrollment-table"><thead><tr><th>Subject</th><th>Section</th><th>Status</th></tr></thead><tbody>${requestRows||'<tr><td colspan="3" class="muted-cell">No enrollment requests yet.</td></tr>'}</tbody></table></div></section>`;
+    return {
+        owned:owned.length,pending:requests.filter(item=>item.status==='pending').length,requests:requests.length,
+        enrolled:`<section class="faculty-enrollment-panel"><header><h4>Enrolled with you</h4><span>${owned.length}</span></header><div class="table-scroll"><table class="faculty-enrollment-table"><thead><tr><th>Subject</th><th>Section</th><th>Change</th></tr></thead><tbody>${rows||'<tr><td colspan="3" class="muted-cell">No subjects under you yet.</td></tr>'}</tbody></table></div></section>`,
+        available:`<section class="faculty-enrollment-panel"><header><h4>Available subjects</h4><span>Active semester</span></header><div class="faculty-available-list">${choices||'<p class="muted-cell">No additional active-semester subjects are available.</p>'}</div></section>`,
+        history:`<section class="faculty-enrollment-panel"><header><h4>Requests</h4><span>${requests.length}</span></header><div class="table-scroll"><table class="faculty-enrollment-table"><thead><tr><th>Subject</th><th>Section</th><th>Status</th></tr></thead><tbody>${requestRows||'<tr><td colspan="3" class="muted-cell">No enrollment requests yet.</td></tr>'}</tbody></table></div></section>`
+    };
 }
+function loadSubjectsForStudent(){
+    const studentId=document.getElementById('assignStudent').value,host=document.getElementById('subjectCheckboxList');if(!studentId){host.innerHTML='<p class="muted-cell">Choose a student to view subject details.</p>';return}
+    const panels=facultyEnrollmentPanels(studentId);
+    host.innerHTML=panels.enrolled+panels.available+panels.history;
+    RoleProfileViewer?.refresh?.();
+}
+/* The section picker and remove actions read the student from #assignStudent;
+   point it at the profile's student without opening the modal. */
+function useEnrollmentStudent(studentId){
+    const select=document.getElementById('assignStudent');if(!select)return;
+    if(![...select.options].some(option=>option.value===studentId)){const student=DB.read('students',students).find(item=>item.id===studentId);select.insertAdjacentHTML('beforeend',`<option value="${studentId}">${studentId} - ${student?`${student.last}, ${student.first}`:''}</option>`);}
+    select.value=studentId;
+}
+RoleProfileViewer.registerTabs?.('faculty',[
+    {id:'manage-subjects',label:'Manage subjects',render(studentId){useEnrollmentStudent(studentId);const panels=facultyEnrollmentPanels(studentId);return `<div class="role-profile-manage"><p class="role-profile-manage-note">Add this student to one of your subjects, move them to another of your sections, or remove a subject. Each change is sent to the Dean for approval.</p>${panels.enrolled}${panels.available}</div>`}},
+    {id:'manage-student',label:'Manage student',render(studentId){useEnrollmentStudent(studentId);const panels=facultyEnrollmentPanels(studentId);return `<div class="role-profile-manage"><div class="role-profile-stats"><div><strong>${panels.owned}</strong><span>Subjects with you</span></div><div><strong>${panels.pending}</strong><span>Pending requests</span></div><div><strong>${panels.requests}</strong><span>All requests</span></div></div>${panels.history}</div>`}}
+]);
 
 function closeStudentAssignModal() {
     document.getElementById('studentAssignModal').classList.remove('active');
@@ -3449,15 +3545,17 @@ function confirmQuestionCSVUpload() {
 const pendingFacultyReportCount=reportsForExams(exams.filter(exam=>exam.facultyId===facultyId).map(exam=>exam.id)).filter(report=>report.status==='open').length;
 facultyNav = mountSidebar({
     items: [
+        { id: 'dashboard-tab', label: 'Dashboard', icon: '▦' },
         { id: 'subjects-tab', label: 'My Subjects', icon: '📚' },
         { id: 'exams-tab',    label: 'My Exams',    icon: '📝' },
         { id: 'students-tab', label: 'My Students', icon: '🎓' }
         ,{ id: 'reports-tab', label: 'Reports', icon: '⚑' }
     ],
-    panels: ['subjects-tab', 'exams-tab', 'students-tab', 'reports-tab', 'subject-workspace-tab'],
+    panels: ['dashboard-tab', 'subjects-tab', 'exams-tab', 'students-tab', 'reports-tab', 'subject-workspace-tab'],
     titleEl: null,
     onSelect: onFacultySection
 });
+if(typeof FacultySubjectNav!=='undefined')FacultySubjectNav.mount();
 if(pendingFacultyReportCount){const reportLink=document.querySelector('#sidebar [data-panel="reports-tab"]');reportLink?.insertAdjacentHTML('beforeend',`<span class="nav-count" aria-label="${pendingFacultyReportCount} pending reports">${pendingFacultyReportCount}</span>`);}
 const facultyRouteParts=location.hash.replace(/^#/,'').split('/');
 if(facultyRouteParts[0]==='reports-tab'&&facultyRouteParts[1]==='report'&&facultyRouteParts[2]){

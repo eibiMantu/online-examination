@@ -1,0 +1,104 @@
+/* ==================================================================
+   Professor subject page in the Student subject-page layout:
+   dark banner with progress, Main/Class/Exams/Grades/Logs tabs,
+   white cards, and a right rail (Open quizzes, Weekly lessons).
+   Professor theme tokens only.
+   ================================================================== */
+body.role-shell-ready[data-role="faculty"] .workspace-student-layout{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:22px;align-items:start}
+body.role-shell-ready[data-role="faculty"] .workspace-student-main{min-width:0}
+
+/* Banner (Student subject hero, Professor colors). */
+body.role-shell-ready[data-role="faculty"] #facultySubjectWorkspace .workspace-student-layout .workspace-hero{position:relative;min-height:0;margin:0 0 18px;padding:26px 28px 24px!important;overflow:hidden;border:0!important;border-radius:21px!important;background:linear-gradient(132deg,var(--role-shell-navy),var(--role-shell-role) 72%)!important;box-shadow:0 14px 32px rgba(62,48,37,.18)!important;color:#fff}
+body.role-shell-ready[data-role="faculty"] #facultySubjectWorkspace .workspace-student-layout .workspace-hero::before{display:none!important}
+body.role-shell-ready[data-role="faculty"] #facultySubjectWorkspace .workspace-student-layout .workspace-hero::after{content:"";position:absolute;right:56px;bottom:-130px;width:300px;height:300px;border:34px solid rgba(255,255,255,.07);border-radius:50%;background:none!important;pointer-events:none}
+body.role-shell-ready[data-role="faculty"] #facultySubjectWorkspace .workspace-student-layout .workspace-hero>*{position:relative;z-index:1}
+body.role-shell-ready[data-role="faculty"] #facultySubjectWorkspace .workspace-student-layout .workspace-hero-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+body.role-shell-ready[data-role="faculty"] .workspace-student-layout .workspace-course-icon{display:grid;width:40px;height:40px;place-items:center;border-radius:11px;background:rgba(255,255,255,.14)!important;color:#fff!important}
+body.role-shell-ready[data-role="faculty"] .workspace-student-layout .workspace-course-icon svg{width:20px;height:20px;fill:currentColor}
+body.role-shell-ready[data-role="faculty"] .workspace-student-layout .workspace-back{margin-left:auto}
+body.role-shell-ready[data-role="faculty"] #facultySubjectWorkspace .workspace-student-layout .workspace-hero :is(.workspace-back,.workspace-menu-trigger){display:grid;width:38px;height:38px;place-items:center;padding:0;border:1px solid rgba(255,255,255,.26)!important;border-radius:11px;background:rgba(255,255,255,.1)!important;color:#fff!important;font-size:18px;cursor:pointer}
+body.role-shell-ready[data-role="faculty"] #facultySubjectWorkspace .workspace-student-layout .workspace-hero :is(.workspace-back,.workspace-menu-trigger):hover{background:rgba(255,255,255,.2)!important}
+body.role-shell-ready[data-role="faculty"] .workspace-student-layout .workspace-back svg{width:18px;height:18px;fill:currentColor}
+body.role-shell-ready[data-role="faculty"] .workspace-student-layout .workspace-code{margin-top:18px;color:var(--role-shell-yellow)!important;font-size:12px!important;font-weight:800!important;letter-spacing:.12em}
+body.role-shell-ready[data-role="faculty"] #facultySubjectWorkspace .workspace-student-layout .workspace-hero h2{margin:8px 0 0!important;color:#fff!important;font-size:clamp(24px,2.4vw,32px)!important;font-weight:700!important;letter-spacing:-.035em;line-height:1.15}
+body.role-shell-ready[data-role="faculty"] #facultySubjectWorkspace .workspace-student-layout .workspace-hero-description{max-width:620px;margin:10px 0 0!important;color:rgba(255,255,255,.76)!important;font-size:12px!important;line-height:1.6}
+body.role-shell-ready[data-role="faculty"] .workspace-student-layout .workspace-course-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+body.role-shell-ready[data-role="faculty"] .workspace-student-layout .workspace-course-meta span{padding:6px 12px;border:1px solid rgba(255,255,255,.28)!important;border-radius:999px;background:rgba(255,255,255,.08)!important;color:#fff!important;font-size:11px;font-weight:600}
+body.role-shell-ready[data-role="faculty"] .workspace-hero-progress{max-width:520px;margin-top:20px}
+body.role-shell-ready[data-role="faculty"] .workspace-hero-progress>div{display:flex;justify-content:space-between;font-size:11px;font-weight:600}
+body.role-shell-ready[data-role="faculty"] .workspace-hero-progress strong{color:var(--role-shell-yellow)}
+body.role-shell-ready[data-role="faculty"] .workspace-hero-progress i{display:block;height:6px;margin:8px 0 6px;border-radius:999px;background:rgba(255,255,255,.2)}
+body.role-shell-ready[data-role="faculty"] .workspace-hero-progress b{display:block;height:100%;border-radius:inherit;background:#f0d3b4}
+body.role-shell-ready[data-role="faculty"] .workspace-hero-progress small{color:rgba(255,255,255,.72);font-size:10px}
+
+/* Tabs (Student underline tabs). */
+body.role-shell-ready[data-role="faculty"] .workspace-student-main>.workspace-tabs{display:flex;gap:26px;margin:0 0 18px;padding:0;border-bottom:1px solid var(--role-shell-line);background:transparent}
+body.role-shell-ready[data-role="faculty"] .workspace-student-main>.workspace-tabs .workspace-tab{margin:0;padding:10px 2px 11px;border:0;border-bottom:2px solid transparent;border-radius:0;background:transparent;color:var(--ink-soft);font-size:12px;font-weight:600;cursor:pointer}
+body.role-shell-ready[data-role="faculty"] .workspace-student-main>.workspace-tabs .workspace-tab.active{border-bottom-color:var(--accent);color:var(--accent)}
+
+/* Cards in the panels. */
+body.role-shell-ready[data-role="faculty"] .workspace-student-main .subject-detail-grid{display:grid;gap:14px}
+body.role-shell-ready[data-role="faculty"] .workspace-student-main .subject-info-cell{padding:22px 24px;border:1px solid var(--role-shell-line)!important;border-radius:18px!important;background:var(--role-shell-surface)!important;box-shadow:0 7px 20px rgba(44,40,35,.07)!important}
+body.role-shell-ready[data-role="faculty"] .workspace-student-main .subject-info-cell h3{margin:0 0 12px;color:var(--ink);font-size:16px;font-weight:650}
+body.role-shell-ready[data-role="faculty"] .workspace-student-main .subject-info-cell :is(p,dd,dt,li,span){font-size:12px}
+
+/* Exams tab overview table. */
+body.role-shell-ready[data-role="faculty"] .workspace-exam-overview{margin-bottom:14px;overflow:hidden;border:1px solid var(--role-shell-line);border-radius:18px;background:var(--role-shell-surface);box-shadow:0 7px 20px rgba(44,40,35,.07)}
+body.role-shell-ready[data-role="faculty"] .workspace-exam-overview>header{padding:22px 24px 16px}
+body.role-shell-ready[data-role="faculty"] .workspace-exam-overview>header span{color:var(--ink-soft);font-size:10px;font-weight:800;letter-spacing:.13em;text-transform:uppercase}
+body.role-shell-ready[data-role="faculty"] .workspace-exam-overview>header h3{margin:6px 0 4px;color:var(--ink);font-size:17px;font-weight:650}
+body.role-shell-ready[data-role="faculty"] .workspace-exam-overview>header p{margin:0;color:var(--ink-soft);font-size:11px}
+body.role-shell-ready[data-role="faculty"] .workspace-exam-overview table{width:100%;border-collapse:collapse;font-size:12px}
+body.role-shell-ready[data-role="faculty"] .workspace-exam-overview th{padding:10px 18px;background:var(--role-shell-surface-soft)!important;color:var(--ink-soft)!important;font-size:9px;font-weight:700;letter-spacing:.08em;text-align:left;text-transform:uppercase}
+body.role-shell-ready[data-role="faculty"] .workspace-exam-overview td{padding:13px 18px;border-top:1px solid color-mix(in srgb,var(--role-shell-line) 60%,transparent);color:var(--ink)!important;vertical-align:middle}
+body.role-shell-ready[data-role="faculty"] .workspace-exam-overview tbody tr{cursor:pointer}
+body.role-shell-ready[data-role="faculty"] .workspace-exam-overview tbody tr:hover{background:var(--accent-soft)!important}
+body.role-shell-ready[data-role="faculty"] .workspace-exam-overview td strong{display:block;font-weight:650}
+body.role-shell-ready[data-role="faculty"] .workspace-exam-overview td small{display:block;margin-top:2px;color:var(--ink-soft);font-size:10px}
+body.role-shell-ready[data-role="faculty"] .workspace-status{display:inline-block;padding:3px 9px;border-radius:999px;font-size:10px;font-weight:700}
+body.role-shell-ready[data-role="faculty"] .workspace-status.open{background:var(--accent-soft);color:var(--accent)}
+body.role-shell-ready[data-role="faculty"] .workspace-status.upcoming{background:color-mix(in srgb,#c89571 18%,transparent);color:#8a5a2e}
+body.role-shell-ready[data-role="faculty"] .workspace-status.closed{background:var(--role-shell-surface-soft);color:var(--ink-soft)}
+body.role-shell-ready[data-role="faculty"] .workspace-status.draft{border:1px dashed var(--role-shell-line);color:var(--ink-soft)}
+:root[data-theme="dark"] body.role-shell-ready[data-role="faculty"] .workspace-status.upcoming{color:#e2bf96}
+body.role-shell-ready[data-role="faculty"] .workspace-grade{display:flex;align-items:center;gap:10px}
+body.role-shell-ready[data-role="faculty"] .workspace-grade b{min-width:36px;font-weight:700}
+body.role-shell-ready[data-role="faculty"] .workspace-grade i{flex:1;min-width:70px;max-width:150px;height:5px;border-radius:999px;background:var(--role-shell-surface-soft)}
+body.role-shell-ready[data-role="faculty"] .workspace-grade em{display:block;height:100%;border-radius:inherit;background:var(--accent)}
+body.role-shell-ready[data-role="faculty"] .workspace-grade em.low{background:#b5534b}
+
+/* Right rail. */
+body.role-shell-ready[data-role="faculty"] .workspace-student-rail{position:sticky;top:20px;display:grid;gap:16px}
+body.role-shell-ready[data-role="faculty"] .rail-card{overflow:hidden;border:1px solid var(--role-shell-line);border-radius:18px;background:var(--role-shell-surface);box-shadow:0 7px 20px rgba(44,40,35,.07)}
+body.role-shell-ready[data-role="faculty"] .rail-card>header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:16px 16px 10px}
+body.role-shell-ready[data-role="faculty"] .rail-card h3{margin:0;color:var(--ink);font-size:14px;font-weight:650}
+body.role-shell-ready[data-role="faculty"] .rail-card>header>span{display:grid;min-width:22px;height:22px;place-items:center;padding:0 6px;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-size:10px;font-weight:700}
+body.role-shell-ready[data-role="faculty"] .rail-quiz{display:block;width:calc(100% - 32px);margin:0 16px 10px;padding:10px 12px;border:1px solid var(--role-shell-line);border-left:3px solid var(--role-shell-yellow,#c89571);border-radius:10px;background:var(--role-shell-surface-soft);color:var(--ink);font:inherit;text-align:left;cursor:pointer}
+body.role-shell-ready[data-role="faculty"] .rail-quiz:hover{border-color:var(--accent-line)}
+body.role-shell-ready[data-role="faculty"] .rail-quiz strong{display:block;font-size:11px;font-weight:650;line-height:1.35}
+body.role-shell-ready[data-role="faculty"] .rail-quiz small{display:block;margin-top:3px;color:var(--ink-soft);font-size:10px}
+body.role-shell-ready[data-role="faculty"] .rail-empty{margin:4px 16px 16px;color:var(--ink-soft);font-size:12px}
+body.role-shell-ready[data-role="faculty"] .rail-lessons .rail-lessons-head{padding:16px;background:linear-gradient(132deg,var(--role-shell-navy),var(--role-shell-role));color:#fff}
+body.role-shell-ready[data-role="faculty"] .rail-lessons-head span{color:var(--role-shell-yellow);font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+body.role-shell-ready[data-role="faculty"] .rail-lessons-head h3{margin-top:4px;color:#fff!important;font-size:15px}
+body.role-shell-ready[data-role="faculty"] .rail-arrows{display:flex;gap:6px}
+body.role-shell-ready[data-role="faculty"] .rail-arrows button{display:grid;width:30px;height:34px;place-items:center;padding:0;border:1px solid rgba(255,255,255,.28);border-radius:9px;background:rgba(255,255,255,.1);color:#fff;font-size:18px;cursor:pointer}
+body.role-shell-ready[data-role="faculty"] .rail-arrows button:disabled{opacity:.35;cursor:default}
+body.role-shell-ready[data-role="faculty"] .rail-lessons .rail-empty{margin:22px 16px;text-align:center}
+body.role-shell-ready[data-role="faculty"] .rail-week{padding:14px 16px 16px}
+body.role-shell-ready[data-role="faculty"] .rail-week>span{color:var(--ink-soft);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+body.role-shell-ready[data-role="faculty"] .rail-week>strong{display:block;margin:4px 0 10px;color:var(--ink);font-size:13px;font-weight:650}
+body.role-shell-ready[data-role="faculty"] .rail-week ol{display:grid;gap:6px;margin:0;padding-left:18px;color:var(--ink-soft);font-size:11px}
+body.role-shell-ready[data-role="faculty"] .rail-week>small{display:block;margin-top:8px;color:var(--ink-soft);font-size:10px}
+
+@media(max-width:920px){
+  body.role-shell-ready[data-role="faculty"] .workspace-student-layout{grid-template-columns:1fr}
+  body.role-shell-ready[data-role="faculty"] .workspace-student-rail{position:static;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+}
+
+/* Underline tabs (beat the older boxed workspace-tab styles). */
+body.role-shell-ready[data-role="faculty"] #facultySubjectWorkspace .workspace-student-main>.workspace-tabs{display:flex!important;justify-content:flex-start!important;gap:26px!important;padding:0!important;border:0!important;border-bottom:1px solid var(--role-shell-line)!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}
+body.role-shell-ready[data-role="faculty"] #facultySubjectWorkspace .workspace-student-main>.workspace-tabs .workspace-tab{flex:0 0 auto!important;width:auto!important;min-height:0!important;padding:10px 2px 11px!important;border:0!important;border-bottom:2px solid transparent!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;color:var(--ink-soft)!important}
+body.role-shell-ready[data-role="faculty"] #facultySubjectWorkspace .workspace-student-main>.workspace-tabs .workspace-tab.active{border-bottom-color:var(--accent)!important;color:var(--accent)!important}
+body.role-shell-ready[data-role="faculty"] #facultySubjectWorkspace .workspace-hero-progress span{color:#fff}
+body.role-shell-ready[data-role="faculty"] .rail-more{display:block;width:calc(100% - 32px);margin:0 16px 14px;padding:6px 0;border:0;background:transparent;color:var(--accent);font:inherit;font-size:11px;font-weight:650;text-align:left;cursor:pointer}

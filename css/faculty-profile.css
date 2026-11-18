@@ -1,0 +1,120 @@
+/* ==================================================================
+   Student profile popup on the Professor page.
+   Brown banner header, pill tabs, cream content with dashboard-style
+   cards, Student-page type scale. Includes the "Manage subjects" and
+   "Manage student" tabs (enrollment tools). Theme tokens only, so
+   dark mode follows the Professor banner.
+   ================================================================== */
+body[data-role="faculty"] .role-profile-overlay{padding:24px;background:rgba(32,24,18,.48);backdrop-filter:blur(5px)}
+body[data-role="faculty"] .role-profile-page{width:min(980px,100%);height:auto;max-height:calc(100dvh - 48px);border:0;border-radius:22px;background:color-mix(in srgb,var(--role-shell-surface,#fbf9f6) 55%,var(--role-shell-surface-soft,#e9ded0));box-shadow:0 30px 80px rgba(32,24,18,.32);font-family:'Poppins',Arial,sans-serif}
+
+/* Header: same gradient as the Professor page banners. */
+body[data-role="faculty"] .role-profile-head{gap:18px;padding:26px 30px;border:0;background:linear-gradient(135deg,var(--role-shell-navy,#3e3025),var(--role-shell-role,#865b45));color:#fff}
+body[data-role="faculty"] .role-profile-avatar{display:grid;flex:0 0 auto;width:58px;height:58px;place-items:center;border:2px solid rgba(255,255,255,.28);border-radius:50%;background:rgba(255,255,255,.14);color:#fff;font-size:17px;font-weight:700}
+body[data-role="faculty"] .role-profile-head small{color:var(--role-shell-yellow,#c89571);font-size:10px;font-weight:800;letter-spacing:.13em}
+body[data-role="faculty"] .role-profile-head h2{margin:4px 0 3px;color:#fff;font-size:26px;font-weight:700;letter-spacing:-.03em;line-height:1.15}
+body[data-role="faculty"] .role-profile-head p{color:rgba(255,255,255,.76);font-size:12px}
+body[data-role="faculty"] .role-profile-close{position:absolute;top:20px;right:22px;display:grid;width:36px;height:36px;place-items:center;padding:0;border:1px solid rgba(255,255,255,.24);border-radius:11px;background:rgba(255,255,255,.12);color:#fff;font-size:18px;line-height:1;cursor:pointer}
+body[data-role="faculty"] .role-profile-close:hover{background:rgba(255,255,255,.22)}
+
+/* Tabs: pills, like the roster filters. */
+body[data-role="faculty"] .role-profile-tabs{flex-wrap:wrap;gap:6px;padding:14px 30px;border-bottom:1px solid var(--role-shell-line,#d8cabc);background:var(--role-shell-surface,#fbf9f6)}
+body[data-role="faculty"] .role-profile-tabs button{height:32px;padding:0 14px;border:1px solid var(--role-shell-line,#d8cabc);border-radius:999px;background:transparent;color:var(--ink-soft);font-size:11px;font-weight:600;cursor:pointer}
+body[data-role="faculty"] .role-profile-tabs button:hover{border-color:var(--accent-line);color:var(--ink)}
+body[data-role="faculty"] .role-profile-tabs button.active{border-color:var(--accent);background:var(--accent);color:#fff}
+:root[data-theme="dark"] body[data-role="faculty"] .role-profile-tabs button.active{color:#241a14}
+
+/* Content cards. */
+body[data-role="faculty"] .role-profile-content{padding:22px 30px 30px}
+body[data-role="faculty"] .role-profile-stats{gap:14px;margin-bottom:16px}
+body[data-role="faculty"] .role-profile-stats>div,
+body[data-role="faculty"] .role-profile-columns>section,
+body[data-role="faculty"] .role-profile-table,
+body[data-role="faculty"] .role-profile-content .faculty-enrollment-panel{padding:18px 20px;border:1px solid var(--role-shell-line,#d8cabc);border-radius:16px;background:var(--role-shell-surface,#fbf9f6);box-shadow:0 7px 20px rgba(44,40,35,.06)}
+body[data-role="faculty"] .role-profile-stats strong{display:block;color:var(--ink);font-size:26px;font-weight:700;line-height:1.1}
+body[data-role="faculty"] .role-profile-stats span{display:block;margin-top:6px;color:var(--ink-soft);font-size:11px;font-weight:600}
+body[data-role="faculty"] .role-profile-columns{gap:14px}
+body[data-role="faculty"] .role-profile-columns h3{margin:0 0 12px;color:var(--ink);font-size:14px;font-weight:650}
+body[data-role="faculty"] .role-profile-columns p{margin:0;color:var(--ink-soft);font-size:12px;line-height:1.6}
+body[data-role="faculty"] .role-profile-row{padding:10px 0;border-bottom:1px solid var(--role-shell-line,#d8cabc);font-size:12px}
+body[data-role="faculty"] .role-profile-row:last-child{border-bottom:0}
+body[data-role="faculty"] .role-profile-row strong{color:var(--ink);font-weight:650}
+body[data-role="faculty"] .role-profile-row span{color:var(--ink-soft)}
+
+/* Tables (Grades, Activity, enrollment panels). */
+body[data-role="faculty"] .role-profile-table{padding:4px 0;overflow:auto}
+body[data-role="faculty"] :is(.role-profile-table,.role-profile-content .faculty-enrollment-panel) table{width:100%;border-collapse:collapse;font-size:12px}
+body[data-role="faculty"] :is(.role-profile-table,.role-profile-content .faculty-enrollment-panel) th{padding:10px 20px;border-bottom:1px solid var(--role-shell-line,#d8cabc);background:transparent!important;color:var(--ink-soft)!important;font-size:9px;font-weight:650;letter-spacing:.08em;text-align:left;text-transform:uppercase}
+body[data-role="faculty"] :is(.role-profile-table,.role-profile-content .faculty-enrollment-panel) td{padding:11px 20px;border-bottom:1px solid color-mix(in srgb,var(--role-shell-line,#d8cabc) 60%,transparent);color:var(--ink)!important}
+body[data-role="faculty"] :is(.role-profile-table,.role-profile-content .faculty-enrollment-panel) tr:last-child td{border-bottom:0}
+:root[data-theme="dark"] body[data-role="faculty"] :is(.role-profile-table,.role-profile-content .faculty-enrollment-panel) tbody tr{background:transparent!important}
+
+/* Manage subjects / Manage student tabs. */
+body[data-role="faculty"] .role-profile-manage{display:grid;gap:14px}
+body[data-role="faculty"] .role-profile-manage .role-profile-stats{margin:0}
+body[data-role="faculty"] .role-profile-manage-note{margin:0;color:var(--ink-soft);font-size:12px;line-height:1.6}
+body[data-role="faculty"] .role-profile-content .faculty-enrollment-panel{margin:0;padding:0;overflow:hidden}
+body[data-role="faculty"] .role-profile-content .faculty-enrollment-panel>header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 20px;border-bottom:1px solid var(--role-shell-line,#d8cabc)}
+body[data-role="faculty"] .role-profile-content .faculty-enrollment-panel h4{margin:0;color:var(--ink);font-size:13px;font-weight:650}
+body[data-role="faculty"] .role-profile-content .faculty-enrollment-panel>header span{padding:2px 9px;border-radius:999px;background:var(--role-shell-surface-soft,#e9ded0);color:var(--ink-soft);font-size:10px;font-weight:650}
+body[data-role="faculty"] .role-profile-content .faculty-enrollment-table td strong{display:block;font-weight:650}
+body[data-role="faculty"] .role-profile-content .faculty-enrollment-table td small{display:block;margin-top:2px;color:var(--ink-soft);font-size:11px}
+body[data-role="faculty"] .role-profile-content .faculty-available-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;padding:14px 20px}
+body[data-role="faculty"] .role-profile-content .faculty-available-list>p{margin:0;color:var(--ink-soft);font-size:12px}
+body[data-role="faculty"] .role-profile-content .faculty-available-subject{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;margin:0;padding:12px 14px;border:1px solid var(--role-shell-line,#d8cabc);border-radius:12px;background:var(--role-shell-surface,#fbf9f6);color:var(--ink);font:inherit;text-align:left;cursor:pointer}
+body[data-role="faculty"] .role-profile-content .faculty-available-subject:hover:not(:disabled){border-color:var(--accent-line);background:var(--accent-soft)}
+body[data-role="faculty"] .role-profile-content .faculty-available-subject strong{display:block;font-size:12px;font-weight:650}
+body[data-role="faculty"] .role-profile-content .faculty-available-subject small{display:block;margin-top:2px;color:var(--ink-soft);font-size:11px}
+body[data-role="faculty"] .role-profile-content .faculty-available-subject em{color:var(--accent);font-size:11px;font-style:normal;font-weight:650;white-space:nowrap}
+body[data-role="faculty"] .role-profile-content :is(.roster-manage-button,.roster-remove-button){display:inline-flex;align-items:center;height:28px;margin:2px 4px 2px 0;padding:0 11px;border:1px solid var(--role-shell-line,#d8cabc);border-radius:9px;background:transparent;color:var(--accent);font-size:11px;font-weight:650;cursor:pointer}
+body[data-role="faculty"] .role-profile-content .roster-remove-button{color:#b5534b}
+:root[data-theme="dark"] body[data-role="faculty"] .role-profile-content .roster-remove-button{color:#eaa59f}
+body[data-role="faculty"] .role-profile-content :is(.roster-manage-button,.roster-remove-button):hover:not(:disabled){background:var(--accent-soft)}
+body[data-role="faculty"] .role-profile-content :is(.roster-manage-button,.roster-remove-button,.faculty-available-subject):disabled{opacity:.5;cursor:not-allowed}
+
+@media(max-width:700px){
+  body[data-role="faculty"] .role-profile-overlay{padding:10px}
+  body[data-role="faculty"] .role-profile-head{padding:22px 60px 22px 20px}
+  body[data-role="faculty"] :is(.role-profile-tabs,.role-profile-content){padding-left:16px;padding-right:16px}
+  body[data-role="faculty"] .role-profile-stats{grid-template-columns:1fr}
+}
+/* Size the popup to its content and center it. */
+body[data-role="faculty"] .role-profile-overlay{align-items:center}
+body[data-role="faculty"] .role-profile-page{align-self:center}
+/* While a profile is open (overlay z 2600), whatever it opens must stack above it:
+   section picker, then confirm/reason dialogs, then toast messages. */
+body[data-role="faculty"].profile-view-open .modal-bg{z-index:2700}
+body[data-role="faculty"].profile-view-open .confirm-bg{z-index:2750}
+body[data-role="faculty"].profile-view-open .toast-host{z-index:2800}
+
+/* Section picker and "Add student" enrollment modal, in the same theme. */
+body[data-role="faculty"] :is(.faculty-section-picker,.faculty-enrollment-modal){padding:24px 26px;border:1px solid var(--role-shell-line,#d8cabc);border-radius:20px;background:var(--role-shell-surface,#fbf9f6);box-shadow:0 30px 80px rgba(32,24,18,.3);font-family:'Poppins',Arial,sans-serif}
+body[data-role="faculty"] .faculty-section-picker{width:min(520px,calc(100vw - 32px))}
+body[data-role="faculty"] .faculty-enrollment-modal{width:min(760px,calc(100vw - 32px));max-height:calc(100dvh - 48px);overflow:auto}
+body[data-role="faculty"] :is(.faculty-section-picker,.faculty-enrollment-modal) h3{margin:0 0 6px;color:var(--ink);font-size:18px;font-weight:700;letter-spacing:-.02em}
+body[data-role="faculty"] :is(.faculty-section-picker,.faculty-enrollment-modal) .faculty-enrollment-help{margin:0 0 16px;color:var(--ink-soft);font-size:12px;line-height:1.6}
+body[data-role="faculty"] .faculty-section-options{display:grid;gap:8px;padding:0}
+body[data-role="faculty"] .faculty-section-option{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;margin:0;padding:12px 14px;border:1px solid var(--role-shell-line,#d8cabc);border-radius:12px;background:var(--role-shell-surface,#fbf9f6);color:var(--ink);font:inherit;text-align:left;cursor:pointer}
+body[data-role="faculty"] .faculty-section-option:hover:not(:disabled){border-color:var(--accent-line);background:var(--accent-soft)}
+body[data-role="faculty"] .faculty-section-option.current{border-color:var(--accent);background:var(--accent-soft)}
+body[data-role="faculty"] .faculty-section-option:disabled{opacity:.55;cursor:not-allowed}
+body[data-role="faculty"] .faculty-section-option strong{display:block;font-size:13px;font-weight:650}
+body[data-role="faculty"] .faculty-section-option small{display:block;margin-top:3px;color:var(--ink-soft);font-size:11px}
+body[data-role="faculty"] .faculty-section-option em{color:var(--accent);font-size:11px;font-style:normal;font-weight:650}
+body[data-role="faculty"] :is(.faculty-section-picker,.faculty-enrollment-modal) .modal-buttons{display:flex;justify-content:flex-end;margin-top:18px}
+body[data-role="faculty"] :is(.faculty-section-picker,.faculty-enrollment-modal) .cancel-btn{width:auto;height:36px;padding:0 18px;border:1px solid var(--role-shell-line,#d8cabc);border-radius:10px;background:transparent;color:var(--ink);font-size:12px;font-weight:600;cursor:pointer}
+body[data-role="faculty"] :is(.faculty-section-picker,.faculty-enrollment-modal) .cancel-btn:hover{background:var(--accent-soft)}
+body[data-role="faculty"] .faculty-enrollment-modal .form-group label{color:var(--ink-soft);font-size:11px;font-weight:650}
+body[data-role="faculty"] .faculty-enrollment-modal select{height:38px;border:1px solid var(--role-shell-line,#d8cabc);border-radius:10px;background:var(--role-shell-surface,#fbf9f6);color:var(--ink);font-size:12px}
+body[data-role="faculty"] .faculty-enrollment-modal .faculty-enrollment-content{display:grid;gap:14px}
+body[data-role="faculty"] .faculty-enrollment-modal .faculty-enrollment-panel{margin:0;overflow:hidden;border:1px solid var(--role-shell-line,#d8cabc);border-radius:14px;background:var(--role-shell-surface,#fbf9f6)}
+body[data-role="faculty"] .faculty-enrollment-modal .faculty-enrollment-panel>header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--role-shell-line,#d8cabc)}
+body[data-role="faculty"] .faculty-enrollment-modal .faculty-enrollment-panel h4{margin:0;color:var(--ink);font-size:13px;font-weight:650}
+body[data-role="faculty"] .faculty-enrollment-modal .faculty-enrollment-panel table{width:100%;border-collapse:collapse;font-size:12px}
+body[data-role="faculty"] .faculty-enrollment-modal .faculty-enrollment-panel th{padding:9px 16px;background:transparent!important;color:var(--ink-soft)!important;font-size:9px;letter-spacing:.08em;text-align:left;text-transform:uppercase}
+body[data-role="faculty"] .faculty-enrollment-modal .faculty-enrollment-panel td{padding:10px 16px;border-top:1px solid color-mix(in srgb,var(--role-shell-line,#d8cabc) 60%,transparent);color:var(--ink)!important}
+body[data-role="faculty"] .faculty-enrollment-modal .faculty-available-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;padding:12px 16px}
+body[data-role="faculty"] .faculty-enrollment-modal .faculty-available-subject{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 13px;border:1px solid var(--role-shell-line,#d8cabc);border-radius:11px;background:var(--role-shell-surface,#fbf9f6);color:var(--ink);font:inherit;text-align:left;cursor:pointer}
+body[data-role="faculty"] .faculty-enrollment-modal .faculty-available-subject em{color:var(--accent);font-size:11px;font-style:normal;font-weight:650}
+body[data-role="faculty"] .faculty-enrollment-modal :is(.roster-manage-button,.roster-remove-button){height:28px;padding:0 11px;border:1px solid var(--role-shell-line,#d8cabc);border-radius:9px;background:transparent;color:var(--accent);font-size:11px;font-weight:650}
+body[data-role="faculty"] .faculty-enrollment-modal .roster-remove-button{color:#b5534b}

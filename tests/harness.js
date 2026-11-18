@@ -24,6 +24,15 @@ const ACADEMIC_WORKFLOW_SERVICE=fs.readFileSync(DIR+'../js/academic-workflow-ser
 const ADMIN_TABLE_TOOLS=fs.readFileSync(DIR+'../js/admin-table-tools.js','utf8');
 const DEMO_DATA=fs.readFileSync(DIR+'../js/demo-data.js','utf8');
 const FACULTY_SUBJECT_WORKSPACE=fs.readFileSync(DIR+'../js/faculty-subject-workspace.js','utf8');
+const FACULTY_DASHBOARD=fs.readFileSync(DIR+'../js/faculty-dashboard.js','utf8');
+const FACULTY_ROSTER_INSIGHTS=fs.readFileSync(DIR+'../js/faculty-roster-insights.js','utf8');
+const FACULTY_EXAMS_OVERVIEW=fs.readFileSync(DIR+'../js/faculty-exams-overview.js','utf8');
+const FACULTY_SUBJECT_NAV=fs.readFileSync(DIR+'../js/faculty-subject-nav.js','utf8');
+const FACULTY_REPORTS_OVERVIEW=fs.readFileSync(DIR+'../js/faculty-reports-overview.js','utf8');
+const LESSON_VIEWER=fs.readFileSync(DIR+'../js/lesson-viewer.js','utf8');
+const LESSON_VIEW_MODE=fs.readFileSync(DIR+'../js/lesson-view-mode.js','utf8');
+const STUDENT_LESSONS=fs.readFileSync(DIR+'../js/student-lessons.js','utf8');
+const FACULTY_LESSONS=fs.readFileSync(DIR+'../js/faculty-lessons.js','utf8');
 const STUDENT_CARD_TOOLS=fs.readFileSync(DIR+'../js/student-card-tools.js','utf8');
 const ROLE_PROFILE=fs.readFileSync(DIR+'../js/role-profile.js','utf8');
 const SYSTEM_MANAGEMENT=fs.readFileSync(DIR+'../js/system-management.js','utf8');
@@ -46,11 +55,20 @@ function load(page, seed, opts={}){
     .replace('<script src="../js/permission-service.js"></script>', `<script>${PERMISSION_SERVICE}</script>`)
     .replace('<script src="../js/approval-service.js"></script>', `<script>${APPROVAL_SERVICE}</script>`)
     .replace('<script src="../js/academic-workflow-service.js"></script>', `<script>${ACADEMIC_WORKFLOW_SERVICE}</script>`)
-    .replace('<script src="../js/admin-table-tools.js"></script>', `<script>${ADMIN_TABLE_TOOLS}</script>`)
+    .replace(/<script src="\.\.\/js\/admin-table-tools\.js(?:\?[^"]*)?"><\/script>/, () => `<script>${ADMIN_TABLE_TOOLS}</script>`)
     .replace('<script src="../js/demo-data.js"></script>', `<script>${DEMO_DATA}</script>`)
     .replace(/<script src="\.\.\/js\/faculty-subject-workspace\.js(?:\?[^"]*)?"><\/script>/, `<script>${FACULTY_SUBJECT_WORKSPACE}</script>`)
+    .replace(/<script src="\.\.\/js\/faculty-dashboard\.js(?:\?[^"]*)?"><\/script>/, () => `<script>${FACULTY_DASHBOARD}</script>`)
+    .replace(/<script src="\.\.\/js\/faculty-roster-insights\.js(?:\?[^"]*)?"><\/script>/, () => `<script>${FACULTY_ROSTER_INSIGHTS}</script>`)
+    .replace(/<script src="\.\.\/js\/faculty-exams-overview\.js(?:\?[^"]*)?"><\/script>/, () => `<script>${FACULTY_EXAMS_OVERVIEW}</script>`)
+    .replace(/<script src="\.\.\/js\/faculty-subject-nav\.js(?:\?[^"]*)?"><\/script>/, () => `<script>${FACULTY_SUBJECT_NAV}</script>`)
+    .replace(/<script src="\.\.\/js\/faculty-reports-overview\.js(?:\?[^"]*)?"><\/script>/, () => `<script>${FACULTY_REPORTS_OVERVIEW}</script>`)
+    .replace(/<script src="\.\.\/js\/lesson-viewer\.js(?:\?[^"]*)?"><\/script>/, () => `<script>${LESSON_VIEWER}</script>`)
+    .replace(/<script src="\.\.\/js\/lesson-view-mode\.js(?:\?[^"]*)?"><\/script>/, () => `<script>${LESSON_VIEW_MODE}</script>`)
+    .replace(/<script src="\.\.\/js\/student-lessons\.js(?:\?[^"]*)?"><\/script>/, () => `<script>${STUDENT_LESSONS}</script>`)
+    .replace(/<script src="\.\.\/js\/faculty-lessons\.js(?:\?[^"]*)?"><\/script>/, () => `<script>${FACULTY_LESSONS}</script>`)
     .replace('<script src="../js/student-card-tools.js"></script>', `<script>${STUDENT_CARD_TOOLS}</script>`)
-    .replace('<script src="../js/role-profile.js"></script>', `<script>${ROLE_PROFILE}</script>`)
+    .replace(/<script src="\.\.\/js\/role-profile\.js(?:\?[^"]*)?"><\/script>/, () => `<script>${ROLE_PROFILE}</script>`)
     .replace('<script src="../js/auth.js"></script>', `<script>${AUTH}</script>`)
     .replace(/<script src="\.\.\/js\/ui\.js(?:\?[^\"]*)?"><\/script>/, `<script>${UI}</script>`)
     .replace('<script src="../js/system-management.js"></script>', `<script>${SYSTEM_MANAGEMENT}</script>`)

@@ -104,11 +104,88 @@ function required(condition, message) {
      onSelect(id) { ... }           // optional, fired after the panel is shown
    })
 */
+function roleShellEscape(value){return String(value??'').replace(/[&<>"']/g,character=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[character]));}
+function ensureRoleMailPage(profile){
+  let panel=document.getElementById('role-mail-panel');if(panel)return panel;
+  const items=profile?.inboxItems||[];
+  panel=document.createElement('section');panel.id='role-mail-panel';panel.className='role-mail-page';
+  panel.innerHTML=`<header class="role-mail-hero"><span>Communication center</span><h1>Mail</h1><p>Read announcements, messages, reports, and role-specific updates.</p></header><div class="role-mail-workspace"><aside class="role-mail-list" aria-label="Mailbox"><header><div><span>Messages</span><h2>Inbox</h2></div><button type="button" class="role-mail-read-all">Read all</button></header><div>${items.length?items.slice(0,20).map((item,index)=>`<button type="button" class="role-mail-row ${item.pending?'unread':''}" data-role-mail-index="${index}"><span class="role-mail-row-kind">${roleShellEscape(item.kind)}</span><strong>${roleShellEscape(item.title)}</strong><p>${roleShellEscape(item.text)}</p><time>${item.at?new Date(item.at).toLocaleDateString(undefined,{month:'short',day:'numeric'}):''}</time></button>`).join(''):'<p class="role-mail-empty">No messages or updates.</p>'}</div></aside><article class="role-mail-reader"><span class="role-mail-reader-icon" aria-hidden="true">&#9993;</span><h2>Select a message</h2><p>Choose a conversation from the mailbox to read it here.</p></article></div>`;
+  document.body.appendChild(panel);
+  const reader=panel.querySelector('.role-mail-reader'),visible=items.slice(0,20),owner=`${profile?.role||'role'}:${profile?.id||'anonymous'}`;
+  const markRead=item=>{if(typeof DB==='undefined'||!item)return;const receipts=new Set(DB.read('inboxReadReceipts',[]));receipts.add(`${owner}:${item.key}`);DB.write('inboxReadReceipts',[...receipts]);item.pending=false};
+  panel.querySelectorAll('[data-role-mail-index]').forEach(button=>button.addEventListener('click',()=>{const index=Number(button.dataset.roleMailIndex),item=visible[index];if(!item)return;markRead(item);button.classList.remove('unread');panel.querySelectorAll('.role-mail-row').forEach(row=>row.classList.toggle('active',row===button));reader.innerHTML=`<span class="role-mail-reader-kind">${roleShellEscape(item.kind)}</span><h2>${roleShellEscape(item.title)}</h2><time>${item.at?new Date(item.at).toLocaleString():''}</time><p>${roleShellEscape(item.text)}</p><button type="button" class="role-mail-open-item" data-open-mail-index="${index}">Open message actions</button>`;reader.querySelector('[data-open-mail-index]')?.addEventListener('click',()=>document.querySelector(`.header-inbox-item[data-inbox-index="${index}"]`)?.click())}));
+  panel.querySelector('.role-mail-read-all')?.addEventListener('click',()=>{visible.forEach(markRead);panel.querySelectorAll('.role-mail-row.unread').forEach(row=>row.classList.remove('unread'));document.querySelector('.header-inbox-read-all')?.click()});
+  return panel;
+}
+function enhanceRoleSidebar(bar,menuBtn,profile){
+  document.body.classList.add('role-shell-ready');bar.classList.add('role-app-sidebar');
+  const close=bar.querySelector('.close-x'),brand=document.createElement('header');brand.className='role-sidebar-brand';brand.innerHTML=`<button type="button" class="role-sidebar-logo" aria-label="Collapse navigation"><img src="../assets/logo.PNG" alt="New Era University"><span><strong>NEW ERA</strong><small>UNIVERSITY</small></span></button>`;if(close)brand.append(close);bar.prepend(brand);
+  const brandButton=brand.querySelector('.role-sidebar-logo');brandButton.addEventListener('click',()=>{const open=document.body.classList.contains('sidebar-open');open?bar._roleClose?.():bar._roleOpen?.();brandButton.setAttribute('aria-label',open?'Expand navigation':'Collapse navigation')});
+  const footer=document.createElement('footer');footer.className='role-sidebar-profile';const initials=initialsFrom(profile?.name||profile?.role||'User');footer.innerHTML=`<button type="button" class="role-sidebar-profile-main" aria-expanded="false"><span class="role-sidebar-avatar">${roleShellEscape(initials)}</span><span class="role-sidebar-profile-copy"><strong>${roleShellEscape(profile?.name||'Account')}</strong><small>${roleShellEscape(profile?.id||'')} · ${roleShellEscape(profile?.roleLabel||profile?.role||'')}</small></span><span aria-hidden="true">&#8963;</span></button><div class="role-sidebar-profile-menu" hidden><button type="button" data-role-profile="theme">&#9680; Change theme</button><button type="button" data-role-profile="logout">&#9211; Log out</button></div>`;bar.append(footer);
+  const profileButton=footer.querySelector('.role-sidebar-profile-main'),profileMenu=footer.querySelector('.role-sidebar-profile-menu');profileButton.onclick=()=>{if(!document.body.classList.contains('sidebar-open')){bar._roleOpen?.();return}const opening=profileMenu.hidden;profileMenu.hidden=!opening;profileButton.setAttribute('aria-expanded',String(opening))};footer.querySelector('[data-role-profile="theme"]').onclick=()=>applyInterfaceTheme(currentInterfaceTheme()==='dark'?'light':'dark');footer.querySelector('[data-role-profile="logout"]').onclick=()=>logout();
+  menuBtn.classList.add('role-mobile-menu');document.body.appendChild(menuBtn);
+}
+
+function roleSidebarIcon(label){
+  const key=String(label||'').toLowerCase();
+  let shape='';
+  if(key.includes('dashboard'))shape='<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>';
+  else if(key.includes('mail'))shape='<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>';
+  else if(key.includes('period')||key.includes('schedule'))shape='<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/>';
+  else if(key.includes('audit')||key.includes('log'))shape='<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>';
+  else if(key.includes('subject'))shape='<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H11v17H6.5A2.5 2.5 0 0 0 4 22Z"/><path d="M20 5.5A2.5 2.5 0 0 0 17.5 3H13v17h4.5A2.5 2.5 0 0 1 20 22Z"/>';
+  else if(key.includes('faculty')||key.includes('professor'))shape='<circle cx="12" cy="8" r="3"/><path d="M6 20v-2a6 6 0 0 1 12 0v2"/>';
+  else if(key.includes('student')||key.includes('member'))shape='<path d="m3 9 9-5 9 5-9 5Z"/><path d="M7 12v4c3 2 7 2 10 0v-4M21 9v6"/>';
+  else if(key.includes('account')||key.includes('permission')||key.includes('lifecycle'))shape='<circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 10.5-4M16 16l2 2 4-5"/>';
+  else if(key.includes('approval'))shape='<path d="M20 6 9 17l-5-5"/>';
+  else if(key.includes('statistic')||key.includes('report'))shape='<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>';
+  else if(key.includes('exam'))shape='<path d="M6 3h9l3 3v15H6Z"/><path d="M14 3v4h4M9 12h6M9 16h6"/>';
+  else if(key.includes('application'))shape='<path d="M7 3h10v4H7zM5 5H3v16h18V5h-2M8 12h8M8 16h5"/>';
+  else if(key.includes('system'))shape='<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-2.83 2.83-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1 1.55V21h-4v-.08a1.7 1.7 0 0 0-1-1.55 1.7 1.7 0 0 0-1.88.34l-.06.06-2.83-2.83.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-1.52-1H3v-4h.08A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.34-1.88l-.06-.06 2.83-2.83.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-1.52V3h4v.08A1.7 1.7 0 0 0 15 4.6a1.7 1.7 0 0 0 1.88-.34l.06-.06 2.83 2.83-.06.06A1.7 1.7 0 0 0 19.4 9a1.7 1.7 0 0 0 1.52 1H21v4h-.08a1.7 1.7 0 0 0-1.52 1Z"/>';
+  else shape='<circle cx="12" cy="12" r="8"/><path d="M12 8v8M8 12h8"/>';
+  return `<svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">${shape}</svg>`;
+}
+
+function ensureRolePageHeader(panel,item,profile){
+  if(!panel||!item||item.divider||panel.id==='role-mail-panel')return;
+  const existing=panel.querySelector(':scope > .role-page-hero, :scope > .role-dashboard-head, :scope > .dashboard-overview-head, :scope > .workspace-hero');
+  if(existing){existing.classList.add('role-page-hero');return}
+  const descriptions={
+    'My Subjects':'View assigned courses, weekly content, examinations, and students.',
+    'My Exams':'Create, manage, and review examinations for your assigned subjects.',
+    'My Students':'Review enrolled students and their academic records.',
+    'Reports':'Review questions and issues reported by students.',
+    'System Management':'Manage announcements, access rules, backups, and system tools.',
+    'Academic Periods':'Configure semesters and active academic periods.',
+    'Accounts & Permissions':'Manage account roles, access, and governance policies.',
+    'Audit Log':'Review sign-ins, changes, and administrative activity.',
+    'Subject Management':'Manage curricula, subject records, units, and load policies.',
+    'Faculty Management':'Manage faculty accounts and teaching records.',
+    'Student Management':'Manage student profiles, enrollment, and academic standing.',
+    'Account Lifecycle':'Review pending, active, suspended, and archived accounts.',
+    'Section Management':'Create sections and prepare their subject offerings.',
+    'Professor Management':'Review faculty assignments, schedules, and teaching loads.',
+    'Applications':'Review academic requests and approval workflows.',
+    'Subject Schedule':'Manage recurring subject meeting times and locations.',
+    'Members':'Manage faculty coordinators and professors in the college.',
+    'Approvals':'Review academic requests awaiting a decision.',
+    'Statistics':'Review college academic and participation indicators.',
+    'Logs':'Review role-specific activity and workflow history.'
+  };
+  const directTitle=[...panel.children].find(child=>/^H[12]$/.test(child.tagName));
+  const directCopy=directTitle?.nextElementSibling?.tagName==='P'?directTitle.nextElementSibling:null;
+  const hero=document.createElement('header');hero.className='role-page-hero';
+  hero.innerHTML=`<div><p class="role-page-eyebrow">${roleShellEscape(profile?.roleLabel||profile?.role||'Workspace')}</p><h1>${roleShellEscape(directTitle?.textContent.trim()||item.label)}</h1><p class="role-page-copy">${roleShellEscape(directCopy?.textContent.trim()||descriptions[item.label]||`Open and manage ${item.label.toLowerCase()}.`)}</p></div>`;
+  directTitle?.remove();directCopy?.remove();panel.prepend(hero);
+}
+
 function mountSidebar({ items, panels, container = '.topbar-left',
                         titleEl = null, onSelect = null, startAt = null,
                         collapsedWidth = 0, expandedWidth = 260 } = {}) {
   const host = typeof container === 'string' ? document.querySelector(container) : container;
   if (!host || !Array.isArray(items) || items.length === 0) return null;
+  const shellRole=document.body.dataset.role||'',roleShell=['admin','faculty','coordinator','dean'].includes(shellRole),shellProfile=globalThis.__roleShellProfile||{role:shellRole,roleLabel:shellRole};
+  if(roleShell){const mailPanel=ensureRoleMailPage(shellProfile),pending=(shellProfile.inboxItems||[]).filter(item=>item.pending).length;items=[...items,{id:mailPanel.id,label:'Mail',badge:pending}].map(item=>item.divider?item:{...item,icon:roleSidebarIcon(item.label)});panels=panels?[...panels,mailPanel.id]:panels;collapsedWidth=76;expandedWidth=280;}
   const navItems = items.filter(item => item && item.id);
   if (!navItems.length) return null;
 
@@ -135,8 +212,10 @@ function mountSidebar({ items, panels, container = '.topbar-left',
       </a>`).join('')}
   `;
   document.body.appendChild(bar);
+  if(roleShell)enhanceRoleSidebar(bar,menuBtn,shellProfile);
 
   const known = panels || navItems.map(i => i.id);
+  if(roleShell)navItems.forEach(item=>ensureRolePageHeader(document.getElementById(item.id),item,shellProfile));
   const routePanels = new Set(navItems.map(item => item.id));
   const routeKey = `neu:last-panel:${location.pathname}`;
   const historyKey = `neu-panel:${location.pathname}`;
@@ -155,7 +234,9 @@ function mountSidebar({ items, panels, container = '.topbar-left',
   }
 
   function setOpen(open) {
-    const compactWidth=window.innerWidth<=760?0:Math.max(0,Number(collapsedWidth)||0);
+    // The collapsed icon rail stays visible at every width (phones and tablets too);
+    // the sidebar logo expands it, so no separate hamburger button is needed.
+    const compactWidth=Math.max(0,Number(collapsedWidth)||0);
     bar.style.width = `${open ? expandedWidth : compactWidth}px`;
     menuBtn.setAttribute('aria-expanded', String(open));
     document.body.classList.toggle('sidebar-open', open);
@@ -164,6 +245,7 @@ function mountSidebar({ items, panels, container = '.topbar-left',
     document.body.style.setProperty('--sidebar-shell-width',`${expandedWidth}px`);
     document.body.style.setProperty('--sidebar-mini-width',`${compactWidth}px`);
   }
+  bar._roleOpen=()=>setOpen(true);bar._roleClose=()=>setOpen(false);
 
   function show(id, options = {}) {
     if (!known.includes(id)) return false;
@@ -174,6 +256,7 @@ function mountSidebar({ items, panels, container = '.topbar-left',
     known.forEach(p => {
       const el = document.getElementById(p);
       if (el) {
+        if(roleShell)el.classList.add('role-shell-panel');
         const active = p === id;
         el.hidden = !active;
         el.style.display = active ? 'block' : 'none';
@@ -550,6 +633,7 @@ function mountProfileMenu({ name, role, id, container }) {
     if(inboxReceipts.includes(`${inboxOwner}:${item.key}`))item.pending=false;
   });
   const pendingInboxCount=inboxItems.filter(item=>item.pending).length;
+  globalThis.__roleShellProfile={name,role,id,roleLabel,inboxItems,pendingInboxCount};
 
   const wrap = document.createElement('div');
   wrap.className = 'profile-wrap';

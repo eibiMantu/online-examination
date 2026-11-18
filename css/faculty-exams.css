@@ -1,0 +1,100 @@
+/* ==================================================================
+   Professor "My Exams" — Student Examinations layout, Professor theme.
+   Status cards with rings, performance chart, filter tabs + table
+   tools, and one row card per exam.
+   ================================================================== */
+body.role-shell-ready[data-role="faculty"] .fx-page{display:grid;gap:18px}
+/* Chart series colors: clearly different in both themes. */
+body.role-shell-ready[data-role="faculty"]{--fx-avg:#865b45;--fx-pass:#d2a15f}
+:root[data-theme="dark"] body.role-shell-ready[data-role="faculty"]{--fx-avg:#e7d2bf;--fx-pass:#e0a95a}
+
+/* Status cards (Open now / Upcoming / Closed). */
+body.role-shell-ready[data-role="faculty"] .fx-status-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+body.role-shell-ready[data-role="faculty"] .fx-status-card{display:flex;align-items:center;gap:16px;min-height:104px;margin:0;padding:18px 20px;border:1px solid var(--role-shell-line);border-radius:18px;background:var(--role-shell-surface);box-shadow:0 7px 20px rgba(44,40,35,.07);color:var(--ink);font:inherit;text-align:left;cursor:pointer;transition:border-color .15s,transform .15s}
+body.role-shell-ready[data-role="faculty"] .fx-status-card:hover{transform:translateY(-1px);border-color:var(--accent-line)}
+body.role-shell-ready[data-role="faculty"] .fx-status-card.active{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent),0 7px 20px rgba(44,40,35,.08)}
+body.role-shell-ready[data-role="faculty"] .fx-status-card strong{display:block;color:var(--ink);font-size:14px;font-weight:650}
+body.role-shell-ready[data-role="faculty"] .fx-status-card small{display:block;margin-top:4px;color:var(--ink-soft);font-size:11px}
+body.role-shell-ready[data-role="faculty"] .fx-ring{position:relative;flex:0 0 64px;width:64px;height:64px}
+body.role-shell-ready[data-role="faculty"] .fx-ring svg{width:64px;height:64px}
+body.role-shell-ready[data-role="faculty"] .fx-ring-track{fill:none;stroke:var(--role-shell-surface-soft);stroke-width:6}
+body.role-shell-ready[data-role="faculty"] .fx-ring-value{fill:none;stroke-width:6;stroke-linecap:round}
+body.role-shell-ready[data-role="faculty"] .fx-ring-label{position:absolute;inset:0;display:grid;place-content:center;text-align:center;line-height:1.1}
+body.role-shell-ready[data-role="faculty"] .fx-ring-label strong{font-size:18px;font-weight:700}
+body.role-shell-ready[data-role="faculty"] .fx-ring-label small{margin:0;font-size:9px;font-weight:700}
+
+/* Performance chart card. */
+body.role-shell-ready[data-role="faculty"] .fx-chart-card{padding:20px 22px;border:1px solid var(--role-shell-line);border-radius:18px;background:var(--role-shell-surface);box-shadow:0 7px 20px rgba(44,40,35,.07)}
+body.role-shell-ready[data-role="faculty"] .fx-chart-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:12px}
+body.role-shell-ready[data-role="faculty"] .fx-eyebrow{display:block;color:var(--ink-soft);font-size:10px;font-weight:800;letter-spacing:.13em;text-transform:uppercase}
+body.role-shell-ready[data-role="faculty"] .fx-chart-head h2{margin:6px 0 0;color:var(--ink);font-size:17px;font-weight:650}
+body.role-shell-ready[data-role="faculty"] .fx-legend{display:flex;flex-wrap:wrap;gap:14px;color:var(--ink-soft);font-size:11px;font-weight:600}
+body.role-shell-ready[data-role="faculty"] .fx-legend i{display:inline-block;width:8px;height:8px;margin-right:6px;border-radius:50%;vertical-align:1px}
+body.role-shell-ready[data-role="faculty"] .fx-chart svg{display:block;width:100%;height:auto;max-height:260px;overflow:visible}
+body.role-shell-ready[data-role="faculty"] .fx-grid line{stroke:var(--role-shell-line)}
+body.role-shell-ready[data-role="faculty"] .fx-chart text{fill:var(--ink-soft);font-size:11px;font-family:inherit}
+body.role-shell-ready[data-role="faculty"] .fx-line{fill:none;stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round}
+body.role-shell-ready[data-role="faculty"] .fx-point{stroke:var(--role-shell-surface);stroke-width:2}
+body.role-shell-ready[data-role="faculty"] .fx-empty{margin:18px 0 6px;color:var(--ink-soft);font-size:12px;text-align:center}
+
+/* Filter tabs + tools. */
+body.role-shell-ready[data-role="faculty"] .fx-controls{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:4px;border-bottom:1px solid var(--role-shell-line)}
+body.role-shell-ready[data-role="faculty"] .fx-tabs{display:flex;flex-wrap:wrap;gap:22px}
+body.role-shell-ready[data-role="faculty"] .fx-tab{display:inline-flex;align-items:center;gap:8px;margin:0;padding:12px 2px 11px;border:0;border-bottom:2px solid transparent;border-radius:0;background:transparent;color:var(--ink-soft);font-size:12px;font-weight:650;cursor:pointer}
+body.role-shell-ready[data-role="faculty"] .fx-tab span{display:grid;min-width:20px;height:20px;place-items:center;padding:0 6px;border-radius:999px;background:var(--role-shell-surface-soft);color:var(--ink-soft);font-size:10px;font-weight:700}
+body.role-shell-ready[data-role="faculty"] .fx-tab:hover{color:var(--ink)}
+body.role-shell-ready[data-role="faculty"] .fx-tab.active{border-bottom-color:var(--accent);color:var(--accent)}
+body.role-shell-ready[data-role="faculty"] .fx-tab.active span{background:var(--accent-soft);color:var(--accent)}
+body.role-shell-ready[data-role="faculty"] .fx-tools{position:relative;display:flex;align-items:center;gap:6px;padding-bottom:6px}
+body.role-shell-ready[data-role="faculty"] .fx-tools .tool-icon,body.role-shell-ready[data-role="faculty"] .fx-tools .fx-add{display:grid;width:36px;height:36px;min-height:36px;place-items:center;margin:0;padding:0;border:1px solid var(--role-shell-line);border-radius:10px;background:var(--role-shell-surface);color:var(--accent);box-shadow:none;cursor:pointer}
+body.role-shell-ready[data-role="faculty"] .fx-tools .tool-icon:hover,body.role-shell-ready[data-role="faculty"] .fx-tools .tool-icon.active{border-color:var(--accent-line);background:var(--accent-soft)}
+body.role-shell-ready[data-role="faculty"] .fx-tools .tool-icon.descending svg{transform:scaleY(-1)}
+body.role-shell-ready[data-role="faculty"] .fx-tools svg{width:16px;height:16px;fill:currentColor}
+body.role-shell-ready[data-role="faculty"] .fx-tools .fx-add{margin-left:6px;border-color:transparent;background:var(--accent);color:#fff}
+:root[data-theme="dark"] body.role-shell-ready[data-role="faculty"] .fx-tools .fx-add{color:#241a14}
+body.role-shell-ready[data-role="faculty"] .fx-tools :is(.table-search-box,.table-tool-select){position:absolute;top:44px;right:0;z-index:8;padding:9px;border:1px solid var(--role-shell-line);border-radius:12px;background:var(--role-shell-surface);box-shadow:0 12px 30px rgba(44,40,35,.16)}
+body.role-shell-ready[data-role="faculty"] .fx-tools :is(.table-search-box,.table-tool-select)[hidden]{display:none}
+body.role-shell-ready[data-role="faculty"] .fx-tools .table-tool-select{display:flex;align-items:center;gap:8px;white-space:nowrap}
+body.role-shell-ready[data-role="faculty"] .fx-tools .table-tool-select span{color:var(--ink-soft);font-size:11px;font-weight:600}
+body.role-shell-ready[data-role="faculty"] .fx-tools :is(.table-search-box input,.table-tool-select select){width:min(280px,70vw);height:36px;margin:0;padding:0 11px;border:1px solid var(--role-shell-line);border-radius:9px;background:var(--role-shell-surface);color:var(--ink);font-size:12px}
+body.role-shell-ready[data-role="faculty"] .fx-tools .table-tool-select select{width:auto}
+
+/* Exam rows (Student "exam-list-row" look). */
+body.role-shell-ready[data-role="faculty"] .fx-list{display:grid;gap:12px}
+body.role-shell-ready[data-role="faculty"] #examsView .fx-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:18px;margin:0;padding:18px 19px 18px 22px!important;border:1px solid var(--role-shell-line)!important;border-left:3px solid var(--accent)!important;border-radius:16px!important;background:var(--role-shell-surface)!important;box-shadow:0 7px 20px rgba(44,40,35,.07)!important;cursor:pointer}
+body.role-shell-ready[data-role="faculty"] #examsView .fx-row:hover{border-color:var(--accent-line)!important;border-left-color:var(--accent)!important}
+body.role-shell-ready[data-role="faculty"] #examsView .fx-row.status-upcoming{border-left-color:var(--role-shell-yellow,#c89571)!important}
+body.role-shell-ready[data-role="faculty"] #examsView .fx-row.status-closed{border-left-color:#8a7a6d!important}
+body.role-shell-ready[data-role="faculty"] #examsView .fx-row.status-draft{border-left-style:dashed!important;border-left-color:var(--ink-soft)!important}
+:root[data-theme="dark"] body.role-shell-ready[data-role="faculty"] #examsView .fx-row{box-shadow:0 8px 22px rgba(0,0,0,.22)!important}
+body.role-shell-ready[data-role="faculty"] #examsView .fx-row .exam-item-info{min-width:0}
+body.role-shell-ready[data-role="faculty"] #examsView .fx-row h4{margin:0 0 7px;color:var(--ink);font-size:14px;font-weight:650;line-height:1.4}
+body.role-shell-ready[data-role="faculty"] .fx-meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px 0;color:var(--ink-soft);font-size:11px}
+body.role-shell-ready[data-role="faculty"] .fx-meta>span:not(.fx-pill)+span:not(.fx-pill)::before{content:"•";margin:0 9px;color:var(--role-shell-line)}
+body.role-shell-ready[data-role="faculty"] .fx-pill{margin-left:10px;padding:3px 9px;border-radius:999px;font-size:10px;font-weight:700}
+body.role-shell-ready[data-role="faculty"] .fx-pill.open{background:var(--accent-soft);color:var(--accent)}
+body.role-shell-ready[data-role="faculty"] .fx-pill.upcoming{background:color-mix(in srgb,#c89571 18%,transparent);color:#8a5a2e}
+:root[data-theme="dark"] body.role-shell-ready[data-role="faculty"] .fx-pill.upcoming{color:#e2bf96}
+body.role-shell-ready[data-role="faculty"] .fx-pill.closed{background:var(--role-shell-surface-soft);color:var(--ink-soft)}
+body.role-shell-ready[data-role="faculty"] .fx-pill.draft{border:1px dashed var(--role-shell-line);color:var(--ink-soft)}
+body.role-shell-ready[data-role="faculty"] .fx-desc{overflow:hidden;margin-top:6px;color:var(--ink-soft);font-size:11px;line-height:1.5;text-overflow:ellipsis;white-space:nowrap}
+body.role-shell-ready[data-role="faculty"] .fx-row-side{display:grid;justify-items:end;gap:4px;white-space:nowrap}
+body.role-shell-ready[data-role="faculty"] .fx-row-stat{color:var(--ink-soft);font-size:11px}
+body.role-shell-ready[data-role="faculty"] .fx-row-stat strong{color:var(--ink);font-size:13px;font-weight:700}
+body.role-shell-ready[data-role="faculty"] .fx-row-stat.muted{font-style:italic}
+body.role-shell-ready[data-role="faculty"] .fx-row-score{padding:3px 9px;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-size:11px;font-weight:700}
+
+/* Grouped by subject. */
+body.role-shell-ready[data-role="faculty"] .fx-group{display:grid;gap:10px}
+body.role-shell-ready[data-role="faculty"] .fx-group+.fx-group{margin-top:14px}
+body.role-shell-ready[data-role="faculty"] .fx-group>h4{display:flex;align-items:center;gap:8px;margin:4px 0 0;color:var(--accent);font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+body.role-shell-ready[data-role="faculty"] .fx-group>h4 span{padding:1px 7px;border-radius:999px;background:var(--accent-soft);font-size:10px;letter-spacing:0}
+body.role-shell-ready[data-role="faculty"] .fx-empty-list{padding:30px;border:1px dashed var(--role-shell-line);border-radius:16px;color:var(--ink-soft);font-size:12px;text-align:center}
+
+@media(max-width:900px){
+  body.role-shell-ready[data-role="faculty"] .fx-status-grid{grid-template-columns:1fr}
+  body.role-shell-ready[data-role="faculty"] .fx-controls{flex-direction:column;align-items:stretch}
+  body.role-shell-ready[data-role="faculty"] .fx-tools{justify-content:flex-end}
+  body.role-shell-ready[data-role="faculty"] #examsView .fx-row{grid-template-columns:minmax(0,1fr) auto}
+  body.role-shell-ready[data-role="faculty"] .fx-row-side{grid-column:1/-1;justify-items:start;grid-auto-flow:column;justify-content:start;gap:10px}
+}

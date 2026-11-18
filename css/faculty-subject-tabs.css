@@ -1,0 +1,64 @@
+/* ==================================================================
+   Subject page: Class, Grades and Logs tabs in the Student-page look
+   (white cards, quiet headers, pills), Professor theme tokens.
+   ================================================================== */
+#facultySubjectWorkspace .workspace-student-main{--tab-line:var(--role-shell-line);--tab-soft:var(--role-shell-surface-soft);--tab-card:var(--role-shell-surface)}
+
+/* Shared table card (Class, Grades, Logs). */
+#facultySubjectWorkspace .workspace-student-main :is(.workspace-table,.workspace-grade-table){overflow:auto;border:1px solid var(--tab-line)!important;border-radius:18px!important;background:var(--tab-card)!important;box-shadow:0 7px 20px rgba(44,40,35,.07)!important}
+:root[data-theme="dark"] #facultySubjectWorkspace .workspace-student-main :is(.workspace-table,.workspace-grade-table){box-shadow:0 8px 22px rgba(0,0,0,.22)!important}
+#facultySubjectWorkspace .workspace-student-main :is(.workspace-table,.workspace-grade-table) table,
+#facultySubjectWorkspace .workspace-student-main table.workspace-table{width:100%;border-collapse:collapse;font-size:12px}
+#facultySubjectWorkspace .workspace-student-main :is(.workspace-table,.workspace-grade-table) th{padding:12px 18px!important;border-bottom:1px solid var(--tab-line)!important;background:transparent!important;color:var(--ink-soft)!important;font-size:9px!important;font-weight:700!important;letter-spacing:.08em!important;text-align:left;text-transform:uppercase;vertical-align:bottom}
+#facultySubjectWorkspace .workspace-student-main :is(.workspace-table,.workspace-grade-table) td{padding:12px 18px!important;border:0!important;border-bottom:1px solid color-mix(in srgb,var(--tab-line) 60%,transparent)!important;background:transparent!important;color:var(--ink)!important;font-size:12px;vertical-align:middle}
+#facultySubjectWorkspace .workspace-student-main :is(.workspace-table,.workspace-grade-table) tbody tr:last-child>td{border-bottom:0!important}
+#facultySubjectWorkspace .workspace-student-main :is(.workspace-table,.workspace-grade-table) tbody tr{background:transparent!important}
+#facultySubjectWorkspace .workspace-student-main :is(.workspace-table,.workspace-grade-table) tbody tr:hover>td{background:var(--accent-soft)!important}
+#facultySubjectWorkspace .workspace-student-main :is(.workspace-table,.workspace-grade-table) td strong{font-weight:650}
+
+/* Class tab: professor rows expand into their handled sections. */
+#facultySubjectWorkspace .member-row{cursor:pointer}
+#facultySubjectWorkspace .member-row.expanded>td,#facultySubjectWorkspace .member-row[aria-expanded="true"]>td{background:var(--tab-soft)!important}
+#facultySubjectWorkspace .member-chevron{color:var(--accent)!important}
+#facultySubjectWorkspace .member-detail-row>td{padding:0 18px 14px!important;background:var(--tab-soft)!important}
+#facultySubjectWorkspace .member-detail-row:hover>td{background:var(--tab-soft)!important}
+#facultySubjectWorkspace .member-section-table{width:100%;overflow:hidden;border:1px solid var(--tab-line)!important;border-radius:12px!important;background:var(--tab-card)!important;border-collapse:separate;border-spacing:0}
+#facultySubjectWorkspace .member-section-table th{padding:9px 14px!important;border-bottom:1px solid var(--tab-line)!important;background:transparent!important;color:var(--ink-soft)!important;font-size:9px!important}
+#facultySubjectWorkspace .member-section-table td{padding:10px 14px!important;border-bottom:1px solid color-mix(in srgb,var(--tab-line) 60%,transparent)!important;background:transparent!important}
+#facultySubjectWorkspace .member-section-table tr:last-child td{border-bottom:0!important}
+
+/* Grades tab: section pills, short exam headers, score pills. */
+#facultySubjectWorkspace .workspace-section-pills{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px}
+#facultySubjectWorkspace .workspace-section-pills button{display:inline-flex;align-items:center;gap:7px;height:32px;margin:0;padding:0 13px;border:1px solid var(--tab-line);border-radius:999px;background:transparent;color:var(--ink-soft);font:inherit;font-size:11px;font-weight:650;cursor:pointer}
+#facultySubjectWorkspace .workspace-section-pills button:hover{border-color:var(--accent-line);color:var(--ink)}
+#facultySubjectWorkspace .workspace-section-pills button span{padding:1px 6px;border-radius:999px;background:var(--tab-soft);font-size:9px}
+#facultySubjectWorkspace .workspace-section-pills button.active{border-color:var(--accent);background:var(--accent);color:#fff}
+#facultySubjectWorkspace .workspace-section-pills button.active span{background:rgba(255,255,255,.22)}
+:root[data-theme="dark"] #facultySubjectWorkspace .workspace-section-pills button.active{color:#241a14}
+#facultySubjectWorkspace .workspace-grade-table th{min-width:120px;text-transform:none!important;letter-spacing:0!important;font-size:11px!important;font-weight:650!important;color:var(--ink)!important;line-height:1.35}
+#facultySubjectWorkspace .workspace-grade-table th:first-child,#facultySubjectWorkspace .workspace-grade-table th:last-child{color:var(--ink-soft)!important;font-size:9px!important;letter-spacing:.08em!important;text-transform:uppercase!important}
+#facultySubjectWorkspace .workspace-grade-table th small{display:block;margin-top:3px;color:var(--ink-soft);font-size:9px;font-weight:500}
+#facultySubjectWorkspace .workspace-grade-table td:first-child{white-space:nowrap}
+#facultySubjectWorkspace .workspace-grade-table td:first-child strong{display:block}
+#facultySubjectWorkspace .workspace-grade-table td[class^="grade-result-"]>span{display:inline-grid;gap:1px;padding:5px 10px;border-radius:10px;font-size:10px;font-weight:600;line-height:1.3;white-space:nowrap}
+#facultySubjectWorkspace .workspace-grade-table td[class^="grade-result-"] b{font-size:13px;font-weight:700}
+#facultySubjectWorkspace .grade-result-pass>span{background:var(--accent-soft);color:var(--accent)}
+#facultySubjectWorkspace .grade-result-fail>span{background:rgba(181,83,75,.12);color:#a3463f}
+#facultySubjectWorkspace .grade-result-missed>span{background:rgba(200,149,113,.16);color:#8a5a2e}
+#facultySubjectWorkspace .grade-result-pending>span{border:1px dashed var(--tab-line);color:var(--ink-soft)}
+:root[data-theme="dark"] #facultySubjectWorkspace .grade-result-fail>span{color:#eaa59f}
+:root[data-theme="dark"] #facultySubjectWorkspace .grade-result-missed>span{color:#e2bf96}
+#facultySubjectWorkspace .grade-summary{white-space:nowrap}
+#facultySubjectWorkspace .grade-summary span{display:inline-block;margin-right:6px;font-size:10px;font-weight:650}
+#facultySubjectWorkspace .grade-summary .ok{color:var(--accent)}
+#facultySubjectWorkspace .grade-summary .bad{color:#a3463f}
+#facultySubjectWorkspace .grade-summary .miss{color:var(--ink-soft)}
+:root[data-theme="dark"] #facultySubjectWorkspace .grade-summary .bad{color:#eaa59f}
+
+/* Logs tab: Faculty / Students as pills. */
+#facultySubjectWorkspace .workspace-subtabs{display:flex!important;gap:6px!important;margin:0 0 14px!important;padding:0!important;border:0!important;background:transparent!important}
+#facultySubjectWorkspace .workspace-subtabs button{height:32px!important;min-height:0!important;margin:0!important;padding:0 14px!important;border:1px solid var(--tab-line)!important;border-radius:999px!important;background:transparent!important;box-shadow:none!important;color:var(--ink-soft)!important;font-size:11px!important;font-weight:650!important}
+#facultySubjectWorkspace .workspace-subtabs button.active{border-color:var(--accent)!important;background:var(--accent)!important;color:#fff!important}
+:root[data-theme="dark"] #facultySubjectWorkspace .workspace-subtabs button.active{color:#241a14!important}
+#facultySubjectWorkspace .log-action{display:inline-block;padding:2px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-size:10px;font-weight:650}
+#facultySubjectWorkspace .workspace-grade-table td[class^="grade-result-"]{box-shadow:none!important;border-left:0!important;background:transparent!important}

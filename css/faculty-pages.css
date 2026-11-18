@@ -1,0 +1,208 @@
+/* ==================================================================
+   Professor pages on the Student layout scale.
+   Same font stack, banner size, page frame, card shapes and type sizes
+   as the Student pages; colors stay on the Professor theme tokens.
+   Only presentation changes here — every page keeps its content.
+   ================================================================== */
+
+/* Font: the Student pages' stack. */
+body[data-role="faculty"],
+body[data-role="faculty"] :is(button,input,select,textarea,h1,h2,h3,h4,h5,h6){font-family:'Poppins',Arial,sans-serif}
+
+/* Accent: Professor brown instead of the generic teal. */
+/* Warm text tones (the generic slate greys clash with the brown theme). Dark mode keeps its own values. */
+body.role-shell-ready[data-role="faculty"]{--ink:#2b221c;--ink-soft:#7a6a5e}
+body.role-shell-ready[data-role="faculty"]{--accent:#865b45;--accent-dark:#694a3a;--accent-soft:rgba(134,91,69,.10);--accent-line:rgba(134,91,69,.28)}
+:root[data-theme="dark"] body.role-shell-ready[data-role="faculty"]{--accent:#c9a184;--accent-dark:#b58b6d;--accent-soft:rgba(201,161,132,.13);--accent-line:rgba(201,161,132,.3)}
+
+/* Sidebar labels at the Student size. */
+body.role-shell-ready[data-role="faculty"] #sidebar a{font-size:12px}
+
+/* Page frame and banner (Student: 30px frame, 132px banner, 32px title). */
+@media(min-width:761px){
+  body.role-shell-ready[data-role="faculty"] .role-shell-panel{width:calc(100% - 60px)!important;margin:30px!important}
+}
+body.role-shell-ready[data-role="faculty"] :is(.role-page-hero,.role-mail-hero){min-height:132px;margin:0 0 18px;padding:27px 29px;border-radius:21px!important;box-shadow:0 14px 32px rgba(62,48,37,.16);box-sizing:border-box}
+body.role-shell-ready[data-role="faculty"] :is(.role-page-hero h1,.role-page-hero h2,.role-mail-hero h1){margin:4px 0 0!important;font-size:clamp(24px,2.4vw,32px)!important;font-weight:700!important;letter-spacing:-.035em!important;line-height:1.15!important}
+body.role-shell-ready[data-role="faculty"] :is(.role-page-copy,.role-page-hero>div>p:last-child,.role-mail-hero p){max-width:660px;margin:8px 0 0!important;color:rgba(255,255,255,.76)!important;font-size:12px!important;line-height:1.6!important}
+body.role-shell-ready[data-role="faculty"] :is(.role-page-eyebrow,.role-mail-hero>span){display:block;font-size:10px!important;font-weight:800!important;letter-spacing:.13em!important}
+
+/* The big wrapper panels disappear: items sit on the canvas as cards,
+   like the Student pages. */
+body.role-shell-ready[data-role="faculty"] :is(#examsView,#studentsView,#reportsView)>.exams-section{padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}
+body.role-shell-ready[data-role="faculty"] :is(#examsView,#reportsView) .exams-header{margin:0 0 14px}
+body.role-shell-ready[data-role="faculty"] :is(#examsView,#reportsView) .exams-header h3,
+body.role-shell-ready[data-role="faculty"] #studentsView .roster-page-head h2{margin:0;color:var(--ink);font-size:17px;font-weight:650;letter-spacing:-.01em}
+body.role-shell-ready[data-role="faculty"] #studentsView .roster-page-head p{margin:5px 0 0;color:var(--ink-soft);font-size:12px;line-height:1.6}
+
+/* Shared card look (Student list rows / cards). */
+body.role-shell-ready[data-role="faculty"] :is(#examsView .exam-item,#reportsView .question-report,#studentsView .student-roster-shell){border:1px solid var(--role-shell-line)!important;border-radius:16px!important;background:var(--role-shell-surface)!important;box-shadow:0 7px 20px rgba(44,40,35,.07)!important}
+:root[data-theme="dark"] body.role-shell-ready[data-role="faculty"] :is(#examsView .exam-item,#reportsView .question-report,#studentsView .student-roster-shell){box-shadow:0 8px 22px rgba(0,0,0,.22)!important}
+
+/* My Subjects cards: Student course-card type scale. */
+body.role-shell-ready[data-role="faculty"] .sub-card{padding:21px!important}
+body.role-shell-ready[data-role="faculty"] .sub-code{margin-top:14px;font-size:11px!important;font-weight:800!important;letter-spacing:.08em;text-transform:uppercase}
+body.role-shell-ready[data-role="faculty"] .sub-name{margin-top:6px;color:var(--ink)!important;font-size:16px!important;font-weight:600!important;line-height:1.35}
+body.role-shell-ready[data-role="faculty"] .sub-meta span{font-size:10px!important;font-weight:650!important}
+
+/* My Exams: subject groups and compact exam rows. */
+body.role-shell-ready[data-role="faculty"] #examsView .exams-section>div>h4{margin:22px 0 10px;color:var(--accent);font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+body.role-shell-ready[data-role="faculty"] #examsView .exam-item{margin:0 0 12px;padding:18px 19px 18px 22px!important;border-left:3px solid var(--accent)!important}
+body.role-shell-ready[data-role="faculty"] #examsView .exam-item-info h4{margin:0 0 6px;color:var(--ink);font-size:14px;font-weight:600;line-height:1.4}
+body.role-shell-ready[data-role="faculty"] #examsView .exam-item-info p{margin:0;color:var(--ink-soft);font-size:11px;line-height:1.6}
+body.role-shell-ready[data-role="faculty"] #examsView .exam-item-info p strong{color:var(--ink-soft);font-weight:650}
+body.role-shell-ready[data-role="faculty"] #examsView .exam-item-info p:nth-of-type(-n+2){display:inline}
+body.role-shell-ready[data-role="faculty"] #examsView .exam-item-info p:nth-of-type(2)::before{content:"•";margin:0 9px;color:var(--role-shell-line)}
+body.role-shell-ready[data-role="faculty"] #examsView .exam-item-info p:nth-of-type(3){margin-top:4px}
+
+/* My Students: heading, buttons, tabs and roster table. */
+body.role-shell-ready[data-role="faculty"] #studentsView .roster-page-head{align-items:flex-start;gap:14px;margin-bottom:6px}
+body.role-shell-ready[data-role="faculty"] .roster-manage-button{display:inline-flex;align-items:center;height:32px;padding:0 13px;border:1px solid var(--role-shell-line);border-radius:10px;background:var(--role-shell-surface-soft);color:var(--accent);font-size:11px;font-weight:650;white-space:nowrap;cursor:pointer}
+body.role-shell-ready[data-role="faculty"] .roster-manage-button:hover{border-color:var(--accent-line);background:var(--accent-soft)}
+body.role-shell-ready[data-role="faculty"] .roster-manage-button.primary{height:38px;margin-top:12px;padding:0 16px;border-color:transparent;background:var(--accent);color:#fff}
+:root[data-theme="dark"] body.role-shell-ready[data-role="faculty"] .roster-manage-button.primary{color:#241a14}
+body.role-shell-ready[data-role="faculty"] :is(.student-section-tab,.report-filter-tab){font-size:12px}
+body.role-shell-ready[data-role="faculty"] .roster-subject-context strong{font-size:14px;font-weight:650}
+body.role-shell-ready[data-role="faculty"] .roster-subject-context span{font-size:11px}
+body.role-shell-ready[data-role="faculty"] .student-roster-table{font-size:12px}
+body.role-shell-ready[data-role="faculty"] .student-roster-table th{font-size:9px;letter-spacing:.08em}
+
+/* Reports: Student-size cards and text. */
+body.role-shell-ready[data-role="faculty"] #reportsView .question-report{margin-bottom:12px;padding:18px 20px!important}
+body.role-shell-ready[data-role="faculty"] #reportsView .report-profile-link{font-size:14px;font-weight:650}
+body.role-shell-ready[data-role="faculty"] #reportsView .report-card-head small{font-size:10px}
+body.role-shell-ready[data-role="faculty"] #reportsView .question-report h4{margin:10px 0 6px;font-size:13px;font-weight:600;line-height:1.45}
+body.role-shell-ready[data-role="faculty"] #reportsView .question-report p{margin:8px 0 6px;color:var(--ink);font-size:12px;line-height:1.6}
+body.role-shell-ready[data-role="faculty"] #reportsView .question-report .report-main>small{color:var(--ink-soft);font-size:10px}
+body.role-shell-ready[data-role="faculty"] #reportsView .report-status{font-size:10px}
+body.role-shell-ready[data-role="faculty"] #reportsView .report-sort-tools label{font-size:11px}
+body.role-shell-ready[data-role="faculty"] #reportsView .report-sort-tools select{height:34px;font-size:12px}
+
+/* Mail: Student-size rows. */
+body.role-shell-ready[data-role="faculty"] .role-mail-list h2{font-size:17px}
+body.role-shell-ready[data-role="faculty"] .role-mail-row strong{font-size:12px}
+body.role-shell-ready[data-role="faculty"] .role-mail-row p{font-size:10px}
+body.role-shell-ready[data-role="faculty"] .role-mail-reader h2{font-size:20px}
+body.role-shell-ready[data-role="faculty"] .role-mail-reader p{font-size:12px}
+
+/* Reports: remaining generic blue links and controls follow the Professor theme. */
+body.role-shell-ready[data-role="faculty"] #reportsView :is(.report-subject-link,.report-card-head small){color:var(--ink-soft)}
+body.role-shell-ready[data-role="faculty"] #reportsView .report-subject-link:hover{color:var(--accent)}
+body.role-shell-ready[data-role="faculty"] #reportsView .report-sort-direction{color:var(--accent)}
+body.role-shell-ready[data-role="faculty"] #reportsView .report-main>small{color:var(--ink-soft)}
+
+/* ---------- My Students: insight cards above the tabs ---------- */
+body.role-shell-ready[data-role="faculty"] .roster-insights{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(280px,1fr);gap:16px;margin:18px 0 22px}
+body.role-shell-ready[data-role="faculty"] .roster-insight-card{min-width:0;padding:18px 20px;border:1px solid var(--role-shell-line);border-radius:16px;background:var(--role-shell-surface);box-shadow:0 7px 20px rgba(44,40,35,.07)}
+:root[data-theme="dark"] body.role-shell-ready[data-role="faculty"] .roster-insight-card{box-shadow:0 8px 22px rgba(0,0,0,.22)}
+body.role-shell-ready[data-role="faculty"] .roster-insight-card>header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+body.role-shell-ready[data-role="faculty"] .roster-insight-card h3{margin:0;color:var(--ink);font-size:15px;font-weight:650}
+body.role-shell-ready[data-role="faculty"] .roster-insight-select{height:32px;padding:0 28px 0 12px;border:1px solid var(--role-shell-line);border-radius:9px;background:var(--role-shell-surface-soft);color:var(--ink);font-size:11px;font-weight:600;cursor:pointer}
+body.role-shell-ready[data-role="faculty"] .roster-perf-list{display:grid;gap:13px}
+body.role-shell-ready[data-role="faculty"] .roster-perf-row{display:grid;grid-template-columns:minmax(64px,90px) minmax(0,1fr) 44px;align-items:center;gap:12px}
+body.role-shell-ready[data-role="faculty"] .roster-perf-label{overflow:hidden;color:var(--ink-soft);font-size:11px;font-weight:600;text-overflow:ellipsis;white-space:nowrap}
+body.role-shell-ready[data-role="faculty"] .roster-perf-track{height:10px;border-radius:999px;background:var(--role-shell-surface-soft)}
+body.role-shell-ready[data-role="faculty"] .roster-perf-track i{display:block;height:100%;border-radius:inherit;background:var(--bar)}
+body.role-shell-ready[data-role="faculty"] .roster-perf-row b{color:var(--ink);font-size:11px;font-weight:700;text-align:right}
+body.role-shell-ready[data-role="faculty"] .roster-insight-empty{margin:0;color:var(--ink-soft);font-size:12px}
+body.role-shell-ready[data-role="faculty"] .roster-donut-body{display:grid;grid-template-columns:140px minmax(0,1fr);align-items:center;gap:18px}
+body.role-shell-ready[data-role="faculty"] .roster-donut-body svg{width:140px;height:140px}
+body.role-shell-ready[data-role="faculty"] .roster-donut-track{stroke:var(--role-shell-surface-soft)}
+body.role-shell-ready[data-role="faculty"] .roster-donut-total{fill:var(--ink);font-size:26px;font-weight:700}
+body.role-shell-ready[data-role="faculty"] .roster-donut-caption{fill:var(--ink-soft);font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+body.role-shell-ready[data-role="faculty"] .roster-donut-legend{display:grid;gap:9px;margin:0;padding:0;list-style:none}
+body.role-shell-ready[data-role="faculty"] .roster-donut-legend li{display:grid;grid-template-columns:10px minmax(0,1fr) auto;align-items:center;gap:9px;color:var(--ink-soft);font-size:11px}
+body.role-shell-ready[data-role="faculty"] .roster-donut-legend i{width:10px;height:10px;border-radius:3px}
+body.role-shell-ready[data-role="faculty"] .roster-donut-legend b{color:var(--ink);font-weight:700}
+
+/* ---------- My Students: analytics-style roster table ---------- */
+body.role-shell-ready[data-role="faculty"] .roster-table-tools{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;border-bottom:1px solid var(--role-shell-line);color:var(--ink-soft);font-size:11px}
+body.role-shell-ready[data-role="faculty"] .roster-table-tools strong{color:var(--ink)}
+body.role-shell-ready[data-role="faculty"] .roster-search{display:flex;align-items:center;gap:7px;width:min(260px,100%);height:34px;padding:0 11px;border:1px solid var(--role-shell-line);border-radius:10px;background:var(--role-shell-surface)}
+body.role-shell-ready[data-role="faculty"] .roster-search:focus-within{border-color:var(--accent)}
+body.role-shell-ready[data-role="faculty"] .roster-search svg{flex:0 0 auto;width:15px;height:15px;fill:none;stroke:var(--ink-soft);stroke-width:2;stroke-linecap:round}
+body.role-shell-ready[data-role="faculty"] .roster-search input{width:100%;min-width:0;height:100%;padding:0;border:0!important;background:transparent!important;color:var(--ink);font-size:12px;outline:0}
+body.role-shell-ready[data-role="faculty"] .student-roster-table th{padding:11px 16px;background:var(--role-shell-surface-soft)!important;color:var(--ink-soft)!important;font-weight:650}
+body.role-shell-ready[data-role="faculty"] .student-roster-table td{padding:10px 16px;border-top:1px solid var(--role-shell-line)}
+body.role-shell-ready[data-role="faculty"] .student-roster-table tbody tr[hidden]{display:none}
+body.role-shell-ready[data-role="faculty"] .roster-sort{padding:0;border:0;background:transparent;color:inherit;font:inherit;letter-spacing:inherit;text-transform:inherit;cursor:pointer}
+body.role-shell-ready[data-role="faculty"] .roster-sort:hover,body.role-shell-ready[data-role="faculty"] th[aria-sort="ascending"] .roster-sort,body.role-shell-ready[data-role="faculty"] th[aria-sort="descending"] .roster-sort{color:var(--ink)}
+body.role-shell-ready[data-role="faculty"] .roster-person{display:inline-flex;align-items:center;gap:11px}
+body.role-shell-ready[data-role="faculty"] .roster-avatar{display:grid;flex:0 0 auto;width:34px;height:34px;place-items:center;border-radius:10px;background:color-mix(in srgb,var(--avatar) 14%,var(--role-shell-surface));color:var(--avatar);font-size:11px;font-weight:700}
+:root[data-theme="dark"] body.role-shell-ready[data-role="faculty"] .roster-avatar{background:color-mix(in srgb,var(--avatar) 24%,var(--role-shell-surface));color:color-mix(in srgb,var(--avatar) 55%,#eef0f3)}
+body.role-shell-ready[data-role="faculty"] .roster-name{color:var(--ink);font-weight:600}
+body.role-shell-ready[data-role="faculty"] .roster-taken{color:var(--ink);font-weight:600}
+body.role-shell-ready[data-role="faculty"] .roster-taken small{color:var(--ink-soft);font-weight:500}
+body.role-shell-ready[data-role="faculty"] .roster-score{display:inline-flex;align-items:center;gap:10px}
+body.role-shell-ready[data-role="faculty"] .roster-score-bar{width:72px;height:5px;border-radius:999px;background:var(--role-shell-surface-soft)}
+body.role-shell-ready[data-role="faculty"] .roster-score-bar i{display:block;height:100%;border-radius:inherit;background:var(--accent)}
+body.role-shell-ready[data-role="faculty"] .roster-score.top .roster-score-bar i{background:#c89571}
+body.role-shell-ready[data-role="faculty"] .roster-score.low .roster-score-bar i{background:#b5534b}
+body.role-shell-ready[data-role="faculty"] .roster-score b{min-width:22px;color:var(--ink);font-size:12px;font-weight:700}
+@media(max-width:900px){body.role-shell-ready[data-role="faculty"] .roster-insights{grid-template-columns:1fr}}
+@media(max-width:520px){body.role-shell-ready[data-role="faculty"] .roster-donut-body{grid-template-columns:1fr;justify-items:center}body.role-shell-ready[data-role="faculty"] .roster-table-tools{flex-direction:column;align-items:stretch}body.role-shell-ready[data-role="faculty"] .roster-search{width:100%}}
+/* Long teaching loads: keep both insight cards compact and scroll inside. */
+body.role-shell-ready[data-role="faculty"] .roster-insights{align-items:stretch}
+body.role-shell-ready[data-role="faculty"] .roster-perf-list{max-height:262px;overflow-y:auto;padding-right:6px}
+body.role-shell-ready[data-role="faculty"] .roster-donut-legend{max-height:262px;overflow-y:auto;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));column-gap:16px;padding-right:6px}
+
+/* ---------- My Students roster: one clean card (controls + table) ---------- */
+body.role-shell-ready[data-role="faculty"] .roster-card{overflow:hidden;border:1px solid var(--role-shell-line);border-radius:18px;background:var(--role-shell-surface);box-shadow:0 7px 20px rgba(44,40,35,.07)}
+:root[data-theme="dark"] body.role-shell-ready[data-role="faculty"] .roster-card{box-shadow:0 8px 22px rgba(0,0,0,.22)}
+body.role-shell-ready[data-role="faculty"] .roster-card-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 20px 14px}
+body.role-shell-ready[data-role="faculty"] .roster-card .roster-subject-context{display:flex;align-items:baseline;flex-wrap:wrap;gap:8px;margin:0;padding:0;border:0;background:none}
+body.role-shell-ready[data-role="faculty"] .roster-card .roster-subject-context strong{color:var(--ink);font-size:16px;font-weight:650}
+body.role-shell-ready[data-role="faculty"] .roster-card .roster-subject-context span{padding:2px 8px;border-radius:999px;background:var(--role-shell-surface-soft);color:var(--ink-soft);font-size:10px;font-weight:650;letter-spacing:.04em}
+body.role-shell-ready[data-role="faculty"] .roster-card .roster-table-tools{gap:14px;padding:0;border:0;white-space:nowrap}
+/* Filter rows: small label + compact pills (no underlined tab strips). */
+body.role-shell-ready[data-role="faculty"] .roster-filter-row{display:flex;align-items:center;gap:14px;padding:0 20px 10px}
+body.role-shell-ready[data-role="faculty"] .roster-filter-row:last-of-type{padding-bottom:16px}
+body.role-shell-ready[data-role="faculty"] .roster-card .roster-tab-label{flex:0 0 64px;margin:0;color:var(--ink-soft);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+body.role-shell-ready[data-role="faculty"] .roster-pills{display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;border:0!important}
+body.role-shell-ready[data-role="faculty"] .roster-pills .student-section-tab{display:inline-flex;align-items:center;gap:6px;height:30px;margin:0;padding:0 12px;border:1px solid var(--role-shell-line)!important;border-radius:999px;background:transparent;box-shadow:none!important;color:var(--ink-soft);font-size:11px;font-weight:600}
+body.role-shell-ready[data-role="faculty"] .roster-pills .student-section-tab::after{display:none!important}
+body.role-shell-ready[data-role="faculty"] .roster-pills .student-section-tab:hover{border-color:var(--accent-line)!important;color:var(--ink)}
+body.role-shell-ready[data-role="faculty"] .roster-pills .student-section-tab.active{border-color:var(--accent)!important;background:var(--accent);color:#fff}
+:root[data-theme="dark"] body.role-shell-ready[data-role="faculty"] .roster-pills .student-section-tab.active{color:#241a14}
+body.role-shell-ready[data-role="faculty"] .roster-pills .student-section-count{min-width:0;padding:1px 6px;border-radius:999px;background:var(--role-shell-surface-soft);color:inherit;font-size:9px}
+body.role-shell-ready[data-role="faculty"] .roster-pills .student-section-tab.active .student-section-count{background:rgba(255,255,255,.22)}
+/* The table now lives inside the card: no second card around it. */
+body.role-shell-ready[data-role="faculty"] #studentsView .roster-card .student-roster-shell{margin:0;border:0!important;border-top:1px solid var(--role-shell-line)!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}
+/* Lighter table: quiet header, shorter rows, muted secondary columns. */
+body.role-shell-ready[data-role="faculty"] .roster-card .student-roster-table th{padding:10px 20px;border-bottom:1px solid var(--role-shell-line);background:transparent!important;color:var(--ink-soft)!important;font-size:9px;font-weight:650}
+body.role-shell-ready[data-role="faculty"] .roster-card .student-roster-table td{padding:9px 20px;border-top:0;border-bottom:1px solid color-mix(in srgb,var(--role-shell-line) 60%,transparent)}
+body.role-shell-ready[data-role="faculty"] .roster-card .student-roster-table tbody tr:last-child td{border-bottom:0}
+body.role-shell-ready[data-role="faculty"] .roster-card .student-roster-table tbody tr:hover{background:var(--accent-soft)!important}
+body.role-shell-ready[data-role="faculty"] .roster-card .student-roster-table td strong{color:var(--ink-soft);font-weight:500}
+body.role-shell-ready[data-role="faculty"] .roster-card .roster-subject-chip{padding:0;border:0;background:none;color:var(--ink-soft);font-size:12px;font-weight:500}
+body.role-shell-ready[data-role="faculty"] .roster-card .roster-avatar{width:32px;height:32px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-size:10px}
+body.role-shell-ready[data-role="faculty"] .roster-card .roster-manage-button{height:28px;padding:0 11px;border-color:var(--role-shell-line);background:transparent;color:var(--accent);font-size:11px}
+body.role-shell-ready[data-role="faculty"] .roster-card .roster-manage-button:hover{background:var(--accent-soft);border-color:var(--accent-line)}
+@media(max-width:700px){body.role-shell-ready[data-role="faculty"] .roster-card-head{flex-direction:column;align-items:stretch}body.role-shell-ready[data-role="faculty"] .roster-filter-row{align-items:flex-start;flex-direction:column;gap:6px}body.role-shell-ready[data-role="faculty"] .roster-card .roster-tab-label{flex:none}}
+body.role-shell-ready[data-role="faculty"] .roster-pills .student-section-tab{min-height:0;height:30px;padding:0 12px}
+:root[data-theme="dark"] body.role-shell-ready[data-role="faculty"] .roster-card .roster-avatar{background:var(--accent-soft);color:var(--accent)}
+/* "Add student" sits beside the roster search (replaces the old page header button). */
+body.role-shell-ready[data-role="faculty"] .roster-card .roster-add-button{display:inline-flex;align-items:center;gap:6px;height:34px;margin:0;padding:0 14px;border-color:transparent;border-radius:10px;background:var(--accent);color:#fff;font-size:11px;font-weight:650}
+body.role-shell-ready[data-role="faculty"] .roster-card .roster-add-button:hover{background:var(--accent-dark);color:#fff}
+body.role-shell-ready[data-role="faculty"] .roster-card .roster-add-button span{font-size:15px;line-height:1}
+:root[data-theme="dark"] body.role-shell-ready[data-role="faculty"] .roster-card .roster-add-button{color:#241a14}
+body.role-shell-ready[data-role="faculty"] #studentsView .roster-insights{margin-top:0}
+/* Shared table tools (search, sort, direction, group by) in the roster toolbar. */
+body.role-shell-ready[data-role="faculty"] .roster-card .roster-tool-host{position:relative;display:flex;align-items:center}
+body.role-shell-ready[data-role="faculty"] .roster-card .roster-tool-host .table-tools{position:relative;display:flex;align-items:center;gap:6px;margin:0}
+/* Professor-themed table tools inside the roster toolbar. */
+body.role-shell-ready[data-role="faculty"] .roster-card .role-table-tools .tool-icon{width:36px;height:36px;min-height:36px;border-color:var(--role-shell-line);border-radius:10px;background:var(--role-shell-surface);color:var(--accent);box-shadow:none}
+body.role-shell-ready[data-role="faculty"] .roster-card .role-table-tools .tool-icon:hover,body.role-shell-ready[data-role="faculty"] .roster-card .role-table-tools .tool-icon.active{border-color:var(--accent-line);background:var(--accent-soft)}
+body.role-shell-ready[data-role="faculty"] .roster-card .role-table-tools .tool-icon svg{width:16px;height:16px}
+body.role-shell-ready[data-role="faculty"] .roster-card .role-table-tools :is(.table-search-box,.table-tool-select){top:44px;right:0;border-color:var(--role-shell-line);background:var(--role-shell-surface);color:var(--ink);box-shadow:0 12px 30px rgba(44,40,35,.16)}
+body.role-shell-ready[data-role="faculty"] .roster-card .role-table-tools :is(.table-search-box input,.table-tool-select select){border-color:var(--role-shell-line);background:var(--role-shell-surface);color:var(--ink);font-size:12px}
+body.role-shell-ready[data-role="faculty"] .roster-card .role-table-tools .table-tool-select span{color:var(--ink-soft);font-size:11px;font-weight:600}
+body.role-shell-ready[data-role="faculty"] .roster-card .student-roster-table .table-group-row td{padding:8px 20px;background:var(--role-shell-surface-soft);color:var(--ink);font-size:11px;font-weight:650}
+body.role-shell-ready[data-role="faculty"] .roster-card .student-roster-table .table-group-row strong{margin-left:8px;color:var(--ink-soft);font-weight:500}
+body.role-shell-ready[data-role="faculty"] .roster-card .roster-table-tools>span{margin-right:6px}
+/* Donut card: subject dropdown in the header, single-column legend (no clipping). */
+body.role-shell-ready[data-role="faculty"] .roster-donut-card>header{flex-wrap:wrap}
+body.role-shell-ready[data-role="faculty"] .roster-donut-card .roster-insight-select{max-width:240px}
+body.role-shell-ready[data-role="faculty"] .roster-donut-legend{grid-template-columns:1fr!important;min-width:0}
+body.role-shell-ready[data-role="faculty"] .roster-donut-legend li{min-width:0}
+body.role-shell-ready[data-role="faculty"] .roster-donut-legend b{padding-right:4px}

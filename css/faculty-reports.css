@@ -1,0 +1,60 @@
+/* ==================================================================
+   Professor Reports page: status cards (shared .fx styles from
+   faculty-exams.css), weekly bars, breakdown cards, then the existing
+   tabs, sort tools and report cards.
+   ================================================================== */
+body.role-shell-ready[data-role="faculty"] #reportsView .rx-page{display:grid;gap:18px}
+
+/* Reports per week. */
+body.role-shell-ready[data-role="faculty"] .rx-bars{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);align-items:end;gap:14px;height:200px;padding:6px 4px 0}
+body.role-shell-ready[data-role="faculty"] .rx-bar{display:grid;grid-template-rows:1fr auto auto;height:100%;justify-items:center;gap:4px;min-width:0}
+body.role-shell-ready[data-role="faculty"] .rx-stack{display:flex;flex-direction:column;align-self:end;width:min(46px,100%);min-height:4px;overflow:hidden;border-radius:8px 8px 4px 4px}
+body.role-shell-ready[data-role="faculty"] .rx-stack i.pending{background:var(--role-shell-yellow,#c89571)}
+body.role-shell-ready[data-role="faculty"] .rx-stack i.closed{background:var(--accent)}
+body.role-shell-ready[data-role="faculty"] .rx-bar b{color:var(--ink);font-size:11px;font-weight:700}
+body.role-shell-ready[data-role="faculty"] .rx-bar span{color:var(--ink-soft);font-size:10px;white-space:nowrap}
+
+/* Breakdown cards. */
+body.role-shell-ready[data-role="faculty"] .rx-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+body.role-shell-ready[data-role="faculty"] .rx-card{padding:18px 20px;border:1px solid var(--role-shell-line);border-radius:18px;background:var(--role-shell-surface);box-shadow:0 7px 20px rgba(44,40,35,.07)}
+:root[data-theme="dark"] body.role-shell-ready[data-role="faculty"] :is(.rx-card,.rx-chart){box-shadow:0 8px 22px rgba(0,0,0,.22)}
+body.role-shell-ready[data-role="faculty"] .rx-card>header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+body.role-shell-ready[data-role="faculty"] .rx-card h3{margin:0;color:var(--ink);font-size:15px;font-weight:650}
+body.role-shell-ready[data-role="faculty"] .rx-card>header span{padding:2px 9px;border-radius:999px;background:var(--role-shell-surface-soft);color:var(--ink-soft);font-size:10px;font-weight:650}
+body.role-shell-ready[data-role="faculty"] .rx-rows{display:grid;gap:11px}
+body.role-shell-ready[data-role="faculty"] .rx-row{display:grid;grid-template-columns:minmax(110px,150px) minmax(0,1fr) 28px;align-items:center;gap:12px;font-size:11px}
+body.role-shell-ready[data-role="faculty"] .rx-row span{overflow:hidden;color:var(--ink-soft);font-weight:600;text-overflow:ellipsis;white-space:nowrap}
+body.role-shell-ready[data-role="faculty"] .rx-row i{height:9px;border-radius:999px;background:var(--role-shell-surface-soft)}
+body.role-shell-ready[data-role="faculty"] .rx-row b{display:block;height:100%;border-radius:inherit;background:var(--accent)}
+body.role-shell-ready[data-role="faculty"] .rx-row strong{color:var(--ink);text-align:right}
+body.role-shell-ready[data-role="faculty"] .rx-exams{display:grid;gap:8px}
+body.role-shell-ready[data-role="faculty"] .rx-exam{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;margin:0;padding:10px 12px;border:1px solid var(--role-shell-line);border-radius:12px;background:var(--role-shell-surface-soft);color:var(--ink);font:inherit;text-align:left;cursor:pointer}
+body.role-shell-ready[data-role="faculty"] .rx-exam:hover{border-color:var(--accent-line)}
+body.role-shell-ready[data-role="faculty"] .rx-exam strong{display:block;font-size:12px;font-weight:650;line-height:1.35}
+body.role-shell-ready[data-role="faculty"] .rx-exam small{display:block;margin-top:2px;color:var(--ink-soft);font-size:10px}
+body.role-shell-ready[data-role="faculty"] .rx-exam em{display:grid;flex:0 0 auto;min-width:26px;height:26px;place-items:center;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-size:11px;font-style:normal;font-weight:700}
+
+/* Tabs and sort tools on one row, like My Exams. */
+body.role-shell-ready[data-role="faculty"] .rx-controls{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:4px;border-bottom:1px solid var(--role-shell-line)}
+body.role-shell-ready[data-role="faculty"] .rx-controls .report-filter-tabs{display:flex;flex-wrap:wrap;gap:22px;margin:0!important;padding:0!important;border:0!important}
+body.role-shell-ready[data-role="faculty"] .rx-controls .report-filter-tab{display:inline-flex;align-items:center;gap:8px;min-height:0;margin:0;padding:12px 2px 11px!important;border:0!important;border-bottom:2px solid transparent!important;border-radius:0!important;background:transparent!important;color:var(--ink-soft)!important;font-size:12px;font-weight:650}
+body.role-shell-ready[data-role="faculty"] .rx-controls .report-filter-tab.active{border-bottom-color:var(--accent)!important;color:var(--accent)!important}
+body.role-shell-ready[data-role="faculty"] .rx-controls .report-filter-count{display:grid;min-width:20px;height:20px;place-items:center;padding:0 6px;border-radius:999px;background:var(--role-shell-surface-soft)!important;color:var(--ink-soft)!important;font-size:10px;font-weight:700}
+body.role-shell-ready[data-role="faculty"] .rx-controls .report-filter-tab.active .report-filter-count{background:var(--accent-soft)!important;color:var(--accent)!important}
+body.role-shell-ready[data-role="faculty"] .rx-controls .report-sort-tools{display:flex;align-items:center;gap:8px;margin:0!important;padding:0 0 6px!important}
+body.role-shell-ready[data-role="faculty"] .rx-controls .report-sort-tools label{display:flex;align-items:center;gap:8px;margin:0;color:var(--ink-soft);font-size:11px;font-weight:600}
+body.role-shell-ready[data-role="faculty"] .rx-controls .report-sort-tools select{width:auto;height:36px;margin:0;padding:0 30px 0 12px;border:1px solid var(--role-shell-line);border-radius:10px;background:var(--role-shell-surface);color:var(--ink);font-size:12px}
+body.role-shell-ready[data-role="faculty"] .rx-controls .report-sort-direction{display:grid;width:36px;height:36px;place-items:center;margin:0;padding:0;border:1px solid var(--role-shell-line);border-radius:10px;background:var(--role-shell-surface);color:var(--accent)}
+
+/* Report cards: left status edge like the exam rows. */
+body.role-shell-ready[data-role="faculty"] #reportsView .question-report{margin:0!important;border-left:3px solid var(--accent)!important}
+body.role-shell-ready[data-role="faculty"] #reportsView .question-report.pending{border-left-color:var(--role-shell-yellow,#c89571)!important}
+body.role-shell-ready[data-role="faculty"] #reportsView .question-report.dismissed{border-left-color:#8a7a6d!important}
+
+@media(max-width:900px){
+  body.role-shell-ready[data-role="faculty"] .rx-grid{grid-template-columns:1fr}
+  body.role-shell-ready[data-role="faculty"] .rx-controls{flex-direction:column;align-items:stretch}
+}
+body.role-shell-ready[data-role="faculty"] .rx-controls .report-sort-direction{color:var(--accent)!important;border-color:var(--role-shell-line)!important;background:var(--role-shell-surface)!important}
+body.role-shell-ready[data-role="faculty"] .rx-stack:empty,body.role-shell-ready[data-role="faculty"] .rx-bar .rx-stack[style*="height:0%"]{background:var(--role-shell-surface-soft)}
+body.role-shell-ready[data-role="faculty"] .rx-controls .report-sort-direction span{color:var(--accent)!important}

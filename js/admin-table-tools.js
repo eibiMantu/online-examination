@@ -2,7 +2,21 @@
 const AdminTableTools = (() => {
   const states = new Map();
   const icon = paths => `<svg viewBox="0 0 24 24" aria-hidden="true">${paths}</svg>`;
-  function state(key){ if(!states.has(key)) states.set(key,{query:'',sort:-1,group:'-1',dir:1}); return states.get(key); }
+  /* Search/sort/group choices survive re-renders and page reloads (per page and
+     table, for this browser tab) and only clear when the user changes them. */
+  const storeKey = key => `tableTools:${location.pathname}:${key}`;
+  function state(key){ if(!states.has(key)){ let saved=null; try{ saved=JSON.parse(sessionStorage.getItem(storeKey(key))||'null'); }catch(_){} states.set(key,{query:'',sort:-1,group:'-1',dir:1,...(saved&&typeof saved==='object'?saved:{})}); } return states.get(key); }
+  function save(key){ try{ const s=states.get(key); sessionStorage.setItem(storeKey(key),JSON.stringify({query:s.query,sort:s.sort,group:s.group,dir:s.dir})); }catch(_){} }
+  /* Put the saved choices back into freshly rendered controls. */
+  function restore(key,tools){
+    const s=state(key),box=tools.querySelector('.table-search-box'),input=box?.querySelector('input'),searchButton=tools.querySelector('.table-search-toggle');
+    if(input&&input.value!==s.query) input.value=s.query;
+    if(s.query&&box){ box.hidden=false; searchButton?.classList.add('active'); }
+    searchButton?.classList.toggle('has-query',!!s.query);
+    const sortSelect=tools.querySelector('.sort-field select'); if(sortSelect&&[...sortSelect.options].some(o=>o.value===String(s.sort))) sortSelect.value=String(s.sort); else s.sort=-1;
+    const groupSelect=tools.querySelector('.group-field select'); if(groupSelect&&[...groupSelect.options].some(o=>o.value===String(s.group))) groupSelect.value=String(s.group); else s.group='-1';
+    const direction=tools.querySelector('.table-direction'); if(direction){ direction.classList.toggle('descending',s.dir===-1); direction.setAttribute('aria-label',s.dir===1?'Sort ascending':'Sort descending'); direction.title=s.dir===1?'Ascending':'Descending'; }
+  }
   function columns(table){ return [...table.querySelectorAll('tr:first-child th')].map((th,index)=>({index,label:th.textContent.trim()})).filter(item=>item.label&&item.label!=='Actions'); }
   function cell(row,index){ return (row.cells[index]?.textContent||'').trim(); }
   function apply(key,table){
@@ -27,13 +41,14 @@ const AdminTableTools = (() => {
       const closeOthers=except=>{tools.querySelectorAll('.table-search-box,.table-tool-select').forEach(panel=>{if(panel!==except)panel.hidden=true;});tools.querySelectorAll('.table-search-toggle,.table-sort-toggle,.table-group-toggle').forEach(button=>{if(button.dataset.controls!==except?.classList[1])button.classList.remove('active');});};
       const toggle=(button,panel)=>{const opening=panel.hidden,scrollX=window.scrollX||0,scrollY=window.scrollY||0;closeOthers(panel);panel.hidden=!opening;button.classList.toggle('active',opening);if(opening&&panel.querySelector('input')){const input=panel.querySelector('input');try{input.focus({preventScroll:true});}catch(_){input.focus();window.scrollTo?.(scrollX,scrollY);}}};
       const searchButton=tools.querySelector('.table-search-toggle');searchButton.dataset.controls='table-search-box';searchButton.onclick=()=>toggle(searchButton,tools.querySelector('.table-search-box'));
-      tools.querySelector('.table-search-box input').oninput=e=>{s.query=e.target.value;apply(key,table);};
+      tools.querySelector('.table-search-box input').oninput=e=>{s.query=e.target.value;save(key);searchButton.classList.toggle('has-query',!!s.query);apply(key,table);};
       const sortButton=tools.querySelector('.table-sort-toggle');sortButton.dataset.controls='sort-field';sortButton.onclick=()=>toggle(sortButton,tools.querySelector('.sort-field'));
-      tools.querySelector('.sort-field select').onchange=e=>{s.sort=Number(e.target.value);apply(key,table);};
+      tools.querySelector('.sort-field select').onchange=e=>{s.sort=Number(e.target.value);save(key);apply(key,table);};
       const groupButton=tools.querySelector('.table-group-toggle');groupButton.dataset.controls='group-field';groupButton.onclick=()=>toggle(groupButton,tools.querySelector('.group-field'));
-      tools.querySelector('.group-field select').onchange=e=>{s.group=e.target.value;apply(key,table);};
-      tools.querySelector('.table-direction').onclick=e=>{s.dir*=-1;e.currentTarget.classList.toggle('descending',s.dir===-1);e.currentTarget.setAttribute('aria-label',s.dir===1?'Sort ascending':'Sort descending');e.currentTarget.title=s.dir===1?'Ascending':'Descending';apply(key,table);};
+      tools.querySelector('.group-field select').onchange=e=>{s.group=e.target.value;save(key);apply(key,table);};
+      tools.querySelector('.table-direction').onclick=e=>{s.dir*=-1;save(key);e.currentTarget.classList.toggle('descending',s.dir===-1);e.currentTarget.setAttribute('aria-label',s.dir===1?'Sort ascending':'Sort descending');e.currentTarget.title=s.dir===1?'Ascending':'Descending';apply(key,table);};
     }
+    restore(key,tools);
     apply(key,table);
   }
   return { mount, apply };

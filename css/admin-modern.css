@@ -383,13 +383,13 @@ body[data-role="admin"] .profile-target-row { animation:profileTarget 1.8s ease;
 }
 :root[data-theme="dark"] body[data-role="admin"] :is(.dashboard-view-switch,.site-status-panel,.site-status-item) { background:var(--surface) !important; border-color:var(--line-strong) !important; }
 :root[data-theme="dark"] body[data-role="admin"] .site-status-item { background:var(--surface-soft) !important; }
-:root[data-theme="dark"] body[data-role="admin"] .dashboard-monitoring { background:#18222e !important; color:#edf4fb !important; border-color:#2c3947 !important; }
-:root[data-theme="dark"] body[data-role="admin"] .monitor-card { background:#111923 !important; border-color:#2c3947 !important; }
-:root[data-theme="dark"] body[data-role="admin"] .monitoring-head h3 { color:#f5f8fc !important; }
-:root[data-theme="dark"] body[data-role="admin"] :is(.monitoring-head p,.monitoring-live,.monitor-card footer) { color:#9fb0c2 !important; }
-:root[data-theme="dark"] body[data-role="admin"] .monitor-card header span { color:#c8d4df !important; }
+:root[data-theme="dark"] body[data-role="admin"] .dashboard-monitoring { background:var(--surface) !important; color:var(--ink) !important; border-color:var(--line-strong) !important; }
+:root[data-theme="dark"] body[data-role="admin"] .monitor-card { background:var(--surface-soft) !important; border-color:var(--line-strong) !important; }
+:root[data-theme="dark"] body[data-role="admin"] .monitoring-head h3 { color:var(--ink) !important; }
+:root[data-theme="dark"] body[data-role="admin"] :is(.monitoring-head p,.monitoring-live,.monitor-card footer) { color:var(--ink-soft) !important; }
+:root[data-theme="dark"] body[data-role="admin"] .monitor-card header span { color:var(--ink) !important; }
 :root[data-theme="dark"] body[data-role="admin"] .monitor-card header strong { color:#71d48d !important; }
-:root[data-theme="dark"] body[data-role="admin"] .monitor-chart .chart-grid { stroke:#344353; }
+:root[data-theme="dark"] body[data-role="admin"] .monitor-chart .chart-grid { stroke:var(--line-strong); }
 :root[data-theme="dark"] body[data-role="admin"] :is(.dashboard-overview-head h2,.site-status-heading h3,.site-status-item strong) { color:var(--ink) !important; }
 :root[data-theme="dark"] body[data-role="admin"] :is(.dashboard-overview-head p,.site-status-heading p,.site-status-item small) { color:var(--ink-soft) !important; }
 :root[data-theme="dark"] body[data-role="admin"] .dashboard-view-btn { color:var(--ink-soft); }

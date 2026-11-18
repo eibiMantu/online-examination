@@ -18,7 +18,7 @@ ok(!!r.d.querySelector('#subjectList .sub-course-icon svg')&&!!r.d.querySelector
 ok(r.d.querySelectorAll('#subjectList .sub-meta span').length>=2,'subject cards show section and exam counts');
 ok(!r.d.querySelector('#subjectList .view-exams-btn')&&!/Open Subject/.test(r.d.getElementById('subjectList').textContent),'subject cards do not repeat a separate open button');
 r.w.displayMyStudents();
-ok(/My Students/.test(r.d.getElementById('studentsView').textContent)&&/Browse students enrolled/.test(r.d.getElementById('studentsView').textContent),'student roster has a page title and description');
+{const hero=r.d.querySelector('#students-tab > .role-page-hero');ok(/My Students/.test(hero?.textContent||'')&&/Review enrolled students/.test(hero?.textContent||''),'student roster has a page title and description (in the page banner)');}
 ok(r.d.querySelectorAll('#studentsView .roster-tab-label').length===2,'subject and section tab rows have visible titles');
 ok(/HCI/.test(r.d.querySelector('#studentsView .roster-subject-context')?.textContent||''),'selected subject name appears between subject and section tabs');
 const rosterRow=r.d.querySelector('#studentsView .student-roster-table tbody tr[role="link"]');
@@ -28,8 +28,8 @@ ok(r.d.getElementById('roleProfileOverlay')?.classList.contains('open')&&/Privac
 r.w.RoleProfileViewer?.close?.();
 r.w.FacultySubjectWorkspace.open('SUB1');
 ok(r.d.getElementById('subject-workspace-tab').style.display==='block','subject opens its own workspace page');
-ok(r.d.querySelectorAll('.workspace-tab').length===4,'Main, Members, Grades, and Logs tabs are present');
-ok(r.d.querySelector('#facultySubjectWorkspace>.workspace-hero')?.nextElementSibling?.classList.contains('workspace-tabs'),'subject tabs render directly below the hero card');
+ok([...r.d.querySelectorAll('.workspace-student-main>.workspace-tabs .workspace-tab')].map(b=>b.textContent).join('|')==='Main|Class|Exams|Grades|Logs','Main, Class, Exams, Grades, and Logs tabs are present');
+ok(r.d.querySelector('#facultySubjectWorkspace .workspace-student-main>.workspace-hero')?.nextElementSibling?.classList.contains('workspace-tabs'),'subject tabs render directly below the hero card');
 ok(!r.d.querySelector('.workspace-rail'),'large student preview rail is removed');
 ok(!!r.d.querySelector('.workspace-menu-trigger'),'hero uses a three-dot options menu');
 r.d.querySelector('.workspace-menu-trigger').click();
@@ -47,7 +47,7 @@ r.d.querySelector('.subject-edit-dialog [data-edit-action="color"]').click();
 r.d.querySelector('.subject-color-options [data-color="#3576a8"]').click();
 ok(r.read('subjects').find(item=>item.code==='SUB1').workspaceColor==='#3576a8','Edit color saves the subject accent');
 ok(r.d.querySelector('#subjectList .sub-card').style.getPropertyValue('--course-accent')==='#3576a8','saved color immediately updates the Faculty subject card');
-ok(r.d.querySelector('#facultySubjectWorkspace>.workspace-hero').style.getPropertyValue('--course-accent')==='#3576a8','saved color applies to the Faculty subject-page hero');
+ok(r.d.querySelector('#facultySubjectWorkspace .workspace-hero').style.getPropertyValue('--course-accent')==='#3576a8','saved color applies to the Faculty subject-page hero');
 r.w.FacultySubjectWorkspace.openEditPrompt();
 r.d.querySelector('.subject-edit-dialog [data-edit-action="icon"]').click();
 r.d.querySelector('.subject-icon-options [data-icon="code"]').click();
@@ -80,7 +80,9 @@ ok(r.read('applicationAuditLog').some(item=>item.action==='add'&&item.entityType
 ok(r.w.FacultySubjectWorkspace.attachExamToWeek(3,'e1'),'Faculty can attach an existing subject exam to a week');
 ok(r.read('subjectWorkspaceContent').some(item=>item.week===3&&item.type==='exam'&&item.examId==='e1'),'weekly content stores an exam reference without moving the exam');
 ok(!!r.d.querySelector('.week-stack .attached-exam-link'),'attached exam appears inside the selected week');
-ok(!!r.d.querySelector('.faculty-exam-cell'),'the original exam cell remains in the Examinations section');
+r.w.FacultySubjectWorkspace.showTab('exams');
+ok(!!r.d.querySelector('.faculty-exam-cell'),'the original exam cell remains in the Examinations section (Exams tab)');
+r.w.FacultySubjectWorkspace.showTab('main');
 r.w.FacultySubjectWorkspace.renameWeek(3);
 const weekEditor=r.d.querySelector('.enhanced-week-editor');
 ok(!!weekEditor&&!!weekEditor.querySelector('.add-week-cell'),'Edit Week uses the matching editor and provides an Add cell icon');
@@ -105,7 +107,7 @@ ok(!!r.d.querySelector('.workspace-grade-table table'),'Grades provides a sectio
 r.w.FacultySubjectWorkspace.showTab('logs');
 ok([...r.d.querySelectorAll('.workspace-subtabs button')].some(button=>button.textContent.includes('Faculty')),'Logs provides a Faculty subtab');
 ok([...r.d.querySelectorAll('.workspace-subtabs button')].some(button=>button.textContent.includes('Students')),'Logs provides a Students subtab');
-r.w.FacultySubjectWorkspace.showTab('main');
+r.w.FacultySubjectWorkspace.showTab('exams');
 const courseExamCell=r.d.querySelector('.faculty-exam-cell');
 ok(!!courseExamCell&&!courseExamCell.querySelector('[aria-label="Open questions"]'),'Faculty Course Page removes the redundant Questions icon');
 courseExamCell.click();

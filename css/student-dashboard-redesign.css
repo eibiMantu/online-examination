@@ -206,7 +206,41 @@ body[data-role="student"] #takeExamModal #examModalActions .prerequisite-redirec
 .results-score-chart{display:block;min-height:210px}.results-score-chart svg{display:block;width:100%;height:210px}.results-score-chart .result-total-line{stroke:var(--student-teal)}.results-score-chart .result-score-line{stroke:var(--student-green)}
 .result-subject-column-head,.result-subject-summary{display:grid;grid-template-columns:minmax(220px,1.7fr) minmax(95px,.65fr) minmax(75px,.5fr) minmax(105px,.7fr) minmax(75px,.5fr);align-items:center;gap:14px}.result-subject-column-head{padding:0 48px 8px 19px;color:var(--student-muted);font-size:8px;font-weight:850;letter-spacing:.08em;text-transform:uppercase}.student-results-page .result-subject-summary{min-height:72px;padding:13px 48px 13px 18px}.result-subject-points span,.result-subject-grade span{display:none}.result-subject-points strong,.result-subject-grade strong{color:var(--student-text);font-size:11px}.student-results-page .result-subject-summary .subject-summary{text-align:left}.student-results-page .result-subject-summary .subject-summary-label{display:none}.result-subject-status{display:inline-flex;width:max-content;padding:5px 9px;border-radius:999px;background:color-mix(in srgb,var(--student-gold) 14%,var(--student-card));color:#8a5a12;font-size:9px;font-weight:850}.result-subject-status.passed{background:color-mix(in srgb,var(--student-green) 11%,var(--student-card));color:var(--student-green)}.result-subject-status.failed{background:color-mix(in srgb,var(--danger) 10%,var(--student-card));color:var(--danger)}
 @media(max-width:820px){.result-subject-column-head{display:none}.student-results-page .result-subject-summary{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:15px 44px 15px 17px}.student-results-page .result-subject-summary .subject-card-title{grid-column:1/-1}.result-subject-points span,.result-subject-grade span,.student-results-page .result-subject-summary .subject-summary-label{display:block;margin-bottom:3px;color:var(--student-muted);font-size:8px;font-weight:850;letter-spacing:.07em;text-transform:uppercase}.student-results-page .result-subject-summary .subject-summary{text-align:left}.result-subject-status{align-self:end}}
+
+/* One Student color system across Dashboard, Subjects, Exams, Results,
+   Schedule, Mail, course details, exam workspaces, and reviews. */
+body[data-role="student"]{--surface:var(--student-card);--surface-soft:var(--student-soft);--ink:var(--student-text);--ink-soft:var(--student-muted);--line:#d7d3cb;--line-strong:#c9c5bd;--accent:var(--student-green);--accent-soft:color-mix(in srgb,var(--student-green) 9%,var(--student-card));--accent-line:color-mix(in srgb,var(--student-green) 28%,transparent)}
+body[data-role="student"] :is(#mail-panel,#schedule-panel,#exams-panel,#results-panel,#subjects-panel,#subject-detail-panel,#review-detail-panel){color:var(--student-text)}
+body[data-role="student"] :is(#mail-panel,#schedule-panel,#exams-panel,#results-panel,#subjects-panel,#subject-detail-panel,#review-detail-panel){background:transparent!important;border-color:transparent!important;box-shadow:none!important}
+body[data-role="student"] :is(.student-mail-list-card,.student-mail-reader,.schedule-calendar-card,.schedule-agenda-card,.exam-compact-list,.exam-list-row,.examination-progress-card,.results-progress-card,.subject-card,.scale-note,.enrolled-subject-card,.subject-info-cell,.weekly-learning-section,.learning-week,.week-content-cell,.student-week-rail,.student-week-upcoming,.review-question-card,.result-detail-body,.result-detail-grid,.exam-review-hero){border-color:var(--line)!important;background-color:var(--student-card)!important;color:var(--student-text)!important}
+body[data-role="student"] :is(.student-mail-row,.schedule-calendar-day,.brief-row,.review-answer-cell,.result-exam-row,.week-content-heading){border-color:var(--line)!important;background-color:var(--student-soft)!important;color:var(--student-text)!important}
+body[data-role="student"] :is(input,select,textarea,.table-search-box,.table-tool-select){border-color:var(--line)!important;background-color:var(--student-card)!important;color:var(--student-text)!important}
+body[data-role="student"] :is(.student-mail-row,.schedule-calendar-day,.exam-list-row,.subject-card,.enrolled-subject-card,.review-question-card):hover{border-color:color-mix(in srgb,var(--student-green) 30%,var(--line))!important}
+:root[data-theme="dark"] body[data-role="student"]{--line:#35443f;--line-strong:#40514b;--accent-soft:color-mix(in srgb,var(--student-green) 18%,var(--student-card));--accent-line:color-mix(in srgb,var(--student-teal) 34%,transparent);background:var(--student-cream)!important}
+:root[data-theme="dark"] body[data-role="student"] #page{background:transparent!important;box-shadow:none!important;border-color:transparent!important}
+:root[data-theme="dark"] body[data-role="student"] :is(.student-mail-list-card,.student-mail-reader,.schedule-calendar-card,.schedule-agenda-card,.exam-list-row,.examination-progress-card,.results-progress-card,.subject-card,.scale-note,.enrolled-subject-card,.subject-info-cell,.weekly-learning-section,.learning-week,.week-content-cell,.student-week-rail,.student-week-upcoming,.review-question-card,.result-detail-body,.result-detail-grid,.exam-review-hero){box-shadow:0 8px 22px rgba(0,0,0,.22)!important}
+:root[data-theme="dark"] body[data-role="student"] :is(.student-page-heading,.student-dashboard-welcome,.schedule-page-heading,#studentSubjectDetail .student-subject-profile,#takeExamModal .exam-page-header){background:linear-gradient(132deg,#073b35,#0e564d 66%,#287269)!important;color:#fff!important}
 @media(min-width:761px){body[data-role="student"] #page{width:100%;max-width:none;margin:0;border-radius:24px 0 0 24px;background:var(--student-cream);box-shadow:-8px 0 24px rgba(5,41,36,.08)}}
+
+/* The application background is the canvas. #page only positions content;
+   it must never appear as another oversized card around Student pages. */
+body[data-role="student"] #page{background:transparent!important;box-shadow:none!important;border:0!important;border-radius:0!important}
+
+/* All top-level Student canvases use one identical paint. This avoids a
+   lighter hidden panel showing through the spacing between real cards. */
+body[data-role="student"]{background-color:var(--student-cream)!important;background-image:none!important}
+
+/* Every Student page wrapper is invisible, exactly like the Dashboard, so
+   only the page canvas and the real cards show. The #page ancestor keeps
+   this ahead of the shared dark-theme .section-card rule, whose :is() list
+   contains an ID (#examModalActions) and would otherwise repaint the
+   wrappers with the card surface. Page contents are not touched. */
+html body[data-role="student"] #page :is(#overview-panel,#mail-panel,#schedule-panel,#exams-panel,#results-panel,#subjects-panel,#subject-detail-panel,#review-detail-panel){background:transparent!important;border-color:transparent!important;box-shadow:none!important}
+body[data-role="student"] .schedule-exam-calendar{border-color:var(--line)!important}
+
+/* Do not let the navigation rail cast a second vertical surface over the
+   application canvas. Content cards keep their own normal elevation. */
+body[data-role="student"] #sidebar.student-app-sidebar{box-shadow:none!important}
 
 /* Compact examination-review hero. */
 body[data-role="student"] #review-detail-panel{padding:20px 24px;border-radius:18px}
@@ -237,3 +271,12 @@ body[data-role="student"] .student-progress-chart{display:grid;place-items:cente
 body[data-role="student"] .student-progress-chart svg{width:100%;max-width:none;height:200px;margin-inline:0;overflow:visible}
 body[data-role="student"] .results-score-chart svg{height:210px}
 body[data-role="student"] .student-progress-chart .chart-label{font-family:Inter,"Segoe UI",Arial,sans-serif;font-weight:450;letter-spacing:0}
+
+/* Dark mode: labels that use the deep brand green as text become a soft
+   teal, readable on the dark canvas without glare. */
+:root[data-theme="dark"] body[data-role="student"]{--student-green-ink:#86c4b6}
+:root[data-theme="dark"] body[data-role="student"] :is(.exam-list-score,.legend-your-score,.results-list-label,.result-subject-status.passed,.student-mail-empty>span){color:var(--student-green-ink)!important}
+:root[data-theme="dark"] body[data-role="student"] :is(.legend-done,.exam-filter-tab span,.exam-filter-count,.student-mail-tabs button.active,.student-mail-avatar){color:var(--student-green-ink)!important}
+:root[data-theme="dark"] body[data-role="student"] :is(.dashboard-class-code,.student-course-code){color:#93bcdc!important}
+:root[data-theme="dark"] body[data-role="student"] .compact-calendar-day:not(.today,.selected,.active){color:var(--student-muted)!important}
+:root[data-theme="dark"] body[data-role="student"] .dashboard-class-icon{background:color-mix(in srgb,var(--student-teal) 22%,var(--student-card))!important;color:#cfe3ec!important}

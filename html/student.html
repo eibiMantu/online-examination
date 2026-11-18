@@ -10,8 +10,11 @@
 <script src="../js/audit-service.js"></script>
 <script src="../js/permission-service.js"></script>
 <script src="../js/weekly-learning.js"></script>
+<script src="../js/lesson-viewer.js?v=20261118-5"></script>
+<script src="../js/lesson-view-mode.js?v=20261118-1"></script>
+<script src="../js/student-lessons.js?v=20261118-3"></script>
 <script src="../js/demo-data.js"></script>
-<script src="../js/admin-table-tools.js"></script>
+<script src="../js/admin-table-tools.js?v=20261118-keep-search"></script>
 <script src="../js/student-card-tools.js"></script>
 <script src="../js/auth.js"></script>
 <style>
@@ -425,12 +428,14 @@
   .scale-grid .fail { background:rgba(179,38,30,0.09); color:#b3261e; font-weight:600; }
 </style>
 <!-- Loaded after the page styles so the shared tokens win on ties -->
-<link rel="stylesheet" href="../css/shared-ui.css?v=20260902-subject-profile-theme">
-<link rel="stylesheet" href="../css/student-dashboard-redesign.css?v=20261117-mail-sidebar-2">
+<link rel="stylesheet" href="../css/shared-ui.css?v=20261118-keep-search">
+<link rel="stylesheet" href="../css/student-dashboard-redesign.css?v=20261118-dark-tones">
+<link rel="stylesheet" href="../css/lesson-viewer.css?v=20261118-3">
+<link rel="stylesheet" href="../css/responsive-shell.css?v=20261118-4">
 <script src="../js/dates.js"></script>
 <script src="../js/exam-timing.js"></script>
 <script src="../js/grading.js"></script>
-<script src="../js/ui.js"></script>
+<script src="../js/ui.js?v=20261118-rail"></script>
 <script src="../js/role-profile.js"></script>
 <script src="../js/question-types.js"></script>
 <script src="../js/attempt.js"></script>
@@ -1275,6 +1280,7 @@ function openStudentSubject(code) {
       if(!item.collapsible){cell.classList.add('always-open');cell.addEventListener('toggle',()=>{if(!cell.open)cell.open=true})}
     }
   });
+  if(typeof StudentLessons!=='undefined'){StudentLessons.bind();StudentLessons.decorate();}
   detailRoot.tabIndex=-1;
   detailRoot.onkeydown=event=>{if(event.key==='ArrowLeft'||event.key==='ArrowRight'){event.preventDefault();navigateStudentSubjectWeek(event.key==='ArrowLeft'?-1:1)}};
   studentNav.show('subject-detail-panel');

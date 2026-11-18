@@ -1,0 +1,56 @@
+/* ==================================================================
+   Narrow screens (tablets, phones) for Student and Professor pages,
+   plus one subject-page look shared by both roles.
+   ================================================================== */
+
+/* No floating hamburger: the sidebar logo opens and closes navigation,
+   and the collapsed icon rail stays visible at every width. */
+.menu-btn.role-mobile-menu,.menu-btn.student-mobile-menu,.role-mobile-menu,.student-mobile-menu{display:none!important}
+@media(max-width:760px){
+  body.sidebar-mini{padding-left:76px!important}
+  body.sidebar-mini #sidebar{width:76px}
+  body.sidebar-mini.sidebar-open #sidebar{width:min(280px,calc(100vw - 24px))!important;box-shadow:12px 0 40px rgba(0,0,0,.35)}
+  /* Opening the rail overlays content instead of squeezing it. */
+  body.sidebar-mini.sidebar-open{padding-left:76px!important}
+  /* Content no longer needs room for the hamburger. */
+  body.role-shell-ready .role-shell-panel{width:calc(100% - 20px)!important;margin:10px!important;padding:6px 6px 30px!important}
+  body[data-role="student"] #page{padding:14px 12px 32px!important}
+}
+
+/* Student subject page: the course banner always comes first; Open quizzes
+   and Weekly lessons follow it when the page is a single column. */
+@media(max-width:920px){
+  #studentSubjectDetail .student-subject-content-column{order:1}
+  #studentSubjectDetail .student-subject-side-column{order:2!important;position:static!important}
+}
+
+/* ---------------- Professor subject page = Student subject page ---------------- */
+/* Tabs: left-aligned, Student spacing and type, wrap instead of scrolling. */
+body.role-shell-ready[data-role="faculty"] #facultySubjectWorkspace .workspace-student-main>.workspace-tabs{flex-wrap:wrap!important;gap:0 24px!important;margin:0 0 18px!important;padding:0 4px!important;overflow:visible!important}
+body.role-shell-ready[data-role="faculty"] #facultySubjectWorkspace .workspace-student-main>.workspace-tabs .workspace-tab{position:relative;min-width:0!important;padding:9px 2px 12px!important;border-bottom:0!important;font-size:12px!important;font-weight:500!important}
+body.role-shell-ready[data-role="faculty"] #facultySubjectWorkspace .workspace-student-main>.workspace-tabs .workspace-tab::after{content:"";position:absolute;right:0;bottom:-1px;left:0;height:3px;border-radius:2px 2px 0 0;background:transparent}
+body.role-shell-ready[data-role="faculty"] #facultySubjectWorkspace .workspace-student-main>.workspace-tabs .workspace-tab.active::after{background:var(--accent)}
+/* Cards: Student type scale and the same professor rows / rule list. */
+body.role-shell-ready[data-role="faculty"] #facultySubjectWorkspace .subject-info-cell h3{margin:0 0 14px!important;color:var(--ink)!important;font-size:15px!important;font-weight:600!important;letter-spacing:-.012em;line-height:1.3}
+body.role-shell-ready[data-role="faculty"] #facultySubjectWorkspace .subject-info-cell :is(p,li){color:var(--ink-soft)!important;font-size:11px!important;line-height:1.68!important}
+body.role-shell-ready[data-role="faculty"] #facultySubjectWorkspace .subject-info-cell ul{margin:0;padding-left:19px}
+body.role-shell-ready[data-role="faculty"] #facultySubjectWorkspace .subject-info-cell p{margin:0 0 4px}
+body.role-shell-ready[data-role="faculty"] #facultySubjectWorkspace .subject-info-cell p strong{color:var(--ink);font-weight:600}
+body.role-shell-ready[data-role="faculty"] #facultySubjectWorkspace .professor-contact-row{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid color-mix(in srgb,var(--role-shell-line) 70%,transparent)}
+body.role-shell-ready[data-role="faculty"] #facultySubjectWorkspace .professor-contact-row:first-of-type{padding-top:2px}
+body.role-shell-ready[data-role="faculty"] #facultySubjectWorkspace .professor-contact-row:last-child{border-bottom:0;padding-bottom:0}
+body.role-shell-ready[data-role="faculty"] #facultySubjectWorkspace .professor-contact-row p{margin:0}
+body.role-shell-ready[data-role="faculty"] #facultySubjectWorkspace .professor-you{padding:4px 10px;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-size:10px;font-weight:700}
+/* Narrow widths: banner first, rail below, nothing scrolls sideways. */
+@media(max-width:920px){
+  body.role-shell-ready[data-role="faculty"] #facultySubjectWorkspace .workspace-student-layout{display:flex!important;flex-direction:column}
+  body.role-shell-ready[data-role="faculty"] #facultySubjectWorkspace .workspace-student-main{order:1;width:100%}
+  body.role-shell-ready[data-role="faculty"] #facultySubjectWorkspace .workspace-student-rail{order:2;width:100%}
+}
+@media(max-width:760px){
+  body.role-shell-ready[data-role="faculty"] #facultySubjectWorkspace .workspace-student-layout .workspace-hero{padding:22px 20px!important}
+  body.role-shell-ready[data-role="faculty"] #facultySubjectWorkspace .workspace-hero-progress{max-width:none}
+}
+body.role-shell-ready[data-role="faculty"] #facultySubjectWorkspace .subject-info-cell p span{font-size:inherit!important;color:inherit!important}
+body.role-shell-ready[data-role="faculty"] #facultySubjectWorkspace .workspace-student-main .subject-detail-grid{gap:16px!important}
+body.role-shell-ready[data-role="faculty"] #facultySubjectWorkspace .workspace-student-main .subject-info-cell{padding:24px!important}
