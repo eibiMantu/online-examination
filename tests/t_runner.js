@@ -13,6 +13,7 @@ function seed(extra={}){
 console.log('=== RUNNER. One-question navigation and durable attempt state ===');
 let r=load('student.html',seed());
 r.w.startExam('e1');
+ok(r.d.getElementById('examNavigator').parentElement===r.d.getElementById('takeExamModal'),'question navigator is mounted above the scrolling exam workspace');
 ok(r.d.querySelectorAll('#examQuestionsContainer .q-item').length===1,'only one question is rendered');
 ok(/Question 1 of 2/.test(r.d.getElementById('examProgress').textContent),'progress identifies position');
 ok(r.d.getElementById('prevQ').disabled,'Previous disabled on first question');
@@ -51,7 +52,12 @@ essay.value='Recovered essay';
 essay.dispatchEvent(new r.w.Event('input',{bubbles:true}));
 r.d.getElementById('nextQ').click();
 ok(r.d.getElementById('examReviewSection').style.display==='block'&&/2 of 2/.test(r.d.getElementById('examReviewSection').textContent),'last-question action opens the completeness review instead of exiting');
+ok(r.d.getElementById('examNavigator').style.display==='block','quick navigation remains available during answer review');
+r.d.querySelector('.nav-cell[data-index="0"]').click();
+ok(r.d.getElementById('examReviewSection').style.display==='none'&&/Question 1 of 2/.test(r.d.getElementById('examProgress').textContent),'review quick navigation returns directly to the selected question');
+r.w.reviewAnswers();
 ok((r.read('studentSubmissions')||[]).length===0,'opening the completeness review does not submit immediately');
+r.d.querySelector('.nav-cell[data-index="1"]').click();
 r.w.backToQuestions();
 r.w.closeExamModal();
 

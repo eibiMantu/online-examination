@@ -37,6 +37,7 @@ ok(/sidebar-mini:not\(\.sidebar-open\)[^}]*\.student-subject-nav-group>a\s*\{[^}
 ok(/#takeExamModal\.exam-page-shell[^}]*background:\s*var\(--student-cream/.test(student)&&/#examBriefing\s*\{[^}]*background:\s*var\(--student-card/.test(student),'exam briefing has an opaque themed workspace and card background');
 ok(/#takeExamModal \.brief\{[^}]*grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/.test(student)&&/#takeExamModal \.brief dd\{[^}]*font-size:11px/.test(student),'exam briefing uses the compact two-column Student hierarchy');
 ok(/#takeExamModal \.exam-navigator,#takeExamModal \.exam-navigator\.is-positioned\s*\{[^}]*position:fixed/.test(studentPage)&&/#takeExamModal \.exam-navigator \.nav-handle[^}]*display:grid!important/.test(studentPage),'exam quick navigation remains a collapsible draggable side control');
+ok(/preserveAspectRatio="xMidYMid meet"/.test(studentPage)&&/getBoundingClientRect\(\)\.width/.test(studentPage)&&/\.student-progress-chart svg\{[^}]*width:100%[^}]*max-width:none/.test(student),'Student graphs fill their cards while using the live container width to keep labels proportional');
 
 // Which fixed-width selectors exist, and are they all in the cap list?
 const capped = ['.modal', '.question-modal', '.exam-box', '.login-container', '.confirm-box'];

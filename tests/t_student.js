@@ -37,9 +37,13 @@ ok(r.d.querySelectorAll('.student-week-link').length===2&&r.d.querySelectorAll('
 ok(r.d.querySelector('#student-subject-week-1>summary')?.dataset.weekLabel==='W01','weekly lesson badge displays its week number instead of an empty box');
 r.d.querySelector('.student-week-nav-controls button:last-child').click();
 ok(r.d.querySelector('.student-week-link[data-week="2"]')?.classList.contains('active')&&r.d.getElementById('student-subject-week-2')?.open,'next-week control pinpoints and opens the following week');
-r.w.focusStudentLearningCell('lesson-2',{scroll:false});
+const lessonTwo=r.d.querySelector('[data-learning-block="lesson-2"]');
+lessonTwo.classList.add('is-focused');
+r.d.querySelector('.student-week-link[data-week="1"]').classList.add('active');
+r.d.querySelector('.student-week-link[data-week="2"]').classList.remove('active');
+r.d.getElementById('student-subject-week-2').open=true;
 r.w.toggleLearningCellDone('lesson-2');
-ok(r.d.querySelector('.student-week-link[data-week="2"]')?.classList.contains('active')&&r.d.querySelector('[data-learning-block="lesson-2"]')?.open&&r.d.querySelector('[data-learning-block="lesson-2"]')?.classList.contains('is-focused'),'marking a lesson done preserves its active week, expanded cell, and focused main-body view');
+ok(r.d.querySelector('.student-week-link[data-week="2"]')?.classList.contains('active')&&r.d.getElementById('student-subject-week-2')?.open&&r.d.querySelector('[data-learning-block="lesson-2"]')?.open&&r.d.querySelector('[data-learning-block="lesson-2"]')?.classList.contains('is-focused'),'marking a lesson done preserves the containing week, expanded cell, and focused main-body view even when the sidebar selection was stale');
 ok(/youtube-nocookie\.com\/embed\//.test(r.w.renderStudentLearningVideo({subjectCode:'CCS2101',title:'Video lesson',body:'Watch and compare.'})),'video lessons render as playable privacy-enhanced embeds');
 ok(/How to use this visual/.test(r.w.renderStudentVisualLesson({weekTitle:'Logic',title:'Visual',body:'Concept map',imageUrl:'data:image/svg+xml,x'})),'visual aids include explicit teaching instructions');
 ok(!!r.d.querySelector('.learning-week .week-content-cell.lesson-cell')&&!r.d.querySelector('.learning-week .week-content-cell.quiz-cell'),'weekly cards use the full width for lessons and do not embed a quiz sidebar');
