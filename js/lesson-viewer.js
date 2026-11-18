@@ -61,6 +61,11 @@ const LessonViewer = (() => {
     host.addEventListener('click', event => {
       if (event.target === host) return close();
       const go = event.target.closest('[data-lv-go]'); if (go) return show(Number(go.dataset.lvGo));
+      if (event.target.closest('[data-lv-toc-toggle]')) { tocCollapsed = !tocCollapsed; try { localStorage.setItem('lessonTocCollapsed', tocCollapsed ? '1' : '0'); } catch (_) {} return render(); }
+      const weekToggle = event.target.closest('[data-lv-toc-week]');
+      if (weekToggle) { const w = weekToggle.dataset.lvTocWeek; openWeeks.has(w) ? openWeeks.delete(w) : openWeeks.add(w); return render(); }
+      const jump = event.target.closest('[data-lv-jump]');
+      if (jump) { const id = jump.dataset.lvJump, here = cfg.slides.findIndex(s => s.id === id); if (here >= 0) return show(here); return cfg.onJump?.(id); }
       if (event.target.closest('[data-lv-prev]')) return show(index - 1);
       if (event.target.closest('[data-lv-next]')) return index >= cfg.slides.length - 1 ? close() : show(index + 1);
       if (event.target.closest('[data-lv-close]')) return close();
@@ -79,6 +84,27 @@ const LessonViewer = (() => {
   /* A page that needs the previous page done can be entered once that page is done. */
   /* Quiz pages are always reachable: the quiz's own prompt explains any prerequisite. */
   const canEnter = i => { const s = cfg.slides[i]; return !!s && !s.lockedReason && (!!s.quiz || !(s.requiresPrevious && i > 0 && !cfg.slides[i - 1].done)); };
+
+  /* Right-side table of contents: every week of the subject. cfg.toc() returns
+     [{ week, title, items:[{ id, title, kind, done, locked, quiz }] }]. */
+  let tocCollapsed = (() => { try { return localStorage.getItem('lessonTocCollapsed') === '1'; } catch (_) { return false; } })();
+  const openWeeks = new Set();
+  function tocMarkup() {
+    const groups = cfg.toc?.() || []; if (!groups.length) return '';
+    const currentId = cfg.slides[index]?.id;
+    openWeeks.add(String(cfg.weekNumber));
+    const allItems = groups.flatMap(g => g.items), done = allItems.filter(i => i.done).length, lessons = allItems.filter(i => !i.quiz).length;
+    const weeks = groups.map(group => {
+      const w = String(group.week), open = openWeeks.has(w), gDone = group.items.filter(i => i.done).length, gLessons = group.items.filter(i => !i.quiz).length;
+      const items = group.items.map(item => {
+        const current = item.id === currentId, state = current ? 'current' : item.done ? 'done' : item.locked ? 'locked' : 'open';
+        const mark = item.done ? '&#10003;' : item.locked ? '&#128274;' : item.quiz ? '&#9998;' : '&#8226;';
+        return `<li><button type="button" class="lv-toc-item ${state}${item.quiz ? ' quiz' : ''}" data-lv-jump="${esc(item.id)}" ${item.locked && !current ? 'disabled title="Locked: finish the earlier lessons first"' : ''} ${current ? 'aria-current="page"' : ''}><span class="lv-toc-mark">${mark}</span><span>${esc(item.title)}</span></button></li>`;
+      }).join('');
+      return `<section class="lv-toc-week${w === String(cfg.weekNumber) ? ' active' : ''}"><button type="button" class="lv-toc-week-head" data-lv-toc-week="${esc(w)}" aria-expanded="${open}"><span class="lv-toc-badge">W${esc(String(group.week).padStart(2, '0'))}</span><span class="lv-toc-week-title"><strong>${esc(group.title)}</strong><small>${cfg.markDone ? `${gDone}/${gLessons} done` : `${group.items.length} pages`}</small></span><span class="lv-toc-chevron" aria-hidden="true">&#8250;</span></button>${open ? `<ol>${items}</ol>` : ''}</section>`;
+    }).join('');
+    return `<aside class="lv-toc${tocCollapsed ? ' collapsed' : ''}" aria-label="Course contents"><header><button type="button" class="lv-toc-toggle" data-lv-toc-toggle aria-expanded="${!tocCollapsed}" aria-label="${tocCollapsed ? 'Show contents' : 'Hide contents'}" title="${tocCollapsed ? 'Show contents' : 'Hide contents'}">${tocCollapsed ? '&#8249;' : '&#8250;'}</button>${tocCollapsed ? '' : `<div><strong>Contents</strong><small>${cfg.markDone ? `${done} of ${lessons} lessons done` : `${groups.length} weeks`}</small></div>`}</header>${tocCollapsed ? `<span class="lv-toc-vertical">Contents</span>` : `<div class="lv-toc-list">${weeks}</div>`}</aside>`;
+  }
 
   function render() {
     const slides = cfg.slides, slide = slides[index], total = slides.length;
@@ -101,11 +127,15 @@ const LessonViewer = (() => {
           <div class="lv-slide-head"><span class="lv-slide-icon" aria-hidden="true">${slide.icon || '&#9776;'}</span><div><small>${esc(/^Page \d+$/.test(slide.kind) ? 'Lesson' : slide.kind)} · Page ${index + 1} of ${total}</small><h3>${esc(slide.title)}</h3></div>${cfg.markDone && slide.done ? '<span class="lv-done-pill">&#10003; Done</span>' : ''}</div>
           ${body}
         </section>
+        ${tocMarkup()}
       </div>
       <footer class="lv-foot"><button type="button" class="lv-secondary" data-lv-prev ${index === 0 ? 'disabled' : ''}>&#8592; Previous</button><div class="lv-progress" aria-hidden="true"><i style="width:${((index + 1) / total) * 100}%"></i></div><button type="button" class="lv-primary" data-lv-next ${next && !canEnter(index + 1) ? 'disabled' : ''}>${esc(nextLabel)} ${next ? '&#8594;' : ''}</button></footer>
     </article>`;
     host.querySelector('.lv-main')?.focus({ preventScroll: true });
     host.querySelector('.lv-step.current')?.scrollIntoView?.({ block: 'nearest' });
+    host.querySelector('.lv-toc-item.current')?.scrollIntoView?.({ block: 'nearest' });
+    host.querySelector('.lv-body')?.classList.toggle('has-toc', !!host.querySelector('.lv-toc'));
+    host.querySelector('.lv-body')?.classList.toggle('toc-collapsed', tocCollapsed);
   }
 
   function show(i) {
@@ -119,7 +149,11 @@ const LessonViewer = (() => {
 
   function open(options) {
     if (!options?.slides?.length) return;
-    cfg = options; ensure(); lastFocus = document.activeElement;
+    const wasOpen = !!host && !host.hidden;
+    if (!wasOpen) openWeeks.clear();
+    // Jumping to another week keeps the original page focus target and close callback.
+    if (wasOpen && cfg && !options.onClose) options.onClose = cfg.onClose;
+    cfg = options; ensure(); if (!wasOpen) lastFocus = document.activeElement;
     host.hidden = false; document.body.classList.add('lesson-viewer-open');
     let start = Math.max(0, Math.min(options.start || 0, options.slides.length - 1));
     while (start > 0 && !canEnter(start) && !cfg.slides[start].lockedReason) start--;

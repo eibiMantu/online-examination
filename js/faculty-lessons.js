@@ -45,8 +45,32 @@ const FacultyLessons = (() => {
       });
     });
     bind(host);
+    renderCoursePath(host, all);
     const heading = host.querySelector('.faculty-learning-section .student-section-heading h3');
     if (typeof LessonViewMode !== 'undefined') LessonViewMode.mount(host, heading);
+  }
+
+  /* Shared Course path card in the right rail (replaces the old week list). */
+  function renderCoursePath(host, all) {
+    if (typeof CoursePath === 'undefined') return;
+    let card = host.querySelector('.rail-card.cp-card');
+    const old = host.querySelector('.rail-lessons');
+    if (!card && old) { card = document.createElement('section'); card.className = 'rail-card cp-card'; old.replaceWith(card); }
+    if (!card) return;
+    const weeks = [...new Set(all.map(item => item.week))].map(week => {
+      const items = all.filter(item => item.week === week);
+      return { week, title: items[0]?.weekTitle || `Week ${week}`, lessons: items.map(item => ({ id: item.id, title: item.title || 'Lesson page', quiz: item.type === 'exam', done: false })) };
+    });
+    const draw = selected => CoursePath.render(card, {
+      subjectCode: currentCode, mode: 'faculty', weeks, selected,
+      onSelect: week => {
+        draw(week);
+        const weekCard = host.querySelector(`.faculty-week-card[data-week="${week}"]`);
+        if (weekCard) { weekCard.open = true; weekCard.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+      },
+      onOpen: id => open(id, host.querySelector(`.faculty-week-card[data-week="${all.find(item => item.id === id)?.week}"]`))
+    });
+    draw();
   }
 
   function open(blockId, card) {
@@ -65,7 +89,13 @@ const FacultyLessons = (() => {
     LessonViewer.open({
       course: `${currentCode}${subject ? ` · ${subject.name}` : ''}`, weekNumber: item.week, weekTitle: item.weekTitle || `Week ${item.week}`,
       slides, start: Math.max(0, slides.findIndex(slide => slide.id === blockId)), markDone: false,
-      onQuiz: slide => manageQuestions(slide.quiz.examId)
+      onQuiz: slide => manageQuestions(slide.quiz.examId),
+      // Preview: every lesson of every week is reachable from the contents panel.
+      toc: () => [...new Set(all.map(entry => entry.week))].map(week => {
+        const weekItems = all.filter(entry => entry.week === week);
+        return { week, title: weekItems[0]?.weekTitle || `Week ${week}`, items: weekItems.map(entry => ({ id: entry.id, title: entry.title || 'Lesson page', done: false, locked: false, quiz: entry.type === 'exam' })) };
+      }),
+      onJump: id => open(id, null)
     });
   }
 

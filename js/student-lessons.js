@@ -52,7 +52,56 @@ const StudentLessons = (() => {
       slides, start: Math.max(0, slides.findIndex(slide => slide.id === blockId)), markDone: true,
       onView: slide => markDone(slide.id),
       onQuiz: slide => setTimeout(() => openExamDetails(slide.quiz.examId), 0),
-      onClose: last => refresh(last?.id)
+      onClose: last => refresh(last?.id),
+      toc: () => toc(code),
+      onJump: id => open(id)
+    });
+  }
+
+  /* Course path card (calendar of weeks) in place of the old week list. */
+  function pathWeeks(code) {
+    const content = ordered(code);
+    return [...new Set(content.map(item => item.week))].map(week => {
+      const items = content.filter(item => item.week === week);
+      return { week, title: items[0]?.weekTitle || `Week ${week}`, lessons: items.map(item => ({ id: item.id, title: item.title || 'Lesson page', quiz: item.type === 'exam', done: item.type !== 'exam' && learningCellCompleted(item.id) })) };
+    });
+  }
+  function renderCoursePath() {
+    const code = selectedStudentSubjectCode, rail = document.querySelector('#studentSubjectDetail .student-week-rail');
+    if (!code || !rail || typeof CoursePath === 'undefined') return;
+    // Selecting a week anywhere (arrows, pills, keyboard) also refreshes this card.
+    if (!window.__coursePathWrapped && typeof window.focusStudentSubjectWeek === 'function') {
+      const original = window.focusStudentSubjectWeek;
+      window.__focusWeekOriginal = original;
+      window.focusStudentSubjectWeek = (week, options = {}) => { original(week, options); CoursePath.select(selectedStudentSubjectCode, week); renderCoursePath(); };
+      window.__coursePathWrapped = true;
+    }
+    const weeks = pathWeeks(code), firstVisit = CoursePath.selected(code) === undefined;
+    const active = Number(document.querySelector('#studentSubjectDetail .learning-week[open]')?.id?.replace('student-subject-week-', '')) || undefined;
+    rail.classList.add('cp-card');
+    CoursePath.render(rail, {
+      subjectCode: code, mode: 'student', weeks, selected: firstVisit ? undefined : (active ?? CoursePath.selected(code)),
+      onSelect: week => window.focusStudentSubjectWeek(week),
+      onOpen: id => open(id)
+    });
+    // First time on this subject: open the current week in the lesson list too.
+    if (firstVisit) { const week = CoursePath.selected(code); if (week && week !== active) (window.__focusWeekOriginal || window.focusStudentSubjectWeek)(week, { scroll: false }); }
+  }
+
+  /* All weeks for the right-side contents panel, with live done/locked state. */
+  function toc(code) {
+    const content = ordered(code), weeks = [...new Set(content.map(item => item.week))];
+    return weeks.map(week => {
+      const items = content.filter(item => item.week === week);
+      return {
+        week, title: items[0]?.weekTitle || `Week ${week}`,
+        items: items.map(item => {
+          const state = learningCellState(item, content.indexOf(item), content), quiz = item.type === 'exam';
+          // Quizzes stay reachable; their prompt explains any prerequisite.
+          const locked = quiz ? state.locked && !/previous page/i.test(state.label) : state.locked;
+          return { id: item.id, title: item.title || 'Lesson page', done: !quiz && learningCellCompleted(item.id), locked, quiz };
+        })
+      };
     });
   }
 
@@ -86,6 +135,7 @@ const StudentLessons = (() => {
   /* Locked rows become keyboard-reachable buttons. */
   function decorate() {
     document.querySelectorAll('#studentSubjectDetail .learning-cell.locked[data-learning-block]:not(.locked-exam-row)').forEach(row => { row.setAttribute('role', 'button'); row.tabIndex = 0; });
+    renderCoursePath();
     const root = document.getElementById('studentSubjectDetail');
     if (typeof LessonViewMode !== 'undefined') LessonViewMode.mount(root, root?.querySelector('.weekly-learning-section>h3'));
   }

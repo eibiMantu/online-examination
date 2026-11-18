@@ -1,0 +1,78 @@
+/* ==================================================================
+   Course path card (Student + Professor): dark banner header with
+   arrows, calendar of week pills, pace note, selected week's lessons.
+   Colors come from the --lv-* tokens defined in lesson-viewer.css.
+   ================================================================== */
+.cp-card{display:block!important;max-height:none!important;overflow:hidden!important;padding:0!important;border:1px solid var(--lv-line)!important;border-radius:18px!important;background:var(--lv-surface)!important;box-shadow:0 7px 20px rgba(44,40,35,.07)!important}
+:root[data-theme="dark"] .cp-card{box-shadow:0 8px 22px rgba(0,0,0,.24)!important}
+.cp-card .cp-head{display:flex!important;align-items:center;justify-content:space-between;gap:10px;margin:0!important;padding:16px!important;border:0!important;background:linear-gradient(132deg,var(--lv-hero-a),var(--lv-hero-b))!important;color:#fff}
+.cp-card .cp-head span{display:block;color:color-mix(in srgb,var(--lv-gold) 75%,#fff)!important;font-size:9px!important;font-weight:800!important;letter-spacing:.12em;text-transform:uppercase}
+.cp-card .cp-head strong{display:block;margin-top:4px!important;color:#fff!important;font-size:15px!important;font-weight:700}
+.cp-card .cp-arrows{display:flex;gap:6px}
+.cp-card .cp-arrows button{display:grid;width:30px!important;height:34px!important;min-height:0!important;place-items:center;margin:0;padding:0!important;border:1px solid rgba(255,255,255,.28)!important;border-radius:9px!important;background:rgba(255,255,255,.1)!important;color:#fff!important;font-size:18px;line-height:1;cursor:pointer}
+.cp-card .cp-arrows button:disabled{opacity:.35;cursor:default}
+
+/* Calendar of weeks. */
+.cp-card .cp-calendar{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px!important;max-height:none!important;margin:0;padding:14px 14px 8px!important;overflow:visible!important}
+.cp-card .cp-pill{display:grid!important;justify-items:center;gap:1px;min-width:0;width:auto!important;min-height:0!important;margin:0!important;padding:7px 2px!important;border:1px solid var(--lv-line)!important;border-radius:11px!important;background:var(--lv-surface)!important;box-shadow:none!important;color:var(--lv-ink)!important;font:inherit;cursor:pointer;transform:none!important}
+.cp-card .cp-pill::before,.cp-card .cp-pill::after{display:none!important}
+.cp-card .cp-pill b{font-size:11px;font-weight:800}
+.cp-card .cp-pill small{overflow:hidden;max-width:100%;color:var(--lv-muted);font-size:8px;font-weight:600;text-overflow:ellipsis;white-space:nowrap}
+.cp-card .cp-pill:hover{border-color:color-mix(in srgb,var(--lv-accent) 45%,var(--lv-line))!important}
+.cp-card .cp-pill.done{border-color:transparent!important;background:var(--lv-accent)!important;color:#fff!important}
+.cp-card .cp-pill.done small{color:rgba(255,255,255,.85)}
+:root[data-theme="dark"] .cp-card .cp-pill.done{color:#17201e!important}
+:root[data-theme="dark"] .cp-card .cp-pill.done small{color:rgba(23,32,30,.8)}
+.cp-card .cp-pill.current{border:2px solid var(--lv-gold)!important;background:color-mix(in srgb,var(--lv-gold) 16%,var(--lv-surface))!important}
+.cp-card .cp-pill.current small{color:color-mix(in srgb,var(--lv-gold) 55%,var(--lv-ink));font-weight:800}
+.cp-card .cp-pill.done.current{background:var(--lv-accent)!important}
+.cp-card .cp-pill.selected{box-shadow:0 0 0 2px var(--lv-surface),0 0 0 4px var(--lv-accent)!important}
+.cp-card .cp-pill:focus-visible{outline:2px solid var(--lv-accent);outline-offset:2px}
+.cp-legend{display:flex;flex-wrap:wrap;gap:4px 12px;padding:0 14px 10px;color:var(--lv-muted);font-size:9px;font-weight:600}
+.cp-legend i{display:inline-block;width:9px;height:9px;margin-right:5px;border-radius:3px;vertical-align:-1px}
+.cp-legend i.now{border:2px solid var(--lv-gold);background:color-mix(in srgb,var(--lv-gold) 16%,transparent)}
+.cp-legend i.done{background:var(--lv-accent)}
+.cp-legend i.sel{border:2px solid var(--lv-accent)}
+
+/* Pace note. */
+.cp-note{display:grid;gap:2px;margin:0 14px 12px;padding:10px 12px;border-radius:12px;border-left:3px solid}
+.cp-note strong{font-size:12px;font-weight:700}
+.cp-note small{font-size:10px;opacity:.85}
+.cp-note.behind{border-color:#c8692e;background:rgba(200,105,46,.1);color:#9a4c1c}
+.cp-note.ahead{border-color:var(--lv-accent);background:var(--lv-accent-soft);color:var(--lv-accent)}
+:root[data-theme="dark"] .cp-note.behind{color:#f0b48c}
+
+/* Selected week. */
+.cp-week{margin:0 14px 14px;padding:12px;border:1px solid var(--lv-line);border-radius:14px;background:var(--lv-soft)}
+.cp-week-head{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:10px;margin-bottom:8px}
+.cp-badge{display:grid;min-width:38px;height:30px;place-items:center;border-radius:9px;background:var(--lv-accent);color:#fff;font-size:11px;font-weight:800}
+:root[data-theme="dark"] .cp-badge{color:#17201e}
+.cp-week-head strong{display:block;overflow:hidden;color:var(--lv-ink);font-size:12px;font-weight:700;line-height:1.3;text-overflow:ellipsis;white-space:nowrap}
+.cp-week-head small{display:block;margin-top:2px;color:var(--lv-muted);font-size:9px}
+.cp-tag{padding:3px 8px;border-radius:999px;font-size:9px;font-weight:700;white-space:nowrap}
+.cp-tag.now{background:color-mix(in srgb,var(--lv-gold) 22%,transparent);color:color-mix(in srgb,var(--lv-gold) 50%,var(--lv-ink))}
+.cp-tag.past{background:var(--lv-surface);color:var(--lv-muted)}
+.cp-tag.next{background:var(--lv-accent-soft);color:var(--lv-accent)}
+.cp-lessons{display:grid;gap:2px;margin:0;padding:0;list-style:none}
+.cp-lesson{display:grid;grid-template-columns:20px minmax(0,1fr);align-items:center;gap:8px;width:100%;margin:0;padding:6px 6px;border:0;border-radius:8px;background:transparent;color:var(--lv-ink);font:inherit;font-size:11px;text-align:left;cursor:pointer}
+.cp-lesson span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cp-lesson:hover{background:var(--lv-surface)}
+.cp-lesson-mark{display:grid;width:20px;height:20px;place-items:center;border:1px solid var(--lv-line);border-radius:50%;background:var(--lv-surface);color:var(--lv-muted);font-size:9px;font-weight:700}
+.cp-lesson.done .cp-lesson-mark{border-color:transparent;background:var(--lv-accent);color:#fff}
+.cp-lesson.quiz .cp-lesson-mark{border-style:dashed;color:color-mix(in srgb,var(--lv-gold) 60%,var(--lv-ink))}
+.cp-empty{margin:22px 16px;color:var(--lv-muted);font-size:12px;text-align:center}
+/* Wide single-column layouts: more weeks per row. */
+@media(max-width:920px){.cp-card .cp-calendar{grid-template-columns:repeat(auto-fill,minmax(64px,1fr))}}
+/* Beat the older Student week-link and list styles. */
+#studentSubjectDetail .cp-card .cp-pill{grid-template-columns:1fr!important;grid-auto-flow:row!important;align-items:center;justify-content:center!important;min-height:0!important;height:auto!important;padding:7px 2px!important;text-align:center}
+#studentSubjectDetail .cp-card .cp-pill>*{grid-column:1!important}
+#studentSubjectDetail .cp-card .cp-lesson{min-height:0!important;height:auto!important;padding:6px!important;border:0!important;box-shadow:none!important}
+#studentSubjectDetail .cp-card .cp-lessons li{margin:0!important;padding:0!important;border:0!important}
+#studentSubjectDetail .cp-card .cp-legend,#studentSubjectDetail .cp-card .cp-note{margin-top:0}
+/* Week header: title gets the full width; the tag sits under it. */
+.cp-week-head{grid-template-columns:auto minmax(0,1fr)!important}
+.cp-week-head strong{white-space:normal!important;display:-webkit-box!important;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.cp-week-head .cp-tag{grid-column:2;justify-self:start;margin-top:-2px}
+/* Card ends with the calendar (and pace note): keep some space below. */
+.cp-card .cp-legend:last-child{padding-bottom:14px}
+.cp-card .cp-note{margin-bottom:14px}

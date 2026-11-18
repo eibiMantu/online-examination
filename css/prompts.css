@@ -1,0 +1,77 @@
+/* ==================================================================
+   Prompts and navigation in the current look, for every role:
+   confirm / reason dialogs, toasts, mail composer, exam overview,
+   grading and question editor, and the sidebar active marker.
+   Colors follow each role's theme tokens; type follows the pages.
+   ================================================================== */
+body{--pr-accent:var(--accent,#3a7d78);--pr-hero-a:var(--role-shell-navy,#1f2933);--pr-hero-b:var(--role-shell-role,var(--accent,#3a7d78));--pr-surface:var(--role-shell-surface,var(--surface,#fff));--pr-soft:var(--role-shell-surface-soft,var(--surface-soft,#f3f4f6));--pr-line:var(--role-shell-line,var(--line,#dde2e7));--pr-ink:var(--ink,#1f2933);--pr-muted:var(--ink-soft,#667085);--pr-font:'Poppins',Inter,Arial,sans-serif}
+body[data-role="student"]{--pr-accent:var(--student-green,#0e564d);--pr-hero-a:var(--student-forest,#073b35);--pr-hero-b:var(--student-green,#0e564d);--pr-surface:var(--student-card,#fff);--pr-soft:var(--student-soft,#f4f1eb);--pr-line:var(--line,#d7d3cb);--pr-ink:var(--student-text,#1d302d);--pr-muted:var(--student-muted,#687772)}
+:root[data-theme="dark"] body[data-role="student"]{--pr-accent:#4f9d8f}
+body{--pr-on-accent:#fff}
+:root[data-theme="dark"] body[data-role="faculty"]{--pr-on-accent:#241a14}
+
+/* Shared button looks for prompts. */
+.pr-btn-primary,.confirm-box .confirm-ok,#emailComposerModal .btn-take-exam,#gradingModal .save-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;width:auto!important;min-width:110px;height:40px;margin:0!important;padding:0 18px!important;border:0!important;border-radius:11px!important;background:var(--pr-accent)!important;color:var(--pr-on-accent)!important;font:600 12px/1 var(--pr-font)!important;box-shadow:none!important;cursor:pointer}
+.confirm-box .confirm-cancel,.confirm-box .confirm-skip,#emailComposerModal .btn-secondary,#takeExamModal #examModalActions .btn-secondary,#gradingModal .cancel-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;width:auto!important;min-width:96px;height:40px;margin:0!important;padding:0 18px!important;border:1px solid var(--pr-line)!important;border-radius:11px!important;background:transparent!important;color:var(--pr-ink)!important;font:600 12px/1 var(--pr-font)!important;box-shadow:none!important;cursor:pointer}
+:is(.confirm-box .confirm-cancel,.confirm-box .confirm-skip,#emailComposerModal .btn-secondary,#takeExamModal #examModalActions .btn-secondary,#gradingModal .cancel-btn):hover{background:var(--pr-soft)!important}
+.confirm-box .confirm-ok.is-danger{background:#b5534b!important;color:#fff!important}
+
+/* ---------------- Confirm / reason dialogs ---------------- */
+.confirm-bg{background:rgba(20,18,16,.5)!important;backdrop-filter:blur(5px)}
+.confirm-box{width:min(460px,calc(100vw - 32px))!important;padding:0 0 22px!important;overflow:hidden;border:0!important;border-radius:20px!important;background:var(--pr-surface)!important;box-shadow:0 30px 80px rgba(0,0,0,.3)!important;color:var(--pr-ink)!important;font-family:var(--pr-font)!important}
+.confirm-box>h3,.confirm-box>h2{margin:0 0 16px!important;padding:20px 24px!important;background:linear-gradient(132deg,var(--pr-hero-a),var(--pr-hero-b))!important;color:#fff!important;font:700 17px/1.3 var(--pr-font)!important;letter-spacing:-.015em}
+.confirm-box .confirm-msg,.confirm-box>p,.confirm-box>label{margin:0 24px 12px!important;color:var(--pr-muted)!important;font:400 12px/1.6 var(--pr-font)!important}
+.confirm-box .confirm-msg strong{color:var(--pr-ink)}
+.confirm-box>label{display:block;color:var(--pr-ink)!important;font-weight:600!important}
+.confirm-box :is(textarea,input,select){display:block;width:calc(100% - 48px)!important;margin:0 24px 6px!important;padding:10px 12px!important;border:1px solid var(--pr-line)!important;border-radius:11px!important;background:var(--pr-surface)!important;color:var(--pr-ink)!important;font:400 12px/1.5 var(--pr-font)!important;box-sizing:border-box}
+.confirm-box textarea{min-height:110px}
+.confirm-box :is(textarea,input,select):focus{border-color:var(--pr-accent)!important;outline:2px solid color-mix(in srgb,var(--pr-accent) 18%,transparent)!important}
+.confirm-box .confirm-actions{display:flex!important;justify-content:flex-end;gap:10px;margin:14px 24px 0!important;padding:0!important}
+
+/* ---------------- Toasts ---------------- */
+.toast{border:1px solid var(--pr-line)!important;border-left:4px solid var(--pr-accent)!important;border-radius:14px!important;background:var(--pr-surface)!important;box-shadow:0 14px 34px rgba(0,0,0,.14)!important;color:var(--pr-ink)!important;font:400 12px/1.5 var(--pr-font)!important}
+.toast .toast-body strong{color:var(--pr-ink)}
+.toast-error{border-left-color:#b5534b!important}
+.toast-info{border-left-color:var(--pr-hero-b)!important}
+.toast .toast-close{color:var(--pr-muted)!important}
+
+/* ---------------- Student mail composer ---------------- */
+#emailComposerModal :is(input,select,textarea){padding:10px 12px!important;border:1px solid var(--pr-line)!important;border-radius:11px!important;background:var(--pr-surface)!important;color:var(--pr-ink)!important;font:400 12px/1.5 var(--pr-font)!important}
+#emailComposerModal label{color:var(--pr-muted)!important;font:600 11px/1.4 var(--pr-font)!important}
+#emailComposerModal .modal-buttons{display:flex;justify-content:flex-end;gap:10px}
+
+/* ---------------- Student exam overview ---------------- */
+#takeExamModal .brief-row>dt{color:var(--pr-muted)!important}
+:root[data-theme="dark"] #takeExamModal .brief-row>dt{color:color-mix(in srgb,var(--pr-accent) 55%,#e8eef0)!important}
+#takeExamModal #examProgress:empty{display:none!important}
+#takeExamModal #examModalActions{gap:10px!important}
+#takeExamModal #examModalActions .btn-take-exam{height:40px;padding:0 18px!important;border-radius:11px!important;font:600 12px/1 var(--pr-font)!important}
+
+/* ---------------- Professor grading + question editor ---------------- */
+#gradingModal .question-modal{padding:0 0 22px!important;overflow:hidden;border:0!important;border-radius:20px!important;background:var(--pr-surface)!important;color:var(--pr-ink)!important;font-family:var(--pr-font)!important}
+#gradingModal .question-modal>div:first-child{margin:0 0 14px!important;padding:20px 24px;background:linear-gradient(132deg,var(--pr-hero-a),var(--pr-hero-b));color:#fff}
+#gradingModal #gradingTitle{color:#fff!important;font:700 18px/1.3 var(--pr-font)!important}
+#gradingModal #gradingMeta{color:rgba(255,255,255,.75)!important;font-size:11px!important}
+#gradingModal .question-modal>div:first-child>button{color:#fff!important}
+#gradingModal .question-modal>:not(:first-child){margin-left:24px!important;margin-right:24px!important}
+#gradingModal .question-modal>p{color:var(--pr-muted)!important;font-size:12px!important;line-height:1.6}
+#gradingModal label{color:var(--pr-ink)!important;font:600 12px/1.4 var(--pr-font)!important}
+#gradingModal textarea,#gradingModal input{border:1px solid var(--pr-line)!important;border-radius:11px!important;background:var(--pr-surface)!important;color:var(--pr-ink)!important;font:400 12px/1.5 var(--pr-font)!important}
+#gradingModal .modal-buttons{display:flex!important;flex-direction:row-reverse;justify-content:flex-start;gap:10px}
+#questionModal .authoring-workspace{background:color-mix(in srgb,var(--pr-surface) 55%,var(--pr-soft))!important;font-family:var(--pr-font)}
+#questionModal .authoring-head{background:var(--pr-surface)!important;border-bottom:1px solid var(--pr-line)!important}
+#questionModal .authoring-title{color:var(--pr-ink)!important}
+
+/* ---------------- Navigation: one active marker everywhere ---------------- */
+/* Expanded sidebar: a left accent edge (as on the Student sidebar). */
+body.role-shell-ready.sidebar-open #sidebar a.active,
+:root[data-theme="dark"] body.role-shell-ready.sidebar-open #sidebar a.active{box-shadow:inset 3px 0 var(--role-shell-yellow)!important}
+.confirm-box label :is(input,textarea,select){width:100%!important;margin:8px 0 0!important}
+.confirm-box label>span{display:block;color:var(--pr-ink);font-weight:600}
+#gradingModal .modal-buttons>button{flex:0 0 auto!important}
+/* Student Mail page: inline compose form. */
+:is(#studentMailTo,#studentMailSubject,#studentMailMessage){padding:10px 12px!important;border:1px solid var(--pr-line)!important;border-radius:11px!important;background:var(--pr-surface)!important;color:var(--pr-ink)!important;font:400 12px/1.5 var(--pr-font)!important}
+:is(#studentMailTo,#studentMailSubject,#studentMailMessage):focus{border-color:var(--pr-accent)!important;outline:2px solid color-mix(in srgb,var(--pr-accent) 18%,transparent)!important}
+.student-mail-compose-actions{display:flex!important;justify-content:flex-end;gap:10px}
+.student-mail-compose-actions .btn-secondary{display:inline-flex;align-items:center;justify-content:center;min-width:96px;height:40px;margin:0!important;padding:0 18px!important;border:1px solid var(--pr-line)!important;border-radius:11px!important;background:transparent!important;color:var(--pr-ink)!important;font:600 12px/1 var(--pr-font)!important}
+.student-mail-compose-actions .btn-take-exam{display:inline-flex;align-items:center;justify-content:center;min-width:110px;height:40px;margin:0!important;padding:0 18px!important;border:0!important;border-radius:11px!important;background:var(--pr-accent)!important;color:#fff!important;font:600 12px/1 var(--pr-font)!important}
