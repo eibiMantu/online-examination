@@ -167,6 +167,47 @@ const AdminMonitoring = (() => {
     Object.keys(view).forEach(name => { view[name].max = 1; const svg = $(`${name}Chart`); if (svg) svg.innerHTML = ''; });
     lastPoll = 0;
   }
-  return { tick, reset, poll };
+  /* ---------- Site control: Start / Restart / Stop ---------- */
+  let siteDown = null, siteBusy = false;
+  function siteButtons() {
+    const start = $('monitorStart'), stop = $('monitorStop'), restart = $('monitorRestart'), badge = $('siteModeBadge');
+    if (start) start.disabled = siteBusy || siteDown !== true;
+    if (stop) stop.disabled = siteBusy || siteDown === true;
+    if (restart) restart.disabled = siteBusy;
+    if (badge) badge.hidden = siteDown !== true;
+  }
+  async function siteStatus() {
+    if (typeof fetch !== 'function' || !/^https?:$/.test(location.protocol)) return;
+    try { const s = await (await fetch('/api/site/status', { cache: 'no-store' })).json(); siteDown = !!s.maintenance; } catch (_) {}
+    siteButtons();
+  }
+  const COPY = {
+    stop: { title: 'Stop the site?', message: 'Everyone except Administrators is signed out within 15 seconds and cannot sign in until you start the site again.', confirmLabel: 'Stop site', danger: true },
+    start: { title: 'Start the site?', message: 'Students, Professors, Coordinators and the Dean can sign in again.', confirmLabel: 'Start site' },
+    restart: { title: 'Restart the server?', message: 'On Render the server restarts (about a minute). Running locally, it reloads its data from Supabase.', confirmLabel: 'Restart' }
+  };
+  async function site(action) {
+    if (siteBusy || !COPY[action]) return;
+    const ok = typeof confirmDialog === 'function' ? await confirmDialog(COPY[action]) : window.confirm(COPY[action].message);
+    if (!ok) return;
+    siteBusy = true; siteButtons();
+    try {
+      const token = (() => { try { return sessionStorage.getItem('serverSessionToken'); } catch (_) { return null; } })();
+      const response = await fetch('/api/site/control', { method: 'POST', headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) }, body: JSON.stringify({ action }) });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || `Server answered ${response.status}`);
+      if (action !== 'restart') siteDown = !!result.maintenance;
+      const note = action === 'stop' ? 'The site is stopped. Only Administrators can use it.' : action === 'start' ? 'The site is running for everyone.' : result.mode === 'process' ? 'The server is restarting. Live monitoring reconnects on its own.' : `Server data reloaded from Supabase (${result.reloaded} collections).`;
+      if (typeof notify === 'function') notify(note, 'success');
+      if (action === 'restart') reset();
+    } catch (error) {
+      if (typeof notify === 'function') notify(error.message, 'error');
+    } finally { siteBusy = false; siteButtons(); }
+  }
+  siteButtons();
+  setTimeout(siteStatus, 0);
+  setInterval(siteStatus, 10000);
+
+  return { tick, reset, poll, site };
 })();
 if (typeof window !== 'undefined') window.AdminMonitoring = AdminMonitoring;

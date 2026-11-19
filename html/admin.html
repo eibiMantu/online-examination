@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Online Examination</title>
     <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/shared-ui.css?v=20261118-keep-search"><link rel="stylesheet" href="../css/responsive-shell.css?v=20261118-4"><link rel="stylesheet" href="../css/prompts.css?v=20261119-1"><link rel="stylesheet" href="../css/table-toolbar.css?v=20261118-4"><link rel="stylesheet" href="../css/profile-popup.css?v=20261118-3"><link rel="stylesheet" href="../css/profile-oversight.css?v=20261118-2">
-    <link rel="stylesheet" href="../css/admin-modern.css?v=20261119-mon"><link rel="stylesheet" href="../css/coordinator-dashboard.css?v=20261119-admin"><link rel="stylesheet" href="../css/admin-dashboard.css?v=20261119-7">
+    <link rel="stylesheet" href="../css/shared-ui.css?v=20261118-keep-search"><link rel="stylesheet" href="../css/responsive-shell.css?v=20261118-4"><link rel="stylesheet" href="../css/prompts.css?v=20261119-glow2"><link rel="stylesheet" href="../css/table-toolbar.css?v=20261118-4"><link rel="stylesheet" href="../css/profile-popup.css?v=20261118-3"><link rel="stylesheet" href="../css/profile-oversight.css?v=20261118-2">
+    <link rel="stylesheet" href="../css/admin-modern.css?v=20261119-mon"><link rel="stylesheet" href="../css/coordinator-dashboard.css?v=20261119-admin"><link rel="stylesheet" href="../css/admin-dashboard.css?v=20261119-9"><link rel="stylesheet" href="../css/coordinator-pages.css?v=20261118-3"><link rel="stylesheet" href="../css/coordinator-workspaces.css?v=20261118-3"><link rel="stylesheet" href="../css/admin-pages.css?v=20261119-12"><link rel="stylesheet" href="../css/admin-governance.css?v=20261119-9">
     <link rel="stylesheet" href="../css/admin-workspaces.css">
     <link rel="stylesheet" href="../css/system-management.css?v=20260902-announcement-menu-right">
     <link rel="stylesheet" href="../css/curriculum-management.css?v=20260920-unified">
@@ -21,15 +21,15 @@
     <script src="../js/student-profile.js"></script><script src="../js/role-profile.js?v=20261118-overview-2"></script>
     <script src="../js/faculty-profile.js"></script>
     <script src="../js/audit-service.js"></script>
-    <script src="../js/permission-service.js"></script>
+    <script src="../js/permission-service.js?v=20261119-roles"></script>
     <script src="../js/approval-service.js"></script>
     <script src="../js/academic-workflow-service.js"></script>
-    <script src="../js/admin-table-tools.js?v=20261118-export2"></script><script src="../js/admin-monitoring.js?v=20261119-7"></script><script src="../js/admin-dashboard.js?v=20261119-7"></script>
+    <script src="../js/admin-table-tools.js?v=20261118-export2"></script><script src="../js/admin-monitoring.js?v=20261119-8"></script><script src="../js/admin-dashboard.js?v=20261119-7"></script><script src="../js/coordinator-pages.js?v=20261118-5"></script><script src="../js/coordinator-workspaces.js?v=20261119-1"></script><script src="../js/admin-pages.js?v=20261119-10"></script>
 <script src="../js/auth.js"></script>
     <script src="../js/ui.js?v=20261118-rail"></script>
     <script src="../js/system-management.js"></script>
     <script src="../js/admin-workspaces.js"></script>
-    <script src="../js/admin-governance.js"></script>
+    <script src="../js/admin-governance.js?v=20261119-8"></script>
 </head>
 
 <body data-role="admin">
@@ -50,7 +50,7 @@
     <div class="cd-layout ad-layout">
       <div class="cd-main">
         <section class="cd-card dashboard-monitoring ad-monitor" aria-labelledby="monitoringTitle">
-          <header class="cd-card-head"><div><h2 id="monitoringTitle">Live monitoring</h2><p>Render server, Supabase and this site · updates every 2 s · <span class="ad-updated">Updated <b id="statusChecked">—</b></span></p><span id="siteStatusSummary" class="sr-only" aria-live="polite"></span></div><div class="monitoring-actions"><span class="monitoring-live" id="monitoringState"><i aria-hidden="true"></i><span>Live</span></span><button type="button" class="monitor-control start" id="monitorStart" onclick="startMonitoring()" title="Start monitoring"><span aria-hidden="true">▶</span> Start</button><button type="button" class="monitor-control restart" id="monitorRestart" onclick="restartMonitoring()" title="Restart monitoring"><span aria-hidden="true">↻</span> Restart</button><button type="button" class="monitor-control stop" id="monitorStop" onclick="stopMonitoring()" title="Stop monitoring"><span aria-hidden="true">■</span> Stop</button></div></header>
+          <header class="cd-card-head"><div><h2 id="monitoringTitle">Live monitoring</h2><p>Render server, Supabase and this site · updates every 2 s · <span class="ad-updated">Updated <b id="statusChecked">—</b></span></p><span id="siteStatusSummary" class="sr-only" aria-live="polite"></span></div><div class="monitoring-actions"><span class="monitoring-live" id="monitoringState"><i aria-hidden="true"></i><span>Live</span></span><span class="ad-site-badge" id="siteModeBadge" hidden>Maintenance</span><button type="button" class="monitor-control start" id="monitorStart" onclick="AdminMonitoring.site('start')" title="Start the site for everyone" aria-label="Start the site for everyone"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5-11-6.5Z"/></svg></button><button type="button" class="monitor-control restart" id="monitorRestart" onclick="AdminMonitoring.site('restart')" title="Restart the server" aria-label="Restart the server"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5a7 7 0 1 1-6.6 4.7l1.9.6A5 5 0 1 0 12 7v3L7.5 6 12 2v3Z"/></svg></button><button type="button" class="monitor-control stop" id="monitorStop" onclick="AdminMonitoring.site('stop')" title="Stop the site for everyone except administrators" aria-label="Stop the site for everyone except administrators"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10v10H7z"/></svg></button></div></header>
           <div class="monitoring-grid ad-services">
           <article class="monitor-card ad-service server-card" id="serverCard" data-tone="ok">
             <div class="ad-service-top"><span class="ad-service-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 4h16a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1Zm1 2v3h14V6H5Zm-1 7h16a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-5a1 1 0 0 1 1-1Zm1 2v3h14v-3H5Zm2-7.5h2v1H7v-1Zm0 9h2v1H7v-1Z"/></svg></span><span class="ad-service-name">Render server</span><i class="ad-dot" aria-hidden="true"></i></div>
@@ -214,12 +214,10 @@
   </div>
   <div id="governanceSection" class="panel">
     <header class="management-page-head"><h3>Accounts, roles, and permissions</h3><p>Create identities, assign roles, and manage role capabilities from one workspace.</p></header>
-    <nav class="governance-tabs" role="tablist" aria-label="Account and permission management">
-      <button type="button" class="governance-tab active" role="tab" aria-selected="true" aria-controls="accountManagementPane" onclick="AdminGovernance.show('accounts')">Accounts &amp; Roles</button>
-      <button type="button" class="governance-tab" role="tab" aria-selected="false" aria-controls="rolePermissionsPane" onclick="AdminGovernance.show('permissions')">Roles &amp; Permissions</button>
-    </nav>
+    <nav class="governance-tabs" role="tablist" aria-label="Accounts and permissions"><button type="button" class="governance-tab active" role="tab" aria-selected="true" data-gv-tab="users" aria-controls="accountManagementPane" onclick="AdminGovernance.show('users')">Users</button><button type="button" class="governance-tab" role="tab" aria-selected="false" data-gv-tab="roles" aria-controls="rolePermissionsPane" onclick="AdminGovernance.show('roles')">Roles</button><button type="button" class="governance-tab" role="tab" aria-selected="false" data-gv-tab="policies" aria-controls="governancePolicyPane" onclick="AdminGovernance.show('policies')">Policies</button></nav>
     <div id="accountManagementPane" class="governance-pane" role="tabpanel"><div id="accountManagementRoot"></div></div>
     <div id="rolePermissionsPane" class="governance-pane" role="tabpanel" hidden><div id="rolePermissionsRoot"></div></div>
+    <div id="governancePolicyPane" class="governance-pane" role="tabpanel" hidden><div id="governancePolicyRoot"></div></div>
   </div>
 
   <div id="loadPolicySection" class="panel">
@@ -1386,10 +1384,7 @@ if(fsEl)fsEl.innerHTML = `<tr><th>Subject</th><th>Faculty</th></tr>` + fsRows;
     state?.classList.toggle('paused',!running);
     const stateLabel=state?.querySelector('span');
     if(stateLabel)stateLabel.textContent=running?'Live':'Paused';
-    const start=document.getElementById('monitorStart'),restart=document.getElementById('monitorRestart'),stop=document.getElementById('monitorStop');
-    if(start)start.disabled=running;
-    if(restart)restart.disabled=false;
-    if(stop)stop.disabled=!running;
+    // The Start / Restart / Stop buttons control the site itself (js/admin-monitoring.js).
   }
   function startMonitoring(){
     if(monitoringTimer)return;
@@ -1410,6 +1405,7 @@ if(fsEl)fsEl.innerHTML = `<tr><th>Subject</th><th>Faculty</th></tr>` + fsRows;
 
   function initializeDashboardOverview(){
     if(typeof AdminDashboard!=='undefined')AdminDashboard.mount();
+    if(typeof AdminPages!=='undefined')setTimeout(()=>AdminPages.mount(),0);
     let savedView='grid';
     try{ savedView=localStorage.getItem(dashboardViewKey)||'grid'; }catch(error){}
     setDashboardView(savedView);

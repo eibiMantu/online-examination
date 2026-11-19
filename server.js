@@ -40,6 +40,24 @@ function ensureDemoAccounts(){const existing=store.read('users',[]),env=runtimeE
   {username:env.STUDENT_USERNAME||'2025-00002',password:env.STUDENT_PASSWORD||'santos2025',role:'student',status:'active'}
 ];const users=Array.isArray(existing)?existing:[],initialCount=users.length,known=new Set(users.map(item=>item.username));required.forEach(item=>{if(!known.has(item.username))users.push(item)});if(users.length!==initialCount)store.write('users',users);const profiles=store.read('coordinators',[]);if(!Array.isArray(profiles)||!profiles.length){store.write('coordinators',required.filter(item=>item.role==='coordinator').map(({username,role})=>({id:username,username,role,first:'Demo',last:'Santos',college:'College of Information and Computer Studies',status:'active'})));}}
 function ensureOfficialCurricula(){const file=path.join(ROOT,'assets','philippine-curricula.json');if(!fs.existsSync(file))return;const official=JSON.parse(fs.readFileSync(file,'utf8')),current=store.read('curricula',[]),records=Array.isArray(current)?current:[],officialPrograms=new Set(official.map(item=>item.program)),bySubject=new Map(records.filter(item=>officialPrograms.has(item.program)).map(item=>[`${item.program}|${item.subjectCode}`,item])),merged=official.map(item=>({...item,...(bySubject.get(`${item.program}|${item.subjectCode}`)||{}),sourceUrl:item.sourceUrl,institution:item.institution})),custom=records.filter(item=>!officialPrograms.has(item.program)||item.institution&&item.institution!=='University of the East');store.write('curricula',[...merged,...custom]);}
+/* Site maintenance: the same systemSettings.maintenance flag the System Management page uses.
+   While it is on, only Administrators can sign in or use the API; it syncs to other instances through Supabase. */
+const MAINTENANCE_DEFAULT='The examination portal is temporarily unavailable while maintenance is in progress.';
+function siteMaintenance(){const settings=store.read('systemSettings',{})||{};return{active:settings.maintenance===true,message:settings.maintenanceMessage||MAINTENANCE_DEFAULT};}
+async function siteControl(action,session,options={}){
+  const settings=store.read('systemSettings',{})||{};
+  const audit=(what,details={})=>{try{store.append('applicationAuditLog',{id:`audit_${Date.now()}_${Math.random().toString(36).slice(2,8)}`,at:new Date().toISOString(),actorId:session.username,actorRole:'admin',action:what,entityType:'site',entityId:'portal',category:'system',result:'success',details});}catch(_){}};
+  if(action==='stop'){store.write('systemSettings',{...settings,maintenance:true,maintenanceMessage:String(options.message||settings.maintenanceMessage||MAINTENANCE_DEFAULT)});audit('site-stop');return{ok:true,maintenance:true};}
+  if(action==='start'){store.write('systemSettings',{...settings,maintenance:false});audit('site-start');return{ok:true,maintenance:false};}
+  if(action==='restart'){
+    audit('site-restart');
+    if(typeof store.flush==='function')await store.flush();
+    // On Render the platform starts a fresh process; locally the server reloads its data from Supabase instead of exiting.
+    if(runtimeEnv.RENDER){setTimeout(()=>process.exit(0),800);return{ok:true,restarting:true,mode:'process'};}
+    const hydration=await store.hydrate();return{ok:true,restarting:false,mode:'reload',reloaded:hydration.hydrated||0};
+  }
+  throw Object.assign(new Error('Unknown site action.'),{status:400});
+}
 let auth, academicPeriods, accountLifecycle, backupRestore, personnel;
 
 function send(res, status, body, type='application/json; charset=utf-8', headers={}) { res.writeHead(status, {'Content-Type':type,'X-Content-Type-Options':'nosniff','Cache-Control':'no-store, no-cache, must-revalidate','Pragma':'no-cache','Expires':'0',...headers}); res.end(type.startsWith('application/json') ? JSON.stringify(body) : body); }
@@ -48,9 +66,12 @@ function cleanKey(value) { const key=decodeURIComponent(value||''); if(!KEY_RE.t
 function collectionFromCsvPath(pathname) { const match=pathname.match(/^\/api\/csv\/([^/]+)\/(import|export)$/); if(!match)return null;const key=cleanKey(match[1]);if(!CSV_COLLECTIONS.has(key))throw Object.assign(new Error('CSV is not enabled for this collection.'),{status:400});return{key,action:match[2]}; }
 
 async function api(req,res,url) {
+  if(url.pathname==='/api/site/status'&&req.method==='GET'){const m=siteMaintenance();return send(res,200,{maintenance:m.active,message:m.message});}
+  if(url.pathname==='/api/site/control'&&req.method==='POST'){const session=auth.requireSession(req,['admin']);const parsed=JSON.parse(await readBody(req)||'{}');return send(res,200,await siteControl(String(parsed.action||''),session,parsed));}
+  if(siteMaintenance().active&&!['/api/health','/api/auth/session','/api/auth/logout'].includes(url.pathname)){const session=auth.resolve(auth.tokenFrom(req));if(session&&session.role!=='admin')return send(res,503,{error:siteMaintenance().message,code:'MAINTENANCE'});}
   if(url.pathname==='/api/monitoring'&&req.method==='GET'){auth.requireSession(req,['admin']);return send(res,200,await monitor.snapshot());}
   if(url.pathname==='/api/health'&&req.method==='GET'){const replication=store.status(),healthy=!replication.enabled||replication.healthy;return send(res,healthy?200:503,{ok:healthy,storage:replication.enabled?'sqlite+supabase':'sqlite',database:path.basename(DB_FILE),replication});}
-  if(url.pathname==='/api/auth/login'&&req.method==='POST'){const parsed=JSON.parse(await readBody(req)||'{}');const result=auth.login(String(parsed.username||''),String(parsed.password||''),req.socket.remoteAddress||'');return send(res,200,result);}
+  if(url.pathname==='/api/auth/login'&&req.method==='POST'){const parsed=JSON.parse(await readBody(req)||'{}');const result=auth.login(String(parsed.username||''),String(parsed.password||''),req.socket.remoteAddress||'');if(result.session.role!=='admin'&&siteMaintenance().active)return send(res,503,{error:siteMaintenance().message,code:'MAINTENANCE'});return send(res,200,result);}
   if(url.pathname==='/api/auth/session'&&req.method==='GET'){const session=auth.requireSession(req);return send(res,200,{session});}
   if(url.pathname==='/api/auth/logout'&&req.method==='DELETE'){const token=auth.tokenFrom(req);if(token)auth.logout(token);return send(res,200,{ok:true});}
   if(url.pathname==='/api/academic-periods'&&req.method==='GET'){const session=auth.requireSession(req);return send(res,200,{periods:academicPeriods.list(),session:{username:session.username,role:session.role}});}

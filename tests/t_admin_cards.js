@@ -10,9 +10,9 @@ ok(r.d.querySelectorAll('.dashboard-view-btn').length===2,'dashboard offers grid
 ok(r.d.querySelector('.dashboard-card-toolbar').nextElementSibling.classList.contains('card-grid'),'view switch sits directly before the management cards');
 ok(r.d.querySelectorAll('.monitor-control').length===3,'monitoring has Start, Restart, and Stop controls');
 r.w.stopMonitoring();
-ok(/Paused/.test(r.d.getElementById('monitoringState').textContent)&&!r.d.getElementById('monitorStart').disabled&&r.d.getElementById('monitorStop').disabled,'Stop pauses sampling and updates its controls');
+ok(/Paused/.test(r.d.getElementById('monitoringState').textContent),'pausing live monitoring shows Paused (the Start / Stop buttons now control the site itself)');
 r.w.startMonitoring();
-ok(/Live/.test(r.d.getElementById('monitoringState').textContent)&&r.d.getElementById('monitorStart').disabled&&!r.d.getElementById('monitorStop').disabled,'Start resumes live sampling');
+ok(/Live/.test(r.d.getElementById('monitoringState').textContent)&&['start','restart','stop'].every(a=>(r.d.getElementById(`monitor${a[0].toUpperCase()+a.slice(1)}`).getAttribute('onclick')||'').includes(`AdminMonitoring.site('${a}')`)),'resuming shows Live; Start, Restart and Stop are wired to site control');
 r.w.setDashboardView('list');
 ok(r.d.getElementById('dashboardSection').classList.contains('dashboard-view-list')&&r.w.localStorage.getItem('adminDashboardView:admin')==='list','list view applies and is saved for the Admin account');
 const cards=[...r.d.querySelectorAll('.admin-dashboard-link:not([hidden])')];
@@ -29,9 +29,9 @@ ok(!!periodCard&&!!lifecycleCard,'academic periods and account lifecycle have di
 const governanceCard=cards.find(card=>card.getAttribute('aria-label')==='Open Accounts, Roles and Permissions');
 ok(!!governanceCard,'accounts, roles, and permissions share one dashboard card');
 governanceCard.click();
-ok(r.d.getElementById('governanceSection').style.display==='block'&&r.d.querySelectorAll('.governance-tab').length===2,'merged governance card opens the two-tab workspace');
+ok(r.d.getElementById('governanceSection').style.display==='block'&&r.d.querySelectorAll('.governance-tab').length===3,'merged governance card opens the Users / Roles / Policies workspace');
 r.d.querySelectorAll('.governance-tab')[1].click();
-ok(!r.d.getElementById('rolePermissionsPane').hidden&&r.d.getElementById('accountManagementPane').hidden,'Roles and Permissions tab switches capabilities in place');
+ok(!r.d.getElementById('rolePermissionsPane').hidden&&r.d.getElementById('accountManagementPane').hidden,'Roles tab switches in place');
 periodCard.dispatchEvent(new r.w.MouseEvent('click',{bubbles:true}));
 ok(r.d.getElementById('academicPeriodsSection').style.display==='block'&&!!r.d.querySelector('#academicPeriodsRoot .workspace-summary'),'Academic Periods card opens its workspace');
 ok(/Guided rollover/.test(r.d.querySelector('#academicPeriodsRoot .workspace-rollover-guide')?.textContent||''),'Academic Periods explains the guided rollover sequence');

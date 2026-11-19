@@ -41,6 +41,7 @@ const ROLE_PROFILE=fs.readFileSync(DIR+'../js/role-profile.js','utf8');
 const SYSTEM_MANAGEMENT=fs.readFileSync(DIR+'../js/system-management.js','utf8');
 const ADMIN_WORKSPACES=fs.readFileSync(DIR+'../js/admin-workspaces.js','utf8');
 const ADMIN_GOVERNANCE=fs.readFileSync(DIR+'../js/admin-governance.js','utf8');
+const ADMIN_PAGES=fs.readFileSync(DIR+'../js/admin-pages.js','utf8');
 const DEAN_PAGES=fs.readFileSync(DIR+'../js/dean-pages.js','utf8');
 const DEAN_PERSONNEL=fs.readFileSync(DIR+'../js/dean-personnel.js','utf8');
 const SECTION_MANAGEMENT=fs.readFileSync(DIR+'../js/section-management.js','utf8');
@@ -60,7 +61,7 @@ function load(page, seed, opts={}){
     .replace('<script src="../js/student-profile.js"></script>', `<script>${STUDENT_PROFILE}</script>`)
     .replace('<script src="../js/faculty-profile.js"></script>', `<script>${FACULTY_PROFILE}</script>`)
     .replace('<script src="../js/audit-service.js"></script>', `<script>${AUDIT_SERVICE}</script>`)
-    .replace('<script src="../js/permission-service.js"></script>', `<script>${PERMISSION_SERVICE}</script>`)
+    .replace(/<script src="\.\.\/js\/permission-service\.js(?:\?[^"]*)?"><\/script>/, () => `<script>${PERMISSION_SERVICE}</script>`)
     .replace('<script src="../js/approval-service.js"></script>', `<script>${APPROVAL_SERVICE}</script>`)
     .replace('<script src="../js/academic-workflow-service.js"></script>', `<script>${ACADEMIC_WORKFLOW_SERVICE}</script>`)
     .replace(/<script src="\.\.\/js\/admin-table-tools\.js(?:\?[^"]*)?"><\/script>/, () => `<script>${ADMIN_TABLE_TOOLS}</script>`)
@@ -84,9 +85,10 @@ function load(page, seed, opts={}){
     .replace(/<script src="\.\.\/js\/ui\.js(?:\?[^\"]*)?"><\/script>/, `<script>${UI}</script>`)
     .replace('<script src="../js/system-management.js"></script>', `<script>${SYSTEM_MANAGEMENT}</script>`)
     .replace('<script src="../js/admin-workspaces.js"></script>', `<script>${ADMIN_WORKSPACES}</script>`)
-    .replace('<script src="../js/admin-governance.js"></script>', `<script>${ADMIN_GOVERNANCE}</script>`)
+    .replace(/<script src="\.\.\/js\/admin-governance\.js(?:\?[^"]*)?"><\/script>/, () => `<script>${ADMIN_GOVERNANCE}</script>`)
     .replace(/<script src="\.\.\/js\/dean-personnel\.js(?:\?[^"]*)?"><\/script>/, () => `<script>${DEAN_PERSONNEL}</script>`)
     .replace(/<script src="\.\.\/js\/dean-pages\.js(?:\?[^"]*)?"><\/script>/, () => `<script>${DEAN_PAGES}</script>`)
+    .replace(/<script src="\.\.\/js\/admin-pages\.js(?:\?[^"]*)?"><\/script>/, () => `<script>${ADMIN_PAGES}</script>`)
     .replace('<script src="../js/section-management.js"></script>', `<script>${SECTION_MANAGEMENT}</script>`)
     .replace(/<script src="\.\.\/js\/professor-management\.js(?:\?[^\"]*)?"><\/script>/, `<script>${PROFESSOR_MANAGEMENT}</script>`)
     .replace(/<script src="\.\.\/js\/subject-schedule\.js(?:\?[^\"]*)?"><\/script>/, `<script>${SUBJECT_SCHEDULE}</script>`)

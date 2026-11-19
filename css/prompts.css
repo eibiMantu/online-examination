@@ -81,3 +81,22 @@ body[data-role="dean"]{--pr-accent:#8a6a2e}
 /* Outlined Cancel / Skip stay outlined in dark mode (an older dark rule filled them). */
 :root[data-theme="dark"] .confirm-box :is(.confirm-cancel,.confirm-skip):not(#pr):not(#pr2){border:1px solid var(--pr-line)!important;background:transparent!important;color:var(--pr-ink)!important}
 :root[data-theme="dark"] .confirm-box :is(.confirm-cancel,.confirm-skip):not(#pr):not(#pr2):hover{background:var(--pr-soft)!important}
+
+/* ===== Banner glows, every role in its own colors ===== */
+body.role-shell-ready{--glow-a:rgba(180,200,215,.40);--glow-b:rgba(240,215,170,.22)}
+body.role-shell-ready[data-role="student"]{--glow-a:rgba(110,214,185,.38);--glow-b:rgba(242,210,122,.24)}
+body.role-shell-ready[data-role="faculty"]{--glow-a:rgba(236,182,140,.40);--glow-b:rgba(250,225,190,.22)}
+body.role-shell-ready[data-role="coordinator"]{--glow-a:rgba(140,180,255,.40);--glow-b:rgba(120,220,225,.22)}
+body.role-shell-ready[data-role="dean"]{--glow-a:rgba(255,214,130,.42);--glow-b:rgba(255,240,195,.24)}
+body.role-shell-ready[data-role="admin"]{--glow-a:rgba(190,160,235,.42);--glow-b:rgba(120,200,220,.22)}
+body.role-shell-ready :is(.role-page-hero,.student-dashboard-welcome,.subject-detail-hero){position:relative;overflow:hidden;isolation:isolate}
+body.role-shell-ready :is(.role-page-hero,.student-dashboard-welcome,.subject-detail-hero)::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(340px 300px at 72% -30%,var(--glow-a),transparent 70%),radial-gradient(380px 320px at -4% 130%,var(--glow-b),transparent 70%)}
+/* The same glows, much fainter, behind the whole page. */
+body.role-shell-ready::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(900px 600px at 85% -10%,color-mix(in srgb,var(--glow-a) 45%,transparent),transparent 70%),radial-gradient(800px 600px at 0% 105%,color-mix(in srgb,var(--glow-b) 55%,transparent),transparent 70%)}
+:root[data-theme="dark"] body.role-shell-ready::before{opacity:.55}
+/* Student pages use their own shell (no role-shell-ready): same glows in green and gold. */
+body[data-role="student"]{--glow-a:rgba(110,214,185,.38);--glow-b:rgba(242,210,122,.24)}
+body[data-role="student"] :is(.role-page-hero,.student-dashboard-welcome,.subject-detail-hero){position:relative;overflow:hidden;isolation:isolate}
+body[data-role="student"] :is(.role-page-hero,.student-dashboard-welcome,.subject-detail-hero)::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(340px 300px at 72% -30%,var(--glow-a),transparent 70%),radial-gradient(380px 320px at -4% 130%,var(--glow-b),transparent 70%)}
+body[data-role="student"]::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(900px 600px at 85% -10%,color-mix(in srgb,var(--glow-a) 45%,transparent),transparent 70%),radial-gradient(800px 600px at 0% 105%,color-mix(in srgb,var(--glow-b) 55%,transparent),transparent 70%)}
+:root[data-theme="dark"] body[data-role="student"]::before{opacity:.55}

@@ -83,6 +83,21 @@ function requireRole(role) {
     return null;
   }
 
+  // While the page stays open, ask the server every 15 s whether an Administrator
+  // has put the site into maintenance; if so, sign out like a fresh page load would.
+  if (role !== 'admin' && typeof fetch === 'function' && /^https?:$/.test(location.protocol) && !window.__maintenanceWatch) {
+    window.__maintenanceWatch = setInterval(async () => {
+      try {
+        const status = await (await fetch('/api/site/status', { cache: 'no-store' })).json();
+        if (!status.maintenance) return;
+        clearInterval(window.__maintenanceWatch);
+        DB.write('accessNotice', status.message || 'The portal is currently under maintenance.');
+        DB.remove('currentUser');
+        window.location.replace('index.html');
+      } catch (_) {}
+    }, 15000);
+  }
+
   return session;
 }
 

@@ -1,0 +1,178 @@
+/* Admin System Management / Academic Periods / Accounts & Permissions / Audit Log. */
+/* The banner already names each page. */
+body[data-role="admin"].ap-ready :is(#systemManagementRoot,#academicPeriodsRoot,#governanceSection)>.management-page-head,
+body[data-role="admin"].ap-ready #auditSection>:is(h3:not(.audit-events-title),p.panel-help:not(#auditFilterSummary)),
+body[data-role="admin"].ap-ready #auditSection>.audit-events-title,
+body[data-role="admin"].ap-ready .cw-emptied,
+body[data-role="admin"].ap-ready #accountManagementRoot>.governance-summary{display:none!important}
+body[data-role="admin"] .ap-insights{margin:0 0 18px!important}
+body[data-role="admin"] .ap-insights .ck-card{--pr-accent:#5b4a75}
+
+/* Same width as the banner (no narrower centred column). */
+body[data-role="admin"].ap-ready :is(#systemManagementRoot,#academicPeriodsRoot,#governanceSection,#auditSection) :is(.system-grid,.governance-tabs,.governance-pane,#accountManagementRoot,#rolePermissionsRoot){max-width:none!important;margin-left:0!important;margin-right:0!important}
+
+/* Guided rollover: numbered steps inside the card. */
+body[data-role="admin"] .workspace-rollover-guide ol{margin:8px 0!important;padding-left:22px!important}
+
+/* Audit table card with its own header and tools. */
+body[data-role="admin"] .audit-table-shell{overflow:visible!important}
+.ap-table-head{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--pr-line)}
+.ap-table-head h3{margin:0;color:var(--pr-ink);font:650 15px/1.3 var(--pr-font)}
+.ap-table-head #auditFilterSummary{margin:3px 0 0!important;color:var(--pr-muted)!important;font-size:11px!important}
+body[data-role="admin"] .ap-table-head #auditTableTools:not(#ap){position:static!important;display:flex;align-items:center;gap:2px;margin-left:auto!important;padding:0!important;border:0!important;background:transparent!important;box-shadow:none!important}
+body[data-role="admin"] .ap-table-head .cw-tool{position:relative}
+body[data-role="admin"] .ap-table-head .cw-filter-panel:not([hidden]){display:grid!important;grid-template-columns:repeat(2,minmax(150px,1fr));min-width:min(380px,86vw);right:0;left:auto}
+body[data-role="admin"] .ap-table-head .cw-filter-panel .cw-reset{grid-column:1/-1}
+body[data-role="admin"] .ap-table-head .cw-filter-panel label{display:grid!important;gap:5px;margin:0!important;color:var(--pr-muted);font:600 11px var(--pr-font)}
+body[data-role="admin"] .ap-table-head .cw-filter-panel :is(input,select){width:100%!important;height:36px!important;margin:0!important;padding:0 10px!important;border:1px solid var(--pr-line)!important;border-radius:9px!important;background:var(--pr-surface)!important;color:var(--pr-ink)!important;font:12px var(--pr-font)!important}
+@media(max-width:900px){body[data-role="admin"] .ap-insights{grid-template-columns:1fr}}
+/* System Management uses the full page width like its banner. */
+body[data-role="admin"].ap-ready #systemManagementRoot{max-width:none!important;margin:0!important}
+/* Audit table: one card, header inside it. */
+body[data-role="admin"].ap-ready #auditSection .audit-table-shell:not(#ap){margin-top:0!important;padding:0!important;border:1px solid var(--pr-line)!important;border-radius:18px!important;background:var(--pr-surface)!important;box-shadow:0 7px 20px rgba(28,36,42,.06)!important}
+body[data-role="admin"].ap-ready #auditSection .audit-table-shell .table-scroll{border-radius:0 0 18px 18px}
+body[data-role="admin"].ap-ready #auditSection .ap-insights{margin-bottom:18px!important}
+body[data-role="admin"].ap-ready #auditSection #auditFilterSummary{display:block!important}
+/* Popovers open under their own icon. */
+body[data-role="admin"] .ap-table-head .cw-tool>:is(.table-search-box,.table-tool-select){top:40px!important;right:0!important}
+/* Academic Periods / System cards: the same card surface as every other page (dark mode had white cards). */
+body[data-role="admin"].ap-ready :is(#academicPeriodsRoot,#systemManagementRoot,#governanceSection) :is(.workspace-form,.workspace-row,.workspace-summary,.workspace-notice,.system-card,.governance-card,.governance-tabs):not(#ap){border:1px solid var(--pr-line)!important;border-radius:16px!important;background:var(--pr-surface)!important;box-shadow:0 7px 20px rgba(28,36,42,.06)!important;color:var(--pr-ink)!important}
+body[data-role="admin"].ap-ready :is(#academicPeriodsRoot,#systemManagementRoot,#governanceSection) :is(h3,h4,strong,.workspace-form-head *,.workspace-row :is(h3,h4,strong,b)):not(#ap){color:var(--pr-ink)!important}
+body[data-role="admin"].ap-ready :is(#academicPeriodsRoot,#systemManagementRoot,#governanceSection) :is(p,small,span:not(.workspace-badge):not([class*="badge"]),label):not(#ap){color:var(--pr-muted)}
+body[data-role="admin"].ap-ready #academicPeriodsRoot .workspace-list-head strong{color:var(--pr-ink)!important}
+:root[data-theme="dark"] body[data-role="admin"].ap-ready :is(#academicPeriodsRoot,#systemManagementRoot,#governanceSection) :is(.workspace-form,.workspace-row,.system-card,.governance-card):not(#ap){box-shadow:0 8px 22px rgba(0,0,0,.22)!important}
+body[data-role="admin"].ap-ready #academicPeriodsRoot .workspace-row button:not(#ap){border:1px solid var(--pr-line)!important;border-radius:10px!important;background:transparent!important;color:var(--pr-accent)!important}
+body[data-role="admin"].ap-ready #academicPeriodsRoot .workspace-row button:not(#ap):hover{background:var(--pr-soft)!important}
+
+/* ===== Content polish: same type scale, fields, buttons and tables as the other pages ===== */
+body[data-role="admin"].ap-ready :is(#systemSection,#academicPeriodsSection,#governanceSection,#auditSection){--ap:#5b4a75;font-family:var(--pr-font)}
+:root[data-theme="dark"] body[data-role="admin"].ap-ready :is(#systemSection,#academicPeriodsSection,#governanceSection,#auditSection){--ap:#b9a6d6}
+/* Card headings */
+body[data-role="admin"].ap-ready :is(#systemSection,#academicPeriodsSection,#governanceSection) :is(.system-card,.governance-card,.workspace-form) :is(h3,h4):not(#ap):not(#ap2){margin:0!important;color:var(--pr-ink)!important;font:650 15px/1.3 var(--pr-font)!important;letter-spacing:0!important}
+body[data-role="admin"].ap-ready :is(#systemSection,#governanceSection) :is(.system-card,.governance-card)>header p:not(#ap){margin:3px 0 0!important;font:400 11.5px/1.4 var(--pr-font)!important}
+body[data-role="admin"].ap-ready :is(#systemSection,#governanceSection) :is(.system-card-icon,.governance-card-icon):not(#ap){border-radius:10px!important;background:color-mix(in srgb,var(--ap) 12%,transparent)!important;color:var(--ap)!important}
+/* Labels and fields */
+body[data-role="admin"].ap-ready :is(#systemSection,#academicPeriodsSection,#governanceSection,#auditSection) label:not(#ap){color:var(--pr-muted)!important;font:600 12px/1.3 var(--pr-font)!important}
+body[data-role="admin"].ap-ready :is(#systemSection,#academicPeriodsSection,#governanceSection) :is(input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),select,textarea):not(#ap):not(#ap2){height:40px;margin:0!important;padding:0 12px!important;border:1px solid var(--pr-line)!important;border-radius:11px!important;background:var(--pr-surface)!important;box-shadow:none!important;color:var(--pr-ink)!important;font:400 13px/1.4 var(--pr-font)!important;box-sizing:border-box}
+body[data-role="admin"].ap-ready :is(#systemSection,#academicPeriodsSection,#governanceSection) textarea:not(#ap):not(#ap2){height:auto!important;min-height:96px;padding:10px 12px!important;resize:vertical}
+body[data-role="admin"].ap-ready :is(#systemSection,#academicPeriodsSection,#governanceSection) :is(input,select,textarea):not(#ap):focus{border-color:var(--ap)!important;outline:0;box-shadow:0 0 0 3px color-mix(in srgb,var(--ap) 16%,transparent)!important}
+/* Buttons: primary = plum fill, secondary = outline; 40px, 600 weight */
+body[data-role="admin"].ap-ready :is(#systemSection,#academicPeriodsSection,#governanceSection) button:not(.governance-tab):not([aria-haspopup]):not([class*="menu"]):not(#ap):not(#ap2){height:40px;min-height:40px;padding:0 18px!important;border:1px solid transparent!important;border-radius:11px!important;background:var(--ap)!important;box-shadow:none!important;color:#fff!important;font:600 12.5px/1 var(--pr-font)!important;letter-spacing:0!important;text-transform:none!important;cursor:pointer}
+:root[data-theme="dark"] body[data-role="admin"].ap-ready :is(#systemSection,#academicPeriodsSection,#governanceSection) button:not(.governance-tab):not([aria-haspopup]):not([class*="menu"]):not(#ap):not(#ap2){color:#1c1830!important}
+body[data-role="admin"].ap-ready :is(#systemSection,#academicPeriodsSection,#governanceSection) :is(button.secondary,button[class*="secondary"],button[class*="restore"],button[class*="ghost"],button[class*="outline"],.workspace-row button):not(#ap):not(#ap2):not(#ap3){border-color:var(--pr-line)!important;background:transparent!important;color:var(--ap)!important}
+body[data-role="admin"].ap-ready :is(#systemSection,#academicPeriodsSection,#governanceSection) button:not(#ap):hover{filter:brightness(1.08)}
+/* Full-width primary buttons become normal width, left aligned */
+body[data-role="admin"].ap-ready :is(#systemSection,#academicPeriodsSection) :is(.system-card,.workspace-form)>button:not(#ap):not(#ap2):not(#ap3){width:auto!important;justify-self:start;align-self:flex-start}
+/* Tabs: underline style like the other pages */
+body[data-role="admin"].ap-ready .governance-tabs:not(#ap):not(#ap2){display:flex!important;gap:4px!important;padding:0 6px!important;border:0!important;border-bottom:1px solid var(--pr-line)!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}
+body[data-role="admin"].ap-ready .governance-tab:not(#ap):not(#ap2){flex:0 0 auto!important;height:auto!important;padding:12px 14px!important;margin-bottom:-1px!important;border:0!important;border-bottom:2px solid transparent!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;color:var(--pr-muted)!important;font:600 13px/1.2 var(--pr-font)!important;letter-spacing:0!important}
+body[data-role="admin"].ap-ready .governance-tab.active:not(#ap):not(#ap2){border-bottom-color:var(--ap)!important;color:var(--ap)!important}
+/* Notes */
+body[data-role="admin"].ap-ready :is(#systemSection,#governanceSection) :is(.system-note,.governance-note):not(#ap){border:0!important;border-radius:10px!important;background:var(--pr-soft)!important;color:var(--pr-muted)!important;font:400 12px/1.5 var(--pr-font)!important}
+/* Academic period rows */
+body[data-role="admin"].ap-ready #academicPeriodsRoot .workspace-row :is(h3,h4,strong):not(#ap):not(#ap2){font:650 14px/1.3 var(--pr-font)!important}
+body[data-role="admin"].ap-ready #academicPeriodsRoot .workspace-row button:not(#ap):not(#ap2):not(#ap3){height:32px;min-height:32px;padding:0 12px!important;font-size:11.5px!important}
+
+/* Audit table: compact rows, one-line dates, small caps headers */
+body[data-role="admin"].ap-ready #auditTable:not(#ap){width:100%;border-collapse:collapse;font-family:var(--pr-font)}
+body[data-role="admin"].ap-ready #auditTable :is(thead,thead tr,th,tbody tr):not(#ap){background:transparent!important}
+body[data-role="admin"].ap-ready #auditTable th:not(#ap):not(#ap2){padding:10px 16px!important;border:0!important;border-bottom:1px solid var(--pr-line)!important;color:var(--pr-muted)!important;font:700 9px/1.3 var(--pr-font)!important;letter-spacing:.08em!important;text-align:left;text-transform:uppercase;white-space:nowrap}
+body[data-role="admin"].ap-ready #auditTable td:not(#ap):not(#ap2){padding:9px 16px!important;border:0!important;border-bottom:1px solid color-mix(in srgb,var(--pr-line) 60%,transparent)!important;background:transparent!important;color:var(--pr-ink)!important;font:400 12px/1.4 var(--pr-font)!important;vertical-align:middle}
+body[data-role="admin"].ap-ready #auditTable td:first-child:not(#ap){white-space:nowrap;color:var(--pr-muted)!important}
+body[data-role="admin"].ap-ready #auditTable td :is(strong,b):not(#ap){font-weight:600!important;font-size:12px!important}
+body[data-role="admin"].ap-ready #auditTable td :is(small,span):not(#ap){color:var(--pr-muted)!important;font-size:11px!important}
+body[data-role="admin"].ap-ready #auditTable tbody tr:hover td{background:color-mix(in srgb,var(--ap) 6%,transparent)!important}
+/* Toggles follow the plum accent. */
+body[data-role="admin"].ap-ready #systemSection :is(input[type="checkbox"]:checked+span,input:checked+.slider,input:checked+[class*="track"],[class*="switch"] input:checked+*){background:var(--ap)!important;border-color:var(--ap)!important}
+body[data-role="admin"].ap-ready #systemSection input[type="checkbox"]{accent-color:var(--ap)}
+/* Announcement items: quieter headings. */
+body[data-role="admin"].ap-ready #systemSection .system-announcements article :is(h4,h5,strong):not(#ap){font:650 13.5px/1.3 var(--pr-font)!important}
+.ap-pill{display:inline-block;padding:2px 9px;border-radius:999px;font:600 10.5px/1.5 var(--pr-font);text-transform:capitalize}
+.ap-pill.ok{background:color-mix(in srgb,#2f8d83 14%,transparent);color:#2f7d74!important}
+.ap-pill.bad{background:color-mix(in srgb,#b5534b 14%,transparent);color:#a3463f!important}
+:root[data-theme="dark"] .ap-pill.ok{color:#8fd3c9!important}
+:root[data-theme="dark"] .ap-pill.bad{color:#f0a49c!important}
+/* Second button in a pair (Restore defaults, Restore backup, Cancel) is the outlined one. */
+body[data-role="admin"].ap-ready :is(#systemSection,#governanceSection,#academicPeriodsSection) button+button:not(.governance-tab):not(#ap):not(#ap2):not(#ap3){border-color:var(--pr-line)!important;background:transparent!important;color:var(--ap)!important}
+/* Academic Periods: list + side column; the form opens in a dialog. */
+.ap-period-layout{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(280px,1fr);gap:16px;align-items:start}
+.ap-period-list{overflow:hidden;border:1px solid var(--pr-line);border-radius:18px;background:var(--pr-surface);box-shadow:0 7px 20px rgba(28,36,42,.06)}
+:root[data-theme="dark"] .ap-period-list{box-shadow:0 8px 22px rgba(0,0,0,.22)}
+body[data-role="admin"].ap-ready #academicPeriodsRoot .ap-period-list .workspace-list-head:not(#ap){display:flex!important;align-items:center;gap:10px;margin:0!important;padding:14px 18px!important;border-bottom:1px solid var(--pr-line)}
+body[data-role="admin"].ap-ready #academicPeriodsRoot .ap-period-list .workspace-list-head strong{flex:0 0 auto;font:650 15px/1.3 var(--pr-font)!important}
+body[data-role="admin"].ap-ready #academicPeriodsRoot .ap-period-list .workspace-list-head span{flex:1;color:var(--pr-muted)!important;font-size:11.5px}
+body[data-role="admin"].ap-ready #academicPeriodsRoot .ap-new-period:not(#ap):not(#ap2):not(#ap3){display:inline-flex;align-items:center;gap:6px;height:34px!important;min-height:0!important;padding:0 14px!important;border:0!important;border-radius:10px!important;background:var(--ap)!important;color:#fff!important;font:600 12px var(--pr-font)!important;filter:none}
+:root[data-theme="dark"] body[data-role="admin"].ap-ready #academicPeriodsRoot .ap-new-period:not(#ap):not(#ap2):not(#ap3){color:#1c1830!important}
+.ap-new-period svg{width:14px;height:14px;fill:currentColor}
+body[data-role="admin"].ap-ready #academicPeriodsRoot .ap-period-list .workspace-list:not(#ap){display:block!important;gap:0!important;margin:0!important}
+body[data-role="admin"].ap-ready #academicPeriodsRoot .ap-period-list .workspace-row:not(#ap):not(#ap2){margin:0!important;padding:13px 18px!important;border:0!important;border-bottom:1px solid color-mix(in srgb,var(--pr-line) 60%,transparent)!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}
+body[data-role="admin"].ap-ready #academicPeriodsRoot .ap-period-list .workspace-row:last-child:not(#ap):not(#ap2){border-bottom:0!important}
+body[data-role="admin"].ap-ready #academicPeriodsRoot .ap-period-list .workspace-row:hover{background:color-mix(in srgb,var(--ap) 5%,transparent)!important}
+body[data-role="admin"].ap-ready #academicPeriodsRoot .workspace-row summary{color:var(--ap)!important;font:600 11.5px var(--pr-font)}
+.ap-period-side{display:grid;gap:16px}
+body[data-role="admin"].ap-ready #academicPeriodsRoot .ap-period-side>*:not(#ap){margin:0!important;padding:16px 18px!important}
+body[data-role="admin"].ap-ready #academicPeriodsRoot .ap-period-side .workspace-rollover-guide li.done{color:var(--pr-muted);text-decoration:line-through}
+.ap-period-form .workspace-form{margin:0!important;padding:0!important;border:0!important;background:none!important;box-shadow:none!important}
+.ap-period-form .workspace-form-head{display:none!important}
+.ap-period-form .workspace-fields{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.ap-period-form label{display:grid!important;gap:6px;color:var(--pr-muted)!important;font:600 12px/1.3 var(--pr-font)!important}
+.ap-period-form :is(input,select){width:100%;height:40px;padding:0 12px!important;border:1px solid var(--pr-line)!important;border-radius:11px!important;background:var(--pr-surface)!important;color:var(--pr-ink)!important;font:400 13px var(--pr-font)!important;box-sizing:border-box}
+.ap-period-form button[type="submit"]{display:block;margin:18px 0 0 auto;height:40px;padding:0 18px;border:0;border-radius:11px;background:var(--gv);color:#fff;font:600 12.5px var(--pr-font);cursor:pointer}
+:root[data-theme="dark"] .ap-period-form button[type="submit"]{color:#1c1830}
+@media(max-width:1000px){.ap-period-layout{grid-template-columns:1fr}}
+@media(max-width:600px){.ap-period-form .workspace-fields{grid-template-columns:1fr}}
+body[data-role="admin"] #academicPeriodsRoot .ap-form-parked:not(#ap):not(#ap2):not(#ap3){display:none!important}
+/* ===== System Management: summary cards ===== */
+body[data-role="admin"] #systemManagementRoot .sm-parked:not(#ap):not(#ap2){display:none!important}
+.sm-layout{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(300px,1fr);gap:16px;align-items:start}
+.sm-side{display:grid;gap:16px}
+.sm-card .gv-pc-head{margin-bottom:12px}
+.sm-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 0;border-top:1px solid color-mix(in srgb,var(--pr-line) 60%,transparent);color:var(--pr-muted);font:500 12px var(--pr-font)}
+.sm-row:first-of-type{border-top:0}
+.sm-row b{color:var(--pr-ink);font-weight:600}
+.sm-state{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;font:600 11px/1.4 var(--pr-font)}
+.sm-state::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.sm-state.on{background:color-mix(in srgb,#2f8d83 14%,transparent);color:#2f7d74}
+.sm-state.off{background:color-mix(in srgb,#b5534b 13%,transparent);color:#a3463f}
+:root[data-theme="dark"] .sm-state.on{color:#8fd3c9}
+:root[data-theme="dark"] .sm-state.off{color:#f0a49c}
+.sm-quote{margin:8px 0 0;padding:10px 12px;border-left:3px solid color-mix(in srgb,var(--ap,#5b4a75) 50%,transparent);border-radius:0 10px 10px 0;background:var(--pr-soft);color:var(--pr-muted);font:italic 400 12px/1.5 var(--pr-font)}
+.sm-note{margin:0;color:var(--pr-muted);font:400 11.5px/1.5 var(--pr-font)}
+.sm-card .gv-pc-head{align-items:center}
+.sm-card .gv-pc-head .gv-pc-edit+.gv-pc-edit{margin-left:-6px}
+body[data-role="admin"] #systemManagementRoot .sm-restore:not(#ap){display:grid!important;width:34px;height:34px;place-items:center;border-radius:10px;color:var(--ap,#5b4a75);cursor:pointer}
+body[data-role="admin"] #systemManagementRoot .sm-restore:hover{background:color-mix(in srgb,var(--ap,#5b4a75) 12%,transparent)}
+.sm-restore svg{width:17px;height:17px;fill:currentColor}
+.sm-restore input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+#systemManagementRoot .gv-pc-edit{display:grid;width:34px;height:34px;padding:0;place-items:center;border:0;border-radius:10px;background:transparent;color:var(--ap,#5b4a75);cursor:pointer}
+body[data-role="admin"].ap-ready #systemManagementRoot .gv-pc-edit:not(#ap):not(#ap2):not(#ap3){width:34px!important;height:34px!important;min-height:0!important;padding:0!important;border:0!important;background:transparent!important;color:var(--ap)!important;filter:none}
+body[data-role="admin"].ap-ready #systemManagementRoot .gv-pc-edit:not(#ap):not(#ap2):not(#ap3):hover{background:color-mix(in srgb,var(--ap) 12%,transparent)!important}
+#systemManagementRoot .gv-pc-edit svg{width:17px;height:17px;fill:currentColor}
+
+body[data-role="admin"].ap-ready #systemManagementRoot .sm-ann-list .announcement-list:not(#ap){display:grid;gap:10px;margin:0!important}
+body[data-role="admin"].ap-ready #systemManagementRoot .sm-ann-list .announcement-row:not(#ap):not(#ap2){position:relative;margin:0!important;padding:14px 16px 14px 18px!important;border:1px solid var(--pr-line)!important;border-left:3px solid var(--ap)!important;border-radius:12px!important;background:var(--pr-surface)!important;box-shadow:none!important}
+body[data-role="admin"].ap-ready #systemManagementRoot .sm-ann-list .announcement-row.archived:not(#ap):not(#ap2){border-left-color:var(--pr-line)!important;opacity:.6}
+body[data-role="admin"].ap-ready #systemManagementRoot .sm-ann-list .announcement-row :is(h4,h5,strong):not(#ap){color:var(--pr-ink)!important;font:650 13.5px/1.3 var(--pr-font)!important}
+body[data-role="admin"].ap-ready #systemManagementRoot .sm-ann-list .announcement-row :is(p,small,span):not(#ap){font-size:12px}
+body[data-role="admin"].ap-ready #systemManagementRoot .announcement-actions-menu summary:not(#ap){display:grid;width:30px;height:30px;place-items:center;border:0!important;border-radius:9px;background:transparent!important;color:var(--pr-muted);list-style:none;cursor:pointer}
+body[data-role="admin"].ap-ready #systemManagementRoot .announcement-actions-menu summary:hover{background:var(--pr-soft)!important}
+.sm-integrity:empty{display:none}
+.sm-integrity{margin-top:4px;color:var(--pr-muted);font:400 12px/1.5 var(--pr-font)}
+/* Fields inside the dialogs */
+.sm-dialog{display:grid;gap:12px}
+.sm-dialog :is(input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),select,textarea){width:100%;min-height:40px;padding:9px 12px!important;border:1px solid var(--pr-line)!important;border-radius:11px!important;background:var(--pr-surface)!important;color:var(--pr-ink)!important;font:400 13px/1.4 var(--pr-font)!important;box-sizing:border-box}
+.sm-dialog textarea{min-height:100px;resize:vertical}
+.sm-dialog .announcement-form{display:grid;gap:12px}
+.sm-dialog label{color:var(--pr-muted);font:600 12px var(--pr-font)}
+.sm-dialog button:not(.gv-icon-btn){height:40px;padding:0 18px;border:0;border-radius:11px;background:var(--gv,#5b4a75);color:#fff;font:600 12.5px var(--pr-font);cursor:pointer}
+.sm-dialog button[onclick*="clear"],.sm-dialog button.system-secondary{border:1px solid var(--pr-line);background:transparent;color:var(--pr-ink)}
+:root[data-theme="dark"] .sm-dialog button:not(.gv-icon-btn):not([onclick*="clear"]){color:#1c1830}
+@media(max-width:1050px){.sm-layout{grid-template-columns:1fr}}
+.sm-dialog .system-switch{display:flex!important;align-items:center;gap:10px;margin:0;color:var(--pr-ink);font:600 13px var(--pr-font);cursor:pointer}
+.sm-dialog .system-switch input{position:relative;flex:0 0 auto;width:38px;height:22px;margin:0;border-radius:999px;background:color-mix(in srgb,var(--pr-muted) 35%,transparent);appearance:none;-webkit-appearance:none;cursor:pointer;transition:background .15s}
+.sm-dialog .system-switch input::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .15s}
+.sm-dialog .system-switch input:checked{background:var(--gv,#5b4a75)}
+.sm-dialog .system-switch input:checked::after{transform:translateX(16px)}
+.sm-dialog .system-toggle-track{display:none!important}
+.sm-dialog>button,.sm-dialog .announcement-actions{justify-self:end}
+.sm-dialog .announcement-actions{display:flex;gap:8px}

@@ -57,9 +57,18 @@ const PermissionService = (() => {
     const override = typeof DB !== 'undefined' ? DB.read('systemSettings', {})?.permissionOverrides?.[normalized]?.[permission] : undefined;
     return override === undefined ? baseline : baseline && override !== false;
   }
+  /* Custom permission roles (systemSettings.permissionRoles) narrow a base role for
+     their members: a permission switched off in the member's role is denied. They
+     can never add a permission the base role does not already have. */
+  function customRoleOf(actor) {
+    if (!actor?.username || typeof DB === 'undefined') return null;
+    const roles = DB.read('systemSettings', {})?.permissionRoles || [];
+    return roles.find(r => (r.members || []).includes(actor.username) && normalizeRole(r.baseRole) === normalizeRole(actor.role)) || null;
+  }
   function can(permission, context = {}) {
     const actor = session(context.actor);
     if (!active(actor) || !roleAllows(actor.role, permission)) return false;
+    if (customRoleOf(actor)?.permissions?.[permission] === false) return false;
     if (permission.endsWith('.own.view') && context.ownerId && actor.username !== context.ownerId) return false;
     if (permission.includes('.own.manage') && context.ownerId && actor.username !== context.ownerId) return false;
     return true;
@@ -77,7 +86,7 @@ const PermissionService = (() => {
     const overrides=DB.read('systemSettings',{})?.permissionOverrides?.[normalized]||{};
     return baseline.filter(permission=>overrides[permission]!==false);
   }
-  return { can, require: requirePermission, active, permissionsFor, normalizeRole, grants };
+  return { can, require: requirePermission, active, permissionsFor, normalizeRole, grants, customRoleOf };
 })();
 
 if (typeof window !== 'undefined') window.PermissionService = PermissionService;
