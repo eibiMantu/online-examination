@@ -13,6 +13,7 @@ const { createAcademicPeriodService, initialFromSettings, normalizeOperationalWr
 const { createAccountLifecycleService, STATUS_BY_ACTION } = require('./server/account-lifecycle');
 const { createBackupRestoreService } = require('./server/backup-restore');
 const { createPersonnelService } = require('./server/personnel');
+const { createMonitor } = require('./server/monitoring');
 
 const ROOT = __dirname;
 const PORT = Number(process.env.PORT || 3000);
@@ -26,8 +27,11 @@ const runtimeEnv = {...readEnvFile(path.join(ROOT,'.env')),...process.env};
 const localStore = openDatabase(DB_FILE);
 const store = createSupabaseReplicatedStore(localStore, {
   url: runtimeEnv.SUPABASE_URL,
-  serviceKey: runtimeEnv.SUPABASE_SERVICE_ROLE_KEY
+  serviceKey: runtimeEnv.SUPABASE_SERVICE_ROLE_KEY,
+  // One Supabase table per collection (see server/supabase-tables.js). Set SUPABASE_RELATIONAL=false to use the old single JSON table.
+  relational: String(runtimeEnv.SUPABASE_RELATIONAL||'true').toLowerCase()!=='false'
 });
+const monitor = createMonitor({ store, env: runtimeEnv, dbFile: DB_FILE });
 function ensureDemoAccounts(){const existing=store.read('users',[]),env=runtimeEnv;const required=[
   {username:env.ADMIN_USERNAME||'admin',password:env.ADMIN_PASSWORD||'admin123',role:'admin',status:'active'},
   {username:env.DEAN_USERNAME||'dean.demo',password:env.DEAN_PASSWORD||'dean123',role:'dean',status:'active'},
@@ -44,6 +48,7 @@ function cleanKey(value) { const key=decodeURIComponent(value||''); if(!KEY_RE.t
 function collectionFromCsvPath(pathname) { const match=pathname.match(/^\/api\/csv\/([^/]+)\/(import|export)$/); if(!match)return null;const key=cleanKey(match[1]);if(!CSV_COLLECTIONS.has(key))throw Object.assign(new Error('CSV is not enabled for this collection.'),{status:400});return{key,action:match[2]}; }
 
 async function api(req,res,url) {
+  if(url.pathname==='/api/monitoring'&&req.method==='GET'){auth.requireSession(req,['admin']);return send(res,200,await monitor.snapshot());}
   if(url.pathname==='/api/health'&&req.method==='GET'){const replication=store.status(),healthy=!replication.enabled||replication.healthy;return send(res,healthy?200:503,{ok:healthy,storage:replication.enabled?'sqlite+supabase':'sqlite',database:path.basename(DB_FILE),replication});}
   if(url.pathname==='/api/auth/login'&&req.method==='POST'){const parsed=JSON.parse(await readBody(req)||'{}');const result=auth.login(String(parsed.username||''),String(parsed.password||''),req.socket.remoteAddress||'');return send(res,200,result);}
   if(url.pathname==='/api/auth/session'&&req.method==='GET'){const session=auth.requireSession(req);return send(res,200,{session});}
@@ -91,14 +96,20 @@ async function api(req,res,url) {
 
 function staticFile(req,res,url){let pathname=url.pathname==='/'?'/html/index.html':url.pathname;let decoded;try{decoded=decodeURIComponent(pathname);}catch{return send(res,400,{error:'Invalid path.'});}if(/^\/[A-Za-z0-9_-]+\.html$/.test(decoded))decoded='/html'+decoded;const target=path.resolve(ROOT,'.'+decoded);if(target!==ROOT&&!target.startsWith(ROOT+path.sep))return send(res,403,{error:'Forbidden.'});fs.stat(target,(error,stat)=>{if(error||!stat.isFile())return send(res,404,{error:'File not found.'});fs.createReadStream(target).on('error',()=>send(res,500,{error:'Could not read file.'})).pipe((res.writeHead(200,{'Content-Type':MIME[path.extname(target).toLowerCase()]||'application/octet-stream','X-Content-Type-Options':'nosniff','Cache-Control':'no-store'}),res));});}
 
-const server=http.createServer(async(req,res)=>{const url=new URL(req.url,'http://localhost');try{if(url.pathname.startsWith('/api/')){const handled=await api(req,res,url);if(handled!==false)return;return send(res,404,{error:'API route not found.'});}if(!['GET','HEAD'].includes(req.method))return send(res,405,{error:'Method not allowed.'});staticFile(req,res,url);}catch(error){const status=error.status||400;if(status>=500)console.error(error);send(res,status,{error:error.message||'Request failed.'});}});
+const server=http.createServer(async(req,res)=>{const url=new URL(req.url,'http://localhost');try{if(url.pathname.startsWith('/api/')){if(url.pathname!=='/api/monitoring'){const started=process.hrtime.bigint();res.on('finish',()=>monitor.track(res.statusCode,Number(process.hrtime.bigint()-started)/1e6));}const handled=await api(req,res,url);if(handled!==false)return;return send(res,404,{error:'API route not found.'});}if(!['GET','HEAD'].includes(req.method))return send(res,405,{error:'Method not allowed.'});staticFile(req,res,url);}catch(error){const status=error.status||400;if(status>=500)console.error(error);send(res,status,{error:error.message||'Request failed.'});}});
 
 async function start() {
   const hydration = await store.hydrate();
   ensureDemoAccounts();
   ensureOfficialCurricula();
   initialFromSettings(store);
-  auth = createAuth(store);
+  // Sessions are sealed tokens; every instance must share the secret (Render generates SESSION_SECRET).
+  // Without it, a secret derived from the Supabase key keeps instances of the same project compatible.
+  const sessionSecret = runtimeEnv.SESSION_SECRET || (runtimeEnv.SUPABASE_SERVICE_ROLE_KEY ? `supabase:${runtimeEnv.SUPABASE_SERVICE_ROLE_KEY}` : undefined);
+  auth = createAuth(store, { secret: sessionSecret });
+  setInterval(() => { try { auth.prune(); } catch (_) {} }, 60 * 60 * 1000).unref();
+  // Pick up changes other server instances make in Supabase (every 2 seconds).
+  if (typeof store.startFollowing === 'function') store.startFollowing(Number(runtimeEnv.SUPABASE_FOLLOW_INTERVAL_MS) || 2000);
   academicPeriods = createAcademicPeriodService(store);
   accountLifecycle = createAccountLifecycleService(store);
   backupRestore = createBackupRestoreService(store);

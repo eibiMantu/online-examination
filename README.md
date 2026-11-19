@@ -38,8 +38,9 @@ replication layer. The existing synchronous application services continue to use
 a local SQLite cache, while Supabase stores every collection off-device and
 hydrates the cache before Render accepts traffic.
 
-1. Create a Supabase project and run
-   `supabase/migrations/202611170001_app_collections.sql` in its SQL Editor.
+1. Create a Supabase project and run both files in `supabase/migrations/`
+   (`202611170001_app_collections.sql`, then
+   `202611190001_relational_tables.sql`) in its SQL Editor.
 2. In Supabase Project Settings, copy the project URL and the server-only
    service-role key. Never place the service-role key in browser code or Git.
 3. In Render, create a Blueprint from this repository and select `render.yaml`.
@@ -48,9 +49,42 @@ hydrates the cache before Render accepts traffic.
 5. Deploy. Render checks `/api/health`; a configured but unhealthy Supabase
    replica returns HTTP 503 so a broken deployment does not receive traffic.
 
-The Blueprint intentionally runs one application instance. Collection updates
-are whole-document writes, so multiple instances could overwrite concurrent
-changes. Supabase credentials are optional locally; without them, `npm start`
+### Supabase tables
+
+Each collection the app keeps as a list has its own Supabase table (users,
+students, faculty, coordinators, subjects, sections, curricula,
+section_offerings, subject_assignments, academic_periods, exams, questions,
+student_submissions, student_enrollments, audit_log, approval_requests,
+question_reports, lesson_content, lesson_views, announcements, student_emails,
+student_notifications). Every row has typed columns for browsing and reports,
+the full record in `data`, and `position` to keep list order. Only changed
+records are sent, and removed records are deleted. Single settings objects and
+UI state stay in `app_collections`. The table list lives in
+`server/supabase-tables.js`; after changing it, run
+`node scripts/generate-supabase-tables-sql.js` and apply the new SQL. Set
+`SUPABASE_RELATIONAL=false` to fall back to the single JSON table.
+
+Tests that start their own server always disable Supabase, so they can never
+write to the real project.
+
+### Running more than one instance
+
+Several instances can serve the app at once:
+
+- **Sign-ins:** session tokens are sealed with `SESSION_SECRET` (Render
+  generates it once for the service), so a token from one instance works on all
+  of them. Logging out is shared through the `revokedSessions` collection.
+- **Fresh data:** database triggers bump `sync_versions` on every change
+  (`supabase/migrations/202611190002_sync_versions.sql`). Each instance polls
+  it every 2 seconds (`SUPABASE_FOLLOW_INTERVAL_MS`) and reloads only the
+  collections another instance changed, never one with its own writes still in
+  flight.
+- **Concurrent edits:** changes are saved per record, so two people editing
+  different records of the same list both keep their changes. Two edits to the
+  same record: the later one wins.
+
+Render's free plan runs one instance; raise `numInstances` in `render.yaml` on a
+paid plan. Supabase credentials are optional locally; without them, `npm start`
 continues to use SQLite only. Copy `.env.example` to `.env` for local cloud
 testing and keep `.env` untracked.
 
@@ -126,6 +160,9 @@ CSV is supported only for transferring tabular data. The parser supports UTF-8 B
 The Node server provides:
 
 - `GET /api/health` — server, SQLite cache, and Supabase replication status
+- `GET /api/monitoring` — Administrator only: live Render server, Supabase and
+  site metrics for the dashboard (add `RENDER_API_KEY` on Render to include the
+  latest deploy status)
 - `POST /api/auth/login` — validate a SQLite account and create a server session
 - `GET /api/auth/session` — validate the current bearer token
 - `DELETE /api/auth/logout` — revoke the current bearer token

@@ -21,6 +21,7 @@ const AUDIT_SERVICE=fs.readFileSync(DIR+'../js/audit-service.js','utf8');
 const PERMISSION_SERVICE=fs.readFileSync(DIR+'../js/permission-service.js','utf8');
 const APPROVAL_SERVICE=fs.readFileSync(DIR+'../js/approval-service.js','utf8');
 const ACADEMIC_WORKFLOW_SERVICE=fs.readFileSync(DIR+'../js/academic-workflow-service.js','utf8');
+const ADMIN_MONITORING=fs.readFileSync(DIR+'../js/admin-monitoring.js','utf8');
 const ADMIN_TABLE_TOOLS=fs.readFileSync(DIR+'../js/admin-table-tools.js','utf8');
 const DEMO_DATA=fs.readFileSync(DIR+'../js/demo-data.js','utf8');
 const FACULTY_SUBJECT_WORKSPACE=fs.readFileSync(DIR+'../js/faculty-subject-workspace.js','utf8');
@@ -63,6 +64,7 @@ function load(page, seed, opts={}){
     .replace('<script src="../js/approval-service.js"></script>', `<script>${APPROVAL_SERVICE}</script>`)
     .replace('<script src="../js/academic-workflow-service.js"></script>', `<script>${ACADEMIC_WORKFLOW_SERVICE}</script>`)
     .replace(/<script src="\.\.\/js\/admin-table-tools\.js(?:\?[^"]*)?"><\/script>/, () => `<script>${ADMIN_TABLE_TOOLS}</script>`)
+    .replace(/<script src="\.\.\/js\/admin-monitoring\.js(?:\?[^"]*)?"><\/script>/, () => `<script>${ADMIN_MONITORING}</script>`)
     .replace('<script src="../js/demo-data.js"></script>', `<script>${DEMO_DATA}</script>`)
     .replace(/<script src="\.\.\/js\/faculty-subject-workspace\.js(?:\?[^"]*)?"><\/script>/, `<script>${FACULTY_SUBJECT_WORKSPACE}</script>`)
     .replace(/<script src="\.\.\/js\/faculty-dashboard\.js(?:\?[^"]*)?"><\/script>/, () => `<script>${FACULTY_DASHBOARD}</script>`)

@@ -1,7 +1,7 @@
 /* Faculty Coordinator dashboard: banner, main (attention + charts), side cards.
    Coordinator theme tokens (--role-shell-*) and prompt tokens (--pr-*). */
-body.role-shell-ready:is([data-role="coordinator"],[data-role="dean"]) #dashboardSection.cd-page{display:block}
-body.role-shell-ready:is([data-role="coordinator"],[data-role="dean"]) .cd-hero{display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:132px;margin:0 0 18px;padding:27px 29px!important;border-radius:21px!important}
+body.role-shell-ready:is([data-role="coordinator"],[data-role="dean"],[data-role="admin"]) #dashboardSection.cd-page{display:block}
+body.role-shell-ready:is([data-role="coordinator"],[data-role="dean"],[data-role="admin"]) .cd-hero{display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:132px;margin:0 0 18px;padding:27px 29px!important;border-radius:21px!important}
 .cd-hero h1{margin:4px 0 0!important;font-size:clamp(24px,2.4vw,32px)!important;font-weight:700!important;letter-spacing:-.035em}
 .cd-hero .role-page-copy{max-width:640px;margin-top:8px!important;font-size:12px!important}
 .cd-hero .role-page-copy strong{color:var(--role-shell-yellow)}
@@ -73,7 +73,7 @@ body.role-shell-ready:is([data-role="coordinator"],[data-role="dean"]) .cd-hero{
 .cd-note p{margin:6px 0 0;color:var(--pr-muted);font-size:11px;line-height:1.6}
 
 @media(max-width:1180px){.cd-layout{grid-template-columns:1fr}.cd-side{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}}
-@media(max-width:760px){body.role-shell-ready:is([data-role="coordinator"],[data-role="dean"]) .cd-hero{flex-direction:column;align-items:flex-start}.cd-bar-row{grid-template-columns:90px minmax(0,1fr) 48px}}
+@media(max-width:760px){body.role-shell-ready:is([data-role="coordinator"],[data-role="dean"],[data-role="admin"]) .cd-hero{flex-direction:column;align-items:flex-start}.cd-bar-row{grid-template-columns:90px minmax(0,1fr) 48px}}
 /* Quick links: the original workspace cards, in the dashboard card style. */
 .cd-quick .role-action-grid{display:grid!important;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px!important;margin:0!important}
 .cd-quick .role-action-card{display:grid!important;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:4px 12px;min-height:0!important;margin:0!important;padding:12px 14px!important;border:1px solid var(--pr-line)!important;border-radius:14px!important;background:var(--pr-surface)!important;box-shadow:none!important;color:var(--pr-ink)!important;text-align:left;cursor:pointer}

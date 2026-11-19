@@ -441,3 +441,22 @@ body[data-role="admin"] .profile-target-row { animation:profileTarget 1.8s ease;
 :root[data-theme="dark"] body[data-role="admin"] .audit-filter-grid label { color:var(--ink-soft); }
 :root[data-theme="dark"] body[data-role="admin"] .audit-filter-grid :is(input,select),
 :root[data-theme="dark"] body[data-role="admin"] .audit-reset { background:var(--surface); border-color:var(--line-strong); color:var(--ink); }
+
+/* ===== Live monitoring: Render server, Supabase, site ===== */
+body[data-role="admin"] .monitor-where{margin:-4px 0 8px;overflow:hidden;color:var(--ink-soft);font-size:11px;line-height:1.4;text-overflow:ellipsis;white-space:nowrap}
+body[data-role="admin"] .server-chart polyline{stroke:#7c6bd6}
+body[data-role="admin"] .server-chart polygon{fill:rgba(124,107,214,.18)}
+body[data-role="admin"] .supabase-chart polyline{stroke:#3ecf8e}
+body[data-role="admin"] .supabase-chart polygon{fill:rgba(62,207,142,.2)}
+body[data-role="admin"] .server-card header strong{color:#6b5bc4}
+:root[data-theme="dark"] body[data-role="admin"] .server-card header strong{color:#b3a8f0!important}
+body[data-role="admin"] .monitor-card[data-tone="warn"] header strong{color:#b7791f!important}
+body[data-role="admin"] .monitor-card[data-tone="down"] header strong{color:#c0453b!important}
+body[data-role="admin"] .monitor-card[data-tone="down"] .monitor-where{color:#c0453b}
+:root[data-theme="dark"] body[data-role="admin"] .monitor-card[data-tone="warn"] header strong{color:#f0c06a!important}
+:root[data-theme="dark"] body[data-role="admin"] .monitor-card[data-tone="down"] :is(header strong,.monitor-where){color:#f0a49c!important}
+body[data-role="admin"] .monitor-card footer span:last-child{text-align:right}
+body[data-role="admin"] .site-status-item[data-tone="warn"] strong{color:#b7791f}
+body[data-role="admin"] .site-status-item[data-tone="down"] strong{color:#c0453b}
+:root[data-theme="dark"] body[data-role="admin"] .site-status-item[data-tone="warn"] strong{color:#f0c06a}
+:root[data-theme="dark"] body[data-role="admin"] .site-status-item[data-tone="down"] strong{color:#f0a49c}

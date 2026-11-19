@@ -39,7 +39,7 @@ const fakeFetch = async (url, init = {}) => {
   store.delete('subjects');
   await store.flush();
   assert.equal(remote.has('subjects'), false, 'deletions replicate to Supabase');
-  assert.deepEqual(store.status(), { enabled:true, provider:'supabase', lastSyncedAt:store.status().lastSyncedAt, healthy:true, error:null });
+  assert.deepEqual(store.status(), { enabled:true, provider:'supabase', lastSyncedAt:store.status().lastSyncedAt, healthy:true, pendingWrites:0, error:null, following:{ active:false, lastPollAt:null, reloads:0, error:null } });
   store.close();
 
   const fallback = createSupabaseReplicatedStore(openDatabase(path.join(folder, 'local.sqlite')));

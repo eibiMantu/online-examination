@@ -10,7 +10,8 @@ const folder = fs.mkdtempSync(path.join(os.tmpdir(), 'neu-period-http-'));
 const port = 3037, origin = `http://127.0.0.1:${port}`;
 const server = spawn(process.execPath, ['server.js'], {
   cwd: path.join(__dirname, '..'),
-  env: { ...process.env, PORT: String(port), SQLITE_PATH: path.join(folder, 'periods.sqlite') },
+  // Never let a test server reach the real Supabase from .env.
+  env: { ...process.env, PORT: String(port), SQLITE_PATH: path.join(folder, 'periods.sqlite'), SUPABASE_URL: '', SUPABASE_SERVICE_ROLE_KEY: '' },
   stdio: ['ignore', 'pipe', 'pipe']
 });
 let errors = '';

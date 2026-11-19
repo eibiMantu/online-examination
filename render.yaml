@@ -7,12 +7,17 @@ services:
     buildCommand: npm install
     startCommand: npm start
     healthCheckPath: /api/health
+    # More than one instance is supported: instances share sessions (SESSION_SECRET)
+    # and pick up each other's changes through Supabase sync_versions.
     numInstances: 1
     envVars:
       - key: NODE_ENV
         value: production
       - key: SQLITE_PATH
         value: /tmp/neu-examination.sqlite
+      # Shared by every instance so a sign-in works on all of them.
+      - key: SESSION_SECRET
+        generateValue: true
       - key: SUPABASE_URL
         sync: false
       - key: SUPABASE_SERVICE_ROLE_KEY

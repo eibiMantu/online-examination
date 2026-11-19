@@ -6,7 +6,7 @@
     <title>Online Examination</title>
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/shared-ui.css?v=20261118-keep-search"><link rel="stylesheet" href="../css/responsive-shell.css?v=20261118-4"><link rel="stylesheet" href="../css/prompts.css?v=20261119-1"><link rel="stylesheet" href="../css/table-toolbar.css?v=20261118-4"><link rel="stylesheet" href="../css/profile-popup.css?v=20261118-3"><link rel="stylesheet" href="../css/profile-oversight.css?v=20261118-2">
-    <link rel="stylesheet" href="../css/admin-modern.css?v=20261118-banner-themes">
+    <link rel="stylesheet" href="../css/admin-modern.css?v=20261119-mon"><link rel="stylesheet" href="../css/coordinator-dashboard.css?v=20261119-admin"><link rel="stylesheet" href="../css/admin-dashboard.css?v=20261119-7">
     <link rel="stylesheet" href="../css/admin-workspaces.css">
     <link rel="stylesheet" href="../css/system-management.css?v=20260902-announcement-menu-right">
     <link rel="stylesheet" href="../css/curriculum-management.css?v=20260920-unified">
@@ -24,7 +24,7 @@
     <script src="../js/permission-service.js"></script>
     <script src="../js/approval-service.js"></script>
     <script src="../js/academic-workflow-service.js"></script>
-    <script src="../js/admin-table-tools.js?v=20261118-export2"></script>
+    <script src="../js/admin-table-tools.js?v=20261118-export2"></script><script src="../js/admin-monitoring.js?v=20261119-7"></script><script src="../js/admin-dashboard.js?v=20261119-7"></script>
 <script src="../js/auth.js"></script>
     <script src="../js/ui.js?v=20261118-rail"></script>
     <script src="../js/system-management.js"></script>
@@ -42,72 +42,94 @@
     <div class="topbar-right" id="topbarRight"></div>
   </div>
 
-  <div id="dashboardSection" class="panel">
-    <header class="dashboard-overview-head">
-      <div><p class="dashboard-eyebrow">Administration</p><h2>System overview</h2><p>Monitor the prototype and open a management area.</p></div>
+  <div id="dashboardSection" class="panel ad-page">
+    <header class="dashboard-overview-head cd-hero ad-hero" id="adminHero">
+      <div><p class="dashboard-eyebrow" id="adminHeroDate">Administration</p><h2>Welcome back, Administrator</h2><p id="adminHeroCopy">Accounts, academic periods and system health in one place.</p></div>
+      <div class="cd-hero-stats" id="adminHeroStats"></div>
     </header>
-    <section class="site-status-panel" aria-label="Site status">
-      <span class="status-pulse" id="siteStatusPulse" aria-hidden="true"></span><span id="siteStatusSummary" class="sr-only" aria-live="polite">Checking application status…</span>
-      <div class="site-status-list">
-        <div class="site-status-item"><span class="status-icon network" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 18.5 15 15a4.2 4.2 0 0 0-6 0l3 3.5Zm-6-7 1.8 1.8a6 6 0 0 1 8.4 0l1.8-1.8a8.5 8.5 0 0 0-12 0ZM2.5 8l1.8 1.8a11 11 0 0 1 15.4 0L21.5 8a13.5 13.5 0 0 0-19 0Z"/></svg></span><span><small>Browser connection</small><strong id="siteNetworkStatus">Checking</strong></span></div>
-        <div class="site-status-item"><span class="status-icon app" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m10.2 16.6-4.1-4.1 1.8-1.8 2.3 2.3 5.9-5.9 1.8 1.8-7.7 7.7Z"/></svg></span><span><small>Interface</small><strong>Operational</strong></span></div>
-        <div class="site-status-item"><span class="status-icon data" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3c4.4 0 8 1.3 8 3s-3.6 3-8 3-8-1.3-8-3 3.6-3 8-3ZM4 9.3c1.8 1.2 4.8 1.7 8 1.7s6.2-.5 8-1.7V13c0 1.7-3.6 3-8 3s-8-1.3-8-3V9.3Zm0 7c1.8 1.2 4.8 1.7 8 1.7s6.2-.5 8-1.7V18c0 1.7-3.6 3-8 3s-8-1.3-8-3v-1.7Z"/></svg></span><span><small>Data source</small><strong>SQLite + browser cache</strong></span></div>
-        <div class="site-status-item"><span class="status-icon time" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20Zm0 2a8 8 0 1 0 0 16 8 8 0 0 0 0-16Zm1 3v4.6l3.2 2-1.1 1.7-4.1-2.6V7h2Z"/></svg></span><span><small>Local time</small><strong id="siteLocalTime">—</strong></span></div>
+    <div class="cd-layout ad-layout">
+      <div class="cd-main">
+        <section class="cd-card dashboard-monitoring ad-monitor" aria-labelledby="monitoringTitle">
+          <header class="cd-card-head"><div><h2 id="monitoringTitle">Live monitoring</h2><p>Render server, Supabase and this site · updates every 2 s · <span class="ad-updated">Updated <b id="statusChecked">—</b></span></p><span id="siteStatusSummary" class="sr-only" aria-live="polite"></span></div><div class="monitoring-actions"><span class="monitoring-live" id="monitoringState"><i aria-hidden="true"></i><span>Live</span></span><button type="button" class="monitor-control start" id="monitorStart" onclick="startMonitoring()" title="Start monitoring"><span aria-hidden="true">▶</span> Start</button><button type="button" class="monitor-control restart" id="monitorRestart" onclick="restartMonitoring()" title="Restart monitoring"><span aria-hidden="true">↻</span> Restart</button><button type="button" class="monitor-control stop" id="monitorStop" onclick="stopMonitoring()" title="Stop monitoring"><span aria-hidden="true">■</span> Stop</button></div></header>
+          <div class="monitoring-grid ad-services">
+          <article class="monitor-card ad-service server-card" id="serverCard" data-tone="ok">
+            <div class="ad-service-top"><span class="ad-service-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 4h16a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1Zm1 2v3h14V6H5Zm-1 7h16a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-5a1 1 0 0 1 1-1Zm1 2v3h14v-3H5Zm2-7.5h2v1H7v-1Zm0 9h2v1H7v-1Z"/></svg></span><span class="ad-service-name">Render server</span><i class="ad-dot" aria-hidden="true"></i></div>
+            <strong class="ad-service-value" id="metricServer">—</strong>
+            <p class="monitor-where" id="serverWhere">Connecting…</p>
+            <div class="monitor-chart server-chart" aria-hidden="true"><svg viewBox="0 0 300 80" preserveAspectRatio="none" id="serverChart"><path id="serverArea" d=""/><path id="serverLine" d=""/></svg></div>
+            <footer><span id="serverMemory">—</span><span id="serverUptime">—</span></footer>
+          </article>
+          <article class="monitor-card ad-service supabase-card" id="supabaseCard" data-tone="ok">
+            <div class="ad-service-top"><span class="ad-service-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3c4.4 0 8 1.3 8 3s-3.6 3-8 3-8-1.3-8-3 3.6-3 8-3ZM4 9.3c1.8 1.2 4.8 1.7 8 1.7s6.2-.5 8-1.7V13c0 1.7-3.6 3-8 3s-8-1.3-8-3V9.3Zm0 7c1.8 1.2 4.8 1.7 8 1.7s6.2-.5 8-1.7V18c0 1.7-3.6 3-8 3s-8-1.3-8-3v-1.7Z"/></svg></span><span class="ad-service-name">Supabase</span><i class="ad-dot" aria-hidden="true"></i></div>
+            <strong class="ad-service-value" id="metricSupabase">—</strong>
+            <p class="monitor-where" id="supabaseWhere">Connecting…</p>
+            <div class="monitor-chart supabase-chart" aria-hidden="true"><svg viewBox="0 0 300 80" preserveAspectRatio="none" id="supabaseChart"><path id="supabaseArea" d=""/><path id="supabaseLine" d=""/></svg></div>
+            <footer><span id="supabaseSync">—</span><span id="supabaseQueue">—</span></footer>
+          </article>
+          <article class="monitor-card ad-service site-card" id="siteCard" data-tone="ok">
+            <div class="ad-service-top"><span class="ad-service-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 18.5 15 15a4.2 4.2 0 0 0-6 0l3 3.5Zm-6-7 1.8 1.8a6 6 0 0 1 8.4 0l1.8-1.8a8.5 8.5 0 0 0-12 0ZM2.5 8l1.8 1.8a11 11 0 0 1 15.4 0L21.5 8a13.5 13.5 0 0 0-19 0Z"/></svg></span><span class="ad-service-name">Site</span><i class="ad-dot" aria-hidden="true"></i></div>
+            <strong class="ad-service-value" id="metricSite">—</strong>
+            <p class="monitor-where" id="siteWhere">Connecting…</p>
+            <div class="monitor-chart site-chart" aria-hidden="true"><svg viewBox="0 0 300 80" preserveAspectRatio="none" id="siteChart"><path id="siteArea" d=""/><path id="siteLine" d=""/></svg></div>
+            <footer><span id="siteTraffic">—</span><span id="siteErrors">—</span></footer>
+          </article>
+          </div>
+        </section>
+        <div class="ad-charts" id="adminCharts"></div>
+        <section class="cd-card ad-nav" aria-labelledby="adminNavTitle">
+          <header class="cd-card-head"><div><h2 id="adminNavTitle">Quick navigation</h2><p>Open any administration workspace</p></div></header>
+        <div class="dashboard-card-toolbar">
+          <div class="dashboard-view-switch" role="group" aria-label="Dashboard card view">
+            <button type="button" class="dashboard-view-btn active" data-view="grid" onclick="setDashboardView('grid')" aria-label="Grid view" title="Grid view" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h6v6H4V4Zm10 0h6v6h-6V4ZM4 14h6v6H4v-6Zm10 0h6v6h-6v-6Z"/></svg></button>
+            <button type="button" class="dashboard-view-btn" data-view="list" onclick="setDashboardView('list')" aria-label="List view" title="List view" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h3v3H4V5Zm5 0h11v3H9V5ZM4 10.5h3v3H4v-3Zm5 0h11v3H9v-3ZM4 16h3v3H4v-3Zm5 0h11v3H9v-3Z"/></svg></button>
+          </div>
+        </div>
+        <div class="card-grid">
+          <div class="dashboard-card-separator" role="separator" aria-label="School management" style="order:20"><span>School management</span></div>
+          <div class="card blue admin-dashboard-link" role="link" tabindex="0" onclick="openAdminCard(event,'facultySection')" onkeydown="activateAdminCard(event,'facultySection')" aria-label="Open Faculty Management" style="order:22">
+            <div class="card-top"><div class="card-icon">👤</div><div class="card-count" id="countFaculty">0</div></div>
+            <div class="card-bottom blue"><div class="card-copy"><div class="card-label">Faculty</div><div class="card-note">Accounts and teaching records</div></div><button class="plus-circle" onclick="event.stopPropagation();openFacultyModal()" aria-label="Add faculty" title="Add faculty">＋</button></div>
+          </div>
+          <div class="card beige admin-dashboard-link" role="link" tabindex="0" onclick="openAdminCard(event,'studentSection')" onkeydown="activateAdminCard(event,'studentSection')" aria-label="Open Student Management" style="order:23">
+            <div class="card-top"><div class="card-icon">👥</div><div class="card-count" id="countStudents">0</div></div>
+            <div class="card-bottom beige"><div class="card-copy"><div class="card-label">Students</div><div class="card-note">Profiles and enrollments</div></div><button class="plus-circle" onclick="event.stopPropagation();openStudentModal()" aria-label="Add student" title="Add student">＋</button></div>
+          </div>
+          <div class="card green admin-dashboard-link" hidden aria-hidden="true" data-archived="true" onclick="openAdminCard(event,'subjectSection')">
+            <div class="card-top"><div class="card-icon">📚</div><div class="card-count" id="countSubjects">0</div></div>
+            <div class="card-bottom green"><div class="card-copy"><div class="card-label">Subjects</div><div class="card-note">Course catalog and offerings</div></div><button class="plus-circle" onclick="event.stopPropagation();openModal('subjectModal')" aria-label="Add subject" title="Add subject">＋</button></div>
+          </div>
+          <div class="dashboard-card-separator" role="separator" aria-label="System settings" style="order:10"><span>System settings</span></div>
+          <div class="card orange admin-dashboard-link" role="link" tabindex="0" onclick="openAdminCard(event,'auditSection')" onkeydown="activateAdminCard(event,'auditSection')" aria-label="Open Audit Log" style="order:14">
+            <div class="card-top"><div class="card-icon">◷</div><div class="card-count" id="countAudit">0</div></div>
+            <div class="card-bottom orange"><div class="card-copy"><div class="card-label">Audit events</div><div class="card-note">Changes and sign-in history</div></div><span class="card-arrow" aria-hidden="true">→</span></div>
+          </div>
+          <div class="card green admin-dashboard-link" role="link" tabindex="0" onclick="openAdminCard(event,'systemSection')" onkeydown="activateAdminCard(event,'systemSection')" aria-label="Open System Management" style="order:11">
+            <div class="card-top"><div class="card-icon">&#9881;</div><div class="card-count">6</div></div>
+            <div class="card-bottom green"><div class="card-copy"><div class="card-label">System management</div><div class="card-note">Announcements, access, and data tools</div></div><span class="card-arrow" aria-hidden="true">&#8594;</span></div>
+          </div>
+          <div class="card blue admin-dashboard-link" role="link" tabindex="0" onclick="openAdminCard(event,'loadPolicySection')" onkeydown="activateAdminCard(event,'loadPolicySection')" aria-label="Open Subject Management" style="order:21">
+            <div class="card-top"><div class="card-icon">&#9636;</div><div class="card-count">5</div></div>
+            <div class="card-bottom blue"><div class="card-copy"><div class="card-label">Subject management</div><div class="card-note">Curricula, subjects, units, and load limits</div></div><span class="card-arrow" aria-hidden="true">&#8594;</span></div>
+          </div>
+          <div class="card beige admin-dashboard-link" role="link" tabindex="0" onclick="openAdminCard(event,'academicPeriodsSection')" onkeydown="activateAdminCard(event,'academicPeriodsSection')" aria-label="Open Academic Periods" style="order:12">
+            <div class="card-top"><div class="card-icon" aria-hidden="true">▤</div><div class="card-count" id="countAcademicPeriods">—</div></div>
+            <div class="card-bottom beige"><div class="card-copy"><div class="card-label">Academic periods</div><div class="card-note">Terms, status, and rollover</div></div><span class="card-arrow" aria-hidden="true">→</span></div>
+          </div>
+          <div class="card blue admin-dashboard-link" role="link" tabindex="0" onclick="openAdminCard(event,'governanceSection')" onkeydown="activateAdminCard(event,'governanceSection')" aria-label="Open Accounts, Roles and Permissions" style="order:13">
+            <div class="card-top"><div class="card-icon" aria-hidden="true">&#9881;</div><div class="card-count" id="countGovernanceAccounts">0</div></div>
+            <div class="card-bottom blue"><div class="card-copy"><div class="card-label">Accounts &amp; permissions</div><div class="card-note">Create accounts, assign roles, and control capabilities</div></div><span class="card-arrow" aria-hidden="true">&#8594;</span></div>
+          </div>
+          <div class="card orange admin-dashboard-link" role="link" tabindex="0" onclick="openAdminCard(event,'accountLifecycleSection')" onkeydown="activateAdminCard(event,'accountLifecycleSection')" aria-label="Open Account Lifecycle" style="order:24">
+            <div class="card-top"><div class="card-icon" aria-hidden="true">♙</div><div class="card-count" id="countLifecycleAccounts">0</div></div>
+            <div class="card-bottom orange"><div class="card-copy"><div class="card-label">Account lifecycle</div><div class="card-note">Account status and history</div></div><span class="card-arrow" aria-hidden="true">→</span></div>
+          </div>
+        </div>
+        </section>
       </div>
-    </section>
-    <section class="dashboard-monitoring" aria-labelledby="monitoringTitle">
-      <div class="monitoring-head"><div><h3 id="monitoringTitle">Application monitoring</h3><p>Live client-side measurements from this browser session.</p></div><div class="monitoring-actions"><span class="monitoring-live" id="monitoringState"><i aria-hidden="true"></i><span>Live</span></span><button type="button" class="monitor-control start" id="monitorStart" onclick="startMonitoring()" title="Start monitoring"><span aria-hidden="true">▶</span> Start</button><button type="button" class="monitor-control restart" id="monitorRestart" onclick="restartMonitoring()" title="Restart monitoring"><span aria-hidden="true">↻</span> Restart</button><button type="button" class="monitor-control stop" id="monitorStop" onclick="stopMonitoring()" title="Stop monitoring"><span aria-hidden="true">■</span> Stop</button></div></div>
-      <div class="monitoring-grid">
-        <article class="monitor-card"><header><span>Interface response</span><strong id="metricResponse">—</strong></header><div class="monitor-chart" aria-hidden="true"><svg viewBox="0 0 300 96" preserveAspectRatio="none"><path class="chart-grid" d="M0 24H300M0 48H300M0 72H300"/><polygon id="responseArea" points="0,96 300,96"/><polyline id="responseLine" points=""/></svg></div><footer><span>Local read time</span><span>Lower is better</span></footer></article>
-        <article class="monitor-card"><header><span>Stored data</span><strong id="metricStorage">—</strong></header><div class="monitor-chart" aria-hidden="true"><svg viewBox="0 0 300 96" preserveAspectRatio="none"><path class="chart-grid" d="M0 24H300M0 48H300M0 72H300"/><polygon id="storageArea" points="0,96 300,96"/><polyline id="storageLine" points=""/></svg></div><footer><span>Browser storage</span><span id="metricRecords">0 records</span></footer></article>
-        <article class="monitor-card"><header><span>Connection</span><strong id="metricConnection">—</strong></header><div class="monitor-chart connection-chart" aria-hidden="true"><svg viewBox="0 0 300 96" preserveAspectRatio="none"><path class="chart-grid" d="M0 24H300M0 48H300M0 72H300"/><polygon id="connectionArea" points="0,96 300,96"/><polyline id="connectionLine" points=""/></svg></div><footer><span id="metricNetworkType">Browser network</span><span id="metricLatency">—</span></footer></article>
-      </div>
-    </section>
-    <div class="dashboard-card-toolbar">
-      <div class="dashboard-view-switch" role="group" aria-label="Dashboard card view">
-        <button type="button" class="dashboard-view-btn active" data-view="grid" onclick="setDashboardView('grid')" aria-label="Grid view" title="Grid view" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h6v6H4V4Zm10 0h6v6h-6V4ZM4 14h6v6H4v-6Zm10 0h6v6h-6v-6Z"/></svg></button>
-        <button type="button" class="dashboard-view-btn" data-view="list" onclick="setDashboardView('list')" aria-label="List view" title="List view" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h3v3H4V5Zm5 0h11v3H9V5ZM4 10.5h3v3H4v-3Zm5 0h11v3H9v-3ZM4 16h3v3H4v-3Zm5 0h11v3H9v-3Z"/></svg></button>
-      </div>
-    </div>
-    <div class="card-grid">
-      <div class="dashboard-card-separator" role="separator" aria-label="School management" style="order:20"><span>School management</span></div>
-      <div class="card blue admin-dashboard-link" role="link" tabindex="0" onclick="openAdminCard(event,'facultySection')" onkeydown="activateAdminCard(event,'facultySection')" aria-label="Open Faculty Management" style="order:22">
-        <div class="card-top"><div class="card-icon">👤</div><div class="card-count" id="countFaculty">0</div></div>
-        <div class="card-bottom blue"><div class="card-copy"><div class="card-label">Faculty</div><div class="card-note">Accounts and teaching records</div></div><button class="plus-circle" onclick="event.stopPropagation();openFacultyModal()" aria-label="Add faculty" title="Add faculty">＋</button></div>
-      </div>
-      <div class="card beige admin-dashboard-link" role="link" tabindex="0" onclick="openAdminCard(event,'studentSection')" onkeydown="activateAdminCard(event,'studentSection')" aria-label="Open Student Management" style="order:23">
-        <div class="card-top"><div class="card-icon">👥</div><div class="card-count" id="countStudents">0</div></div>
-        <div class="card-bottom beige"><div class="card-copy"><div class="card-label">Students</div><div class="card-note">Profiles and enrollments</div></div><button class="plus-circle" onclick="event.stopPropagation();openStudentModal()" aria-label="Add student" title="Add student">＋</button></div>
-      </div>
-      <div class="card green admin-dashboard-link" hidden aria-hidden="true" data-archived="true" onclick="openAdminCard(event,'subjectSection')">
-        <div class="card-top"><div class="card-icon">📚</div><div class="card-count" id="countSubjects">0</div></div>
-        <div class="card-bottom green"><div class="card-copy"><div class="card-label">Subjects</div><div class="card-note">Course catalog and offerings</div></div><button class="plus-circle" onclick="event.stopPropagation();openModal('subjectModal')" aria-label="Add subject" title="Add subject">＋</button></div>
-      </div>
-      <div class="dashboard-card-separator" role="separator" aria-label="System settings" style="order:10"><span>System settings</span></div>
-      <div class="card orange admin-dashboard-link" role="link" tabindex="0" onclick="openAdminCard(event,'auditSection')" onkeydown="activateAdminCard(event,'auditSection')" aria-label="Open Audit Log" style="order:14">
-        <div class="card-top"><div class="card-icon">◷</div><div class="card-count" id="countAudit">0</div></div>
-        <div class="card-bottom orange"><div class="card-copy"><div class="card-label">Audit events</div><div class="card-note">Changes and sign-in history</div></div><span class="card-arrow" aria-hidden="true">→</span></div>
-      </div>
-      <div class="card green admin-dashboard-link" role="link" tabindex="0" onclick="openAdminCard(event,'systemSection')" onkeydown="activateAdminCard(event,'systemSection')" aria-label="Open System Management" style="order:11">
-        <div class="card-top"><div class="card-icon">&#9881;</div><div class="card-count">6</div></div>
-        <div class="card-bottom green"><div class="card-copy"><div class="card-label">System management</div><div class="card-note">Announcements, access, and data tools</div></div><span class="card-arrow" aria-hidden="true">&#8594;</span></div>
-      </div>
-      <div class="card blue admin-dashboard-link" role="link" tabindex="0" onclick="openAdminCard(event,'loadPolicySection')" onkeydown="activateAdminCard(event,'loadPolicySection')" aria-label="Open Subject Management" style="order:21">
-        <div class="card-top"><div class="card-icon">&#9636;</div><div class="card-count">5</div></div>
-        <div class="card-bottom blue"><div class="card-copy"><div class="card-label">Subject management</div><div class="card-note">Curricula, subjects, units, and load limits</div></div><span class="card-arrow" aria-hidden="true">&#8594;</span></div>
-      </div>
-      <div class="card beige admin-dashboard-link" role="link" tabindex="0" onclick="openAdminCard(event,'academicPeriodsSection')" onkeydown="activateAdminCard(event,'academicPeriodsSection')" aria-label="Open Academic Periods" style="order:12">
-        <div class="card-top"><div class="card-icon" aria-hidden="true">▤</div><div class="card-count" id="countAcademicPeriods">—</div></div>
-        <div class="card-bottom beige"><div class="card-copy"><div class="card-label">Academic periods</div><div class="card-note">Terms, status, and rollover</div></div><span class="card-arrow" aria-hidden="true">→</span></div>
-      </div>
-      <div class="card blue admin-dashboard-link" role="link" tabindex="0" onclick="openAdminCard(event,'governanceSection')" onkeydown="activateAdminCard(event,'governanceSection')" aria-label="Open Accounts, Roles and Permissions" style="order:13">
-        <div class="card-top"><div class="card-icon" aria-hidden="true">&#9881;</div><div class="card-count" id="countGovernanceAccounts">0</div></div>
-        <div class="card-bottom blue"><div class="card-copy"><div class="card-label">Accounts &amp; permissions</div><div class="card-note">Create accounts, assign roles, and control capabilities</div></div><span class="card-arrow" aria-hidden="true">&#8594;</span></div>
-      </div>
-      <div class="card orange admin-dashboard-link" role="link" tabindex="0" onclick="openAdminCard(event,'accountLifecycleSection')" onkeydown="activateAdminCard(event,'accountLifecycleSection')" aria-label="Open Account Lifecycle" style="order:24">
-        <div class="card-top"><div class="card-icon" aria-hidden="true">♙</div><div class="card-count" id="countLifecycleAccounts">0</div></div>
-        <div class="card-bottom orange"><div class="card-copy"><div class="card-label">Account lifecycle</div><div class="card-note">Account status and history</div></div><span class="card-arrow" aria-hidden="true">→</span></div>
-      </div>
+      <aside class="cd-side">
+        <section class="cd-card" id="adminPeriodCard"></section>
+        <section class="cd-card" id="adminActivityCard"></section>
+      </aside>
     </div>
   </div>
 
@@ -1346,55 +1368,15 @@ if(fsEl)fsEl.innerHTML = `<tr><th>Subject</th><th>Faculty</th></tr>` + fsRows;
     try{ localStorage.setItem(dashboardViewKey,selected); }catch(error){}
   }
 
-  const monitorHistory={response:[],storage:[],connection:[]};
-  function formatMetricBytes(bytes){
-    if(bytes<1024)return `${bytes} B`;
-    if(bytes<1024*1024)return `${(bytes/1024).toFixed(1)} KB`;
-    return `${(bytes/(1024*1024)).toFixed(2)} MB`;
-  }
-  function pushMonitorSample(name,value){
-    const values=monitorHistory[name];
-    values.push(Number.isFinite(value)?Math.max(0,value):0);
-    if(values.length>24)values.shift();
-    while(values.length<24)values.unshift(values[0]||0);
-    const maximum=Math.max(...values,1);
-    const points=values.map((sample,index)=>`${(index/(values.length-1)*300).toFixed(1)},${(92-(sample/maximum)*78).toFixed(1)}`);
-    const line=document.getElementById(`${name}Line`),area=document.getElementById(`${name}Area`);
-    line?.setAttribute('points',points.join(' '));
-    area?.setAttribute('points',`0,96 ${points.join(' ')} 300,96`);
-  }
-  function refreshMonitoring(){
-    const started=performance.now();
-    try{ JSON.parse(localStorage.getItem('students')||'[]'); }catch(error){}
-    const response=Math.max(.01,performance.now()-started);
-    let bytes=0;
-    try{ for(let index=0;index<localStorage.length;index++){const key=localStorage.key(index)||'';bytes+=(key.length+(localStorage.getItem(key)||'').length)*2;} }catch(error){}
-    const recordCount=['faculty','students','subjects','sections','subjectAssignments','sectionSubjects','exams','questions','studentSubmissions'].reduce((total,key)=>total+DB.read(key,[]).length,0);
-    const connection=navigator.connection||navigator.mozConnection||navigator.webkitConnection;
-    const connected=navigator.onLine!==false;
-    const connectionValue=connected?(Number(connection?.downlink)||1):0;
-    const responseText=response<1?`${response.toFixed(2)} ms`:`${response.toFixed(1)} ms`;
-    document.getElementById('metricResponse').textContent=responseText;
-    document.getElementById('metricStorage').textContent=formatMetricBytes(bytes);
-    document.getElementById('metricRecords').textContent=`${recordCount.toLocaleString()} records`;
-    document.getElementById('metricConnection').textContent=!connected?'Offline':connection?.downlink?`${connection.downlink} Mbps`:'Online';
-    document.getElementById('metricNetworkType').textContent=connection?.effectiveType?`${connection.effectiveType.toUpperCase()} connection`:'Browser network';
-    document.getElementById('metricLatency').textContent=connection?.rtt?`${connection.rtt} ms RTT`:'RTT unavailable';
-    pushMonitorSample('response',response);
-    pushMonitorSample('storage',bytes);
-    pushMonitorSample('connection',connectionValue);
-  }
+  // Live metrics come from the server (Render, Supabase, site): js/admin-monitoring.js.
+  function refreshMonitoring(){ if(typeof AdminMonitoring!=='undefined')AdminMonitoring.tick(); }
 
   function refreshSiteStatus(){
     const connected=navigator.onLine!==false;
-    const network=document.getElementById('siteNetworkStatus');
     const summary=document.getElementById('siteStatusSummary');
     const pulse=document.getElementById('siteStatusPulse');
-    const clock=document.getElementById('siteLocalTime');
-    if(network)network.textContent=connected?'Online':'Offline';
-    if(summary)summary.textContent=connected?'The interface is available and the browser is online.':'The interface is available locally; internet access is offline.';
+    if(summary)summary.textContent=connected?'Monitoring Render, Supabase and the site.':'This browser is offline.';
     pulse?.classList.toggle('offline',!connected);
-    if(clock)clock.textContent=new Intl.DateTimeFormat(undefined,{hour:'numeric',minute:'2-digit',second:'2-digit'}).format(new Date());
     refreshMonitoring();
   }
 
@@ -1422,15 +1404,12 @@ if(fsEl)fsEl.innerHTML = `<tr><th>Subject</th><th>Faculty</th></tr>` + fsRows;
   }
   function restartMonitoring(){
     stopMonitoring();
-    Object.values(monitorHistory).forEach(values=>values.splice(0,values.length));
-    ['response','storage','connection'].forEach(name=>{
-      document.getElementById(`${name}Line`)?.setAttribute('points','');
-      document.getElementById(`${name}Area`)?.setAttribute('points','0,96 300,96');
-    });
+    if(typeof AdminMonitoring!=='undefined')AdminMonitoring.reset();
     startMonitoring();
   }
 
   function initializeDashboardOverview(){
+    if(typeof AdminDashboard!=='undefined')AdminDashboard.mount();
     let savedView='grid';
     try{ savedView=localStorage.getItem(dashboardViewKey)||'grid'; }catch(error){}
     setDashboardView(savedView);
