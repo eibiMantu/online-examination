@@ -84,9 +84,9 @@ const AdminStudentAdd = (() => {
   function ensureMarkup() {
     const modal = document.querySelector('#studentModal .modal'); if (!modal || modal.querySelector('#saEnroll')) return;
     modal.classList.add('sa-modal');
-    // ID · Year · Middle initial, then Last · First, in one grid of their own.
+    // ID · Year, then Last · First · Middle initial, in one grid of their own.
     const basics = document.createElement('div'); basics.className = 'sa-basics';
-    ['sID', 'sYear', 'sMiddle', 'sLast', 'sFirst'].forEach(id => { const l = modal.querySelector(`label[for="${id}"]`); if (l) basics.appendChild(l); });
+    ['sID', 'sYear', 'sLast', 'sFirst', 'sMiddle'].forEach(id => { const l = modal.querySelector(`label[for="${id}"]`); if (l) basics.appendChild(l); });
     modal.querySelector('h3')?.after(basics);
     const help = modal.querySelector('#studentYearHelp');
     help?.insertAdjacentHTML('afterend', '<div id="saEnroll" class="sa-enroll"></div>');

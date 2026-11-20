@@ -35,12 +35,15 @@
 .sa-block{max-width:280px}
 @media (max-width:640px){.sa-grid,.sa-status{grid-template-columns:1fr}.sa-row{grid-template-columns:1fr auto}.sa-where{grid-column:1/-1;justify-items:start}}
 /* Name, ID and year fields sit in their own grid (the shared dialog rules order direct children). */
-.sa-basics{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:0 12px}
-.sa-basics>label{grid-column:span 2;min-width:0}
-.sa-basics>label[for="sLast"],.sa-basics>label[for="sFirst"]{grid-column:span 3}
+.sa-basics{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:0 12px}
+.sa-basics>label{min-width:0}
+.sa-basics>label[for="sID"],.sa-basics>label[for="sYear"]{grid-column:span 6}
+.sa-basics>label[for="sLast"],.sa-basics>label[for="sFirst"]{grid-column:span 5}
+.sa-basics>label[for="sMiddle"]{grid-column:span 2}
 #studentModal .modal.sa-adding #studentYearHelp{display:none!important}
 #studentModal .modal .sa-status button{height:auto!important;min-height:0!important;margin:0!important;padding:10px 12px!important;border:1px solid var(--pr-line,#dcd6e4)!important;border-radius:11px!important;background:var(--pr-surface,#fff)!important;color:var(--pr-ink,#1d2730)!important;box-shadow:none!important;text-align:left!important;font:inherit!important;width:auto!important}
 #studentModal .modal .sa-status button small{color:var(--pr-muted,#6b7280)!important}
 #studentModal .modal .sa-status button.on{border-color:var(--pr-accent,#66547f)!important;background:color-mix(in srgb,var(--pr-accent,#66547f) 10%,var(--pr-surface,#fff))!important;box-shadow:inset 0 0 0 1px var(--pr-accent,#66547f)!important}
 @media (max-width:640px){.sa-basics{grid-template-columns:1fr}.sa-basics>label{grid-column:1/-1!important}}
 body #studentModal.modal-bg>.modal.sa-modal.sa-adding:not(#pr):not(#pr2){width:min(760px,calc(100vw - 32px))!important}
+.sa-basics>label[for="sMiddle"] small{display:none}.sa-basics>label[for="sMiddle"]>span{white-space:nowrap}
