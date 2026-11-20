@@ -16,7 +16,7 @@ const AdminPages = (() => {
   const barsOf = entries => { const max = Math.max(1, ...entries.map(e => e[1])); return entries.map(([label, n, color]) => ({ label, pct: n / max * 100, text: Number(n).toLocaleString(), title: `${label}: ${Number(n).toLocaleString()}`, color })); };
   const donutOf = entries => entries.filter(e => e[1]).map(([label, value, color], i) => ({ label, value, color: color || COLORS[i % COLORS.length] }));
   // Thousands separators inside a donut (centre total and legend).
-  const pretty = html => html.replace(/>(d{4,})</g, (m, n) => `>${Number(n).toLocaleString()}<`);
+  const pretty = html => html.replace(/>(\d{4,})</g, (m, n) => `>${Number(n).toLocaleString()}<`);
 
   // Puts (or replaces) the charts row right before `anchor` inside `host`.
   function place(host, anchor, html) {
@@ -176,7 +176,67 @@ const AdminPages = (() => {
     layout.querySelector('.sm-ann-list').addEventListener('click', e => { if (e.target.closest('[onclick*="editAnnouncement"]')) smEditPending = true; }, true);
     if (smEditPending) { smEditPending = false; nodesDialog('Edit announcement', [ann?.querySelector('.announcement-form')]); }
   }
-  function refresh() { [system, systemLayout, periods, periodsLayout, accounts, auditCharts, auditTools, auditPills].forEach(fn => { try { fn(); } catch (e) { console.warn(e); } }); }
+  /* ---------- Faculty / Students: charts + one table card with our toolbar ---------- */
+  function offerings() { return read('sectionSubjects').flatMap(r => (r.assignments || []).map(a => ({ ...a, sectionId: r.sectionId }))); }
+  function tableCard(sectionId, title, count) {
+    const host = document.getElementById(sectionId), shell = host?.querySelector('.management-table-shell'), box = shell?.querySelector('.action-box');
+    if (!shell || !box) return;
+    let head = shell.querySelector(':scope > .ap-table-head');
+    if (!head) { head = document.createElement('header'); head.className = 'ap-table-head'; head.innerHTML = '<div><h3></h3><p></p></div>'; shell.prepend(head); head.appendChild(box); shell.classList.add('ap-card-shell'); }
+    head.querySelector('h3').textContent = title; head.querySelector('p').textContent = count;
+  }
+  function faculty() {
+    const host = document.getElementById('facultySection'), shell = host?.querySelector('.management-table-shell'), p = P(); if (!shell || !p) return;
+    const people = read('faculty'), subjects = read('subjects'), units = c => Number(subjects.find(x => x.code === c)?.units) || 3, NORMAL = Number((read('systemSettings', {}) || {}).professorLoadPolicy?.maximum) || 24;
+    const load = new Map(); offerings().forEach(o => { if (o.facultyId) load.set(o.facultyId, (load.get(o.facultyId) || 0) + units(o.subjectCode)); });
+    const rows = people.map(f => ({ name: `${f.last}, ${f.first}`, u: load.get(f.id) || 0 }));
+    const groups = [['Overloaded', r => r.u > NORMAL, '#b5534b'], ['Full load', r => r.u >= NORMAL * .75 && r.u <= NORMAL, '#66547f'], ['Light load', r => r.u > 0 && r.u < NORMAL * .75, '#d39a2c'], ['No classes', r => !r.u, '#8a8f99']].map(([l, t, c]) => [l, rows.filter(t).length, c]);
+    const top = rows.slice().sort((a, b) => b.u - a.u).slice(0, 8).map(r => [r.name, r.u]);
+    place(host, shell, p.insights(p.card('Teaching load status', `${people.length} faculty · maximum ${NORMAL} units`, p.donut(donutOf(groups), 'faculty')), p.card('Heaviest teaching loads', 'Units assigned this period', p.bars(barsOf(top)))));
+    tableCard('facultySection', 'Faculty accounts', `${people.length.toLocaleString()} accounts · right-click a row to manage access or status`);
+  }
+  function students() {
+    const host = document.getElementById('studentSection'), shell = host?.querySelector('.management-table-shell'), p = P(); if (!shell || !p) return;
+    const list = read('students'), sections = new Map(read('sections').map(x => [x.id, x]));
+    const year = new Map(), program = new Map();
+    list.forEach(st => { const sec = (st.sections || []).map(id => sections.get(id)).find(Boolean); const y = sec?.yearLevel ? `Year ${sec.yearLevel}` : 'No section'; year.set(y, (year.get(y) || 0) + 1); const pr = sec?.program || st.program || 'Unassigned'; program.set(pr, (program.get(pr) || 0) + 1); });
+    const colors = ['#2f8d83', '#66547f', '#d39a2c', '#3d8fd4', '#8a8f99'];
+    const years = [...year.entries()].sort((a, b) => a[0].localeCompare(b[0])).map(([k, n], i) => [k, n, colors[i % colors.length]]);
+    const programs = [...program.entries()].sort((a, b) => b[1] - a[1]);
+    place(host, shell, p.insights(p.card('Students by year level', `${list.length.toLocaleString()} students`, pretty(p.donut(donutOf(years), 'students'))), p.card('Students by program', 'Based on section membership', p.bars(barsOf(programs)))));
+    tableCard('studentSection', 'Students', `${list.length.toLocaleString()} students · right-click a row to open the profile`);
+  }
+  function subjects() {
+    const root = document.getElementById('loadPolicyRoot'), page = root?.querySelector('.load-policy-page'), p = P(); if (!page || !p) return;
+    if (root.querySelector(':scope > .ap-insights')) return;
+    const rows = read('curricula'), byProgram = new Map(), byUnits = new Map();
+    rows.forEach(r => { const k = r.program || r.curriculumId || 'Other'; byProgram.set(k, (byProgram.get(k) || 0) + 1); const u = `${Number(r.units) || 0} unit${Number(r.units) === 1 ? '' : 's'}`; byUnits.set(u, (byUnits.get(u) || 0) + 1); });
+    const colors = ['#66547f', '#2f8d83', '#d39a2c', '#3d8fd4', '#c8692e', '#8a8f99'];
+    const units = [...byUnits.entries()].sort((a, b) => parseFloat(a[0]) - parseFloat(b[0])).map(([k, n], i) => [k, n, colors[i % colors.length]]);
+    place(root, page, p.insights(p.card('Subjects per curriculum', `${rows.length} curriculum entries`, p.bars(barsOf([...byProgram.entries()].sort((a, b) => b[1] - a[1])))), p.card('Subjects by units', 'How heavy each subject is', p.donut(donutOf(units), 'subjects'))));
+  }
+  /* ---------- Account Lifecycle: charts + one table card ---------- */
+  function lifecycleCharts() {
+    const section = document.getElementById('accountLifecycleSection'), root = document.getElementById('accountLifecycleRoot'), p = P(); if (!root || !p) return;
+    if (section.querySelector(':scope > .ap-insights')) return;
+    const users = read('users');
+    const statusOf = u => u.disabled === true ? 'Deactivated' : String(u.lifecycleStatus || u.status || 'active').replace(/^\w/, c => c.toUpperCase());
+    const tone = { Active: '#2f8d83', Deactivated: '#b5534b', Archived: '#8a8f99', Graduated: '#66547f', Transferred: '#d39a2c' };
+    const status = new Map(Object.keys(tone).map(k => [k, 0])); users.forEach(u => { const k = statusOf(u); status.set(k, (status.get(k) || 0) + 1); });
+    const roleRows = [...['student','faculty','coordinator','dean','admin'].map(r => [ROLE[r], users.filter(u => roleOf(u.role) === r).length])].filter(e => e[1]);
+    const active = status.get('Active') || 0;
+    place(section, root, p.insights(p.card('Account status', `${active.toLocaleString()} of ${users.length.toLocaleString()} can sign in`, pretty(p.donut(donutOf([...status.entries()].map(([k, n]) => [k, n, tone[k]])), 'accounts'))), p.card('Accounts by role', 'Every login account in the portal', p.bars(barsOf(roleRows)))));
+  }
+  function lifecycleLayout() {
+    const root = document.getElementById('accountLifecycleRoot'), tools = root?.querySelector('.lifecycle-tools');
+    if (!root || !tools || root.querySelector(':scope > .ap-table-head')) return;
+    const total = read('users').length;
+    const head = document.createElement('header'); head.className = 'ap-table-head';
+    head.innerHTML = `<div><h3>Accounts</h3><p>${total.toLocaleString()} accounts · right-click a row to change its status</p></div>`;
+    root.prepend(head); head.appendChild(tools);
+    root.classList.add('ap-lc-card');
+  }
+  function refresh() { [lifecycleCharts, lifecycleLayout, faculty, students, subjects, system, systemLayout, periods, periodsLayout, accounts, auditCharts, auditTools, auditPills].forEach(fn => { try { fn(); } catch (e) { console.warn(e); } }); }
   function mount() {
     document.body.classList.add('ap-ready');
     refresh();
@@ -185,6 +245,10 @@ const AdminPages = (() => {
     watch('systemManagementRoot', () => { if (!document.querySelector('#systemManagementRoot .ap-insights')) system(); systemLayout(); });
     watch('academicPeriodsRoot', () => { if (!document.querySelector('#academicPeriodsRoot .ap-insights')) periods(); periodsLayout(); });
     watch('accountManagementRoot', accounts);
+    watch('accountLifecycleRoot', () => { lifecycleLayout(); lifecycleCharts(); });
+    document.querySelector('#sidebar [data-panel="accountLifecycleSection"]')?.addEventListener('click', () => setTimeout(refresh, 0));
+    watch('loadPolicyRoot', () => { if (!document.querySelector('#loadPolicyRoot > .ap-insights')) subjects(); });
+    ['facultySection', 'studentSection', 'loadPolicySection'].forEach(id => document.querySelector(`#sidebar [data-panel="${id}"]`)?.addEventListener('click', () => setTimeout(refresh, 0)));
     const table = document.getElementById('auditTable'); if (table) { let q = false; new MutationObserver(() => { if (q) return; q = true; setTimeout(() => { q = false; auditPills(); }, 0); }).observe(table, { childList: true, subtree: true }); }
     ['systemSection', 'academicPeriodsSection', 'governanceSection', 'auditSection'].forEach(id => document.querySelector(`#sidebar [data-panel="${id}"]`)?.addEventListener('click', () => setTimeout(refresh, 0)));
   }

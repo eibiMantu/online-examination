@@ -80,6 +80,14 @@ function createAuth(store, options = {}) {
     const { username, role, issuedAt, expiresAt } = sealed;
     return { username, role, issuedAt, expiresAt };
   }
+  // Sliding renewal: a valid token is exchanged for one with a fresh expiry (same session id,
+  // so a logout still ends it everywhere).
+  function refresh(token) {
+    const sealed = unseal(token);
+    if (!resolve(token) || !sealed) return null;
+    const issuedAt = now(), next = { ...sealed, issuedAt, expiresAt: issuedAt + SESSION_TTL_MS };
+    return { token: seal(next), session: { username: next.username, role: next.role, issuedAt, expiresAt: next.expiresAt } };
+  }
   function requireSession(req, roles = []) {
     const session = resolve(tokenFrom(req));
     if (!session) { const error = new Error('Authentication is required.'); error.status = 401; error.code = 'AUTH_REQUIRED'; throw error; }
@@ -104,7 +112,7 @@ function createAuth(store, options = {}) {
       if (kept.length !== list.length) store.write(REVOKED_KEY, kept);
     }
   }
-  return { login, logout, resolve, requireSession, tokenFrom, prune, normalizeRole, active };
+  return { login, logout, resolve, refresh, requireSession, tokenFrom, prune, normalizeRole, active };
 }
 
 module.exports = { createAuth, SESSION_TTL_MS };

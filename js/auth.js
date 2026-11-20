@@ -66,9 +66,15 @@ function requireRole(role) {
     window.location.replace('index.html');
     return null;
   }
-  if (!session.lastActivityAt) {
-    session.lastActivityAt = now;
-    DB.write('currentUser', session);
+  // The timeout counts from the last activity, not from sign-in: every page load
+  // and any click or key press (at most once a minute) moves it forward.
+  session.lastActivityAt = now;
+  DB.write('currentUser', session);
+  if (!window.__activityWatch) {
+    window.__activityWatch = true;
+    let last = now;
+    const touch = () => { const t = Date.now(); if (t - last < 60000) return; last = t; const current = DB.read('currentUser', null); if (current && current.username === session.username) DB.write('currentUser', { ...current, lastActivityAt: t }); };
+    ['click', 'keydown', 'scroll'].forEach(type => window.addEventListener(type, touch, { passive: true }));
   }
 
   // The account must still exist. Without this, deleting a user in the admin
@@ -107,7 +113,7 @@ function logout() {
   try {
     const token = sessionStorage.getItem('serverSessionToken');
     if (token) fetch('/api/auth/logout', { method: 'DELETE', headers: { Authorization: `Bearer ${token}` }, keepalive: true }).catch(() => {});
-    sessionStorage.removeItem('serverSessionToken');
+    if (typeof forgetServerToken === 'function') forgetServerToken(); else sessionStorage.removeItem('serverSessionToken');
   } catch (_) {}
   localStorage.removeItem('currentUser');
   window.location.replace('index.html');

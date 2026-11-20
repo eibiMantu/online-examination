@@ -22,13 +22,43 @@ const SQLITE_PERIOD_SCOPED = new Set([
   'sectionSubjects', 'studentEnrollments', 'subjectAssignments', 'exams',
   'questions', 'studentSubmissions', 'approvalRequests'
 ]);
+/* The server session token is kept in sessionStorage (where every page reads it)
+   and mirrored in localStorage, so a refresh, a new tab or a restored browser
+   keeps the user signed in. Each page load also renews the token so an active
+   user is not signed out two hours after they first logged in. */
+const SERVER_TOKEN_MIRROR = 'neu:serverSessionToken';
+(function restoreServerToken() {
+  try {
+    if (!sessionStorage.getItem('serverSessionToken')) {
+      const kept = localStorage.getItem(SERVER_TOKEN_MIRROR);
+      if (kept && localStorage.getItem('currentUser')) sessionStorage.setItem('serverSessionToken', kept);
+    }
+  } catch (_) {}
+})();
+function storeServerToken(token) {
+  try { sessionStorage.setItem('serverSessionToken', token); localStorage.setItem(SERVER_TOKEN_MIRROR, token); } catch (_) {}
+}
+function forgetServerToken() {
+  try { sessionStorage.removeItem('serverSessionToken'); localStorage.removeItem(SERVER_TOKEN_MIRROR); } catch (_) {}
+}
+function renewServerToken() {
+  if (typeof fetch !== 'function' || typeof location === 'undefined' || !/^https?:$/.test(location.protocol)) return;
+  let token = ''; try { token = sessionStorage.getItem('serverSessionToken') || ''; } catch (_) {}
+  if (!token) return;
+  fetch('/api/auth/refresh', { method: 'POST', headers: { Authorization: `Bearer ${token}` } })
+    .then(r => r.ok ? r.json() : null).then(d => { if (d?.token) storeServerToken(d.token); }).catch(() => {});
+}
+if (typeof window !== 'undefined') {
+  setTimeout(renewServerToken, 0);
+  setInterval(renewServerToken, 30 * 60 * 1000);
+}
 function sqliteSessionToken() { try { return sessionStorage.getItem('serverSessionToken') || ''; } catch (_) { return ''; } }
 function resetSqliteLoginEntry() {
   if (!SQLITE_BACKEND_ACTIVE || typeof location === 'undefined' || !/(?:^|\/)login\.html$/.test(location.pathname || '')) return false;
   try {
     // Opening sign-in starts a fresh authentication attempt. Remove only
     // identity/session state; all hydrated academic collections remain.
-    sessionStorage.removeItem('serverSessionToken');
+    forgetServerToken();
     localStorage.removeItem('currentUser');
     localStorage.removeItem('accessNotice');
   } catch (_) {}
@@ -36,7 +66,7 @@ function resetSqliteLoginEntry() {
 }
 function invalidateSqliteSession(message = 'Your server session expired. Please sign in again.') {
   try {
-    sessionStorage.removeItem('serverSessionToken');
+    forgetServerToken();
     localStorage.removeItem('currentUser');
     localStorage.setItem('accessNotice', JSON.stringify(message));
   } catch (_) {}

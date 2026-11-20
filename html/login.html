@@ -6,7 +6,7 @@
   <title>Online Examination</title>
   <link rel="stylesheet" href="../css/style.css?v=20260919-unified-login" />
   <link rel="stylesheet" href="../css/shared-ui.css?v=20261118-keep-search" />
-  <script src="../js/storage.js"></script>
+  <script src="../js/storage.js?v=20261119-keep"></script>
   <script src="../js/audit-service.js"></script>
   <script src="../js/weekly-learning.js"></script>
   <script src="../js/demo-data.js"></script>
@@ -589,7 +589,7 @@
         const response = await fetch('/api/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username, password }) });
         const result = await response.json();
         if (!response.ok) throw new Error(result.error || 'Those details do not match an active account.');
-        sessionStorage.setItem('serverSessionToken', result.token);
+        if (typeof storeServerToken === 'function') storeServerToken(result.token); else sessionStorage.setItem('serverSessionToken', result.token);
         user = result.session;
       } catch (error) {
         showAuthError(error.message || 'The server could not authenticate this account.');
@@ -636,5 +636,6 @@
     window.location.replace(destination);
   });
 </script>
+<script src="../js/overlay-stack.js?v=20261119-1"></script>
 </body>
 </html>

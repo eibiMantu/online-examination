@@ -81,7 +81,7 @@ function load(page, seed, opts={}){
     .replace(/<script src="\.\.\/js\/faculty-lessons\.js(?:\?[^"]*)?"><\/script>/, () => `<script>${FACULTY_LESSONS}</script>`)
     .replace('<script src="../js/student-card-tools.js"></script>', `<script>${STUDENT_CARD_TOOLS}</script>`)
     .replace(/<script src="\.\.\/js\/role-profile\.js(?:\?[^"]*)?"><\/script>/, () => `<script>${ROLE_PROFILE}</script>`)
-    .replace('<script src="../js/auth.js"></script>', `<script>${AUTH}</script>`)
+    .replace(/<script src="\.\.\/js\/auth\.js(?:\?[^"]*)?"><\/script>/, () => `<script>${AUTH}</script>`)
     .replace(/<script src="\.\.\/js\/ui\.js(?:\?[^\"]*)?"><\/script>/, `<script>${UI}</script>`)
     .replace('<script src="../js/system-management.js"></script>', `<script>${SYSTEM_MANAGEMENT}</script>`)
     .replace('<script src="../js/admin-workspaces.js"></script>', `<script>${ADMIN_WORKSPACES}</script>`)

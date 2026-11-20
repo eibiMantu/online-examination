@@ -1,0 +1,106 @@
+/* ==================================================================
+   One look for every profile popup, every role: banner header in the
+   role's colors, pill tabs filled with the role accent, soft cards.
+   What each popup shows still depends on who opens it and from where.
+   ================================================================== */
+/* Role accents (profiles, tabs, buttons). */
+body[data-role="admin"]{--pr-accent:#5b4a75;--pr-on-accent:#fff}
+:root[data-theme="dark"] body[data-role="admin"]{--pr-accent:#b9a6d6;--pr-on-accent:#1c1830}
+body[data-role="coordinator"]{--pr-accent:#3f6a93;--pr-on-accent:#fff}
+:root[data-theme="dark"] body[data-role="coordinator"]{--pr-accent:#8fb5dc;--pr-on-accent:#13202e}
+
+/* Pill tabs in every profile popup (Coordinator professor/student dialogs included). */
+body :is(.role-profile-tabs,#studentProfileModal .profile-tabs,#facultyProfileModal .profile-tabs,.student-profile-tabs,.professor-profile-tabs):not(#pu):not(#pu2){display:flex!important;flex-wrap:wrap;gap:6px!important;margin:0!important;padding:14px 30px!important;border:0!important;border-bottom:1px solid var(--pr-line)!important;border-radius:0!important;background:var(--pr-surface)!important}
+body :is(.role-profile-tabs,#studentProfileModal .profile-tabs,#facultyProfileModal .profile-tabs,.student-profile-tabs,.professor-profile-tabs)>button:not(#pu):not(#pu2):not(#pu3){height:32px!important;min-height:0!important;margin:0!important;padding:0 14px!important;border:1px solid var(--pr-line)!important;border-radius:999px!important;background:transparent!important;box-shadow:none!important;color:var(--pr-muted)!important;font:600 11px/1 var(--pr-font)!important;letter-spacing:0!important;cursor:pointer}
+body :is(.role-profile-tabs,#studentProfileModal .profile-tabs,#facultyProfileModal .profile-tabs,.student-profile-tabs,.professor-profile-tabs)>button:not(#pu):not(#pu2):not(#pu3):hover{border-color:color-mix(in srgb,var(--pr-accent) 45%,var(--pr-line))!important;color:var(--pr-ink)!important}
+body :is(.role-profile-tabs,#studentProfileModal .profile-tabs,#facultyProfileModal .profile-tabs,.student-profile-tabs,.professor-profile-tabs)>button:is(.active,[aria-selected="true"],[aria-pressed="true"]):not(#pu):not(#pu2):not(#pu3){border-color:var(--pr-accent)!important;background:var(--pr-accent)!important;color:var(--pr-on-accent,#fff)!important}
+body :is(.role-profile-tabs,.profile-tabs,.student-profile-tabs,.professor-profile-tabs)>button::after{display:none!important}
+
+/* Banner header of the Coordinator professor dialog and Admin faculty modal. */
+body :is(#facultyProfileModal .student-profile-head,.professor-load-card>header):not(#pu):not(#pu2){padding:26px 30px!important;background:linear-gradient(135deg,var(--pr-hero-a),var(--pr-hero-b))!important;color:#fff!important}
+body #facultyProfileModal .student-profile-head :is(h2,#facultyProfileName):not(#pu){color:#fff!important;font:700 24px/1.2 var(--pr-font)!important}
+body #facultyProfileModal .student-profile-head p:not(.profile-eyebrow):not(#pu){color:rgba(255,255,255,.78)!important;font-size:12px!important}
+body #facultyProfileModal .faculty-avatar:not(#pu){background:rgba(255,255,255,.14)!important;color:#fff!important}
+
+/* Content: headings and cards at the same scale everywhere. */
+body :is(#facultyProfileContent,#studentProfileContent) :is(h3,h4):not(#pu){color:var(--pr-ink)!important;font:650 15px/1.3 var(--pr-font)!important}
+body :is(#facultyProfileContent,#studentProfileContent)>:is(p,.panel-help):not(#pu){color:var(--pr-muted)!important;font-size:12px!important}
+
+/* Rows that open a profile on click. */
+body :is(#facultyTable,#studentTable,#deanPersonnelTable) tbody tr{cursor:pointer}
+
+/* Dean member profile (built from the shared role-profile classes). */
+.pu-load{display:flex;align-items:center;gap:10px}
+.pu-load i{flex:1;height:8px;overflow:hidden;border-radius:999px;background:var(--pr-soft)}
+.pu-load b{display:block;height:100%;border-radius:inherit;background:var(--pr-accent)}
+.pu-load b.over{background:#b5534b}
+
+/* Every Admin profile modal (student profile, student administration, faculty profile). */
+body .student-profile-bg .student-profile-page:not(#pu){width:min(980px,calc(100vw - 32px))!important;overflow:hidden auto!important;border:0!important;border-radius:20px!important;background:var(--pr-surface)!important;box-shadow:0 30px 80px rgba(0,0,0,.3)!important;font-family:var(--pr-font)!important}
+body .student-profile-bg .student-profile-head:not(#pu):not(#pu2){display:flex!important;align-items:center;gap:18px;margin:0!important;padding:26px 30px!important;border:0!important;background:linear-gradient(135deg,var(--pr-hero-a),var(--pr-hero-b))!important;color:#fff!important}
+body .student-profile-bg .student-profile-head :is(h2,h3):not(#pu){margin:0!important;color:#fff!important;font:700 24px/1.2 var(--pr-font)!important}
+body .student-profile-bg .student-profile-head p:not(.profile-eyebrow):not(#pu){margin:4px 0 0!important;color:rgba(255,255,255,.78)!important;font:400 12px var(--pr-font)!important}
+body .student-profile-bg .profile-eyebrow:not(#pu){margin:0 0 4px!important;color:color-mix(in srgb,var(--role-shell-yellow,#f0c36d) 80%,#fff)!important;font:700 10px var(--pr-font)!important;letter-spacing:.14em!important;text-transform:uppercase}
+body .student-profile-bg .profile-avatar:not(#pu):not(#pu2){display:grid;width:58px!important;height:58px!important;place-items:center;border:2px solid rgba(255,255,255,.28)!important;border-radius:50%!important;background:rgba(255,255,255,.14)!important;box-shadow:none!important;color:#fff!important;font:700 18px var(--pr-font)!important}
+body .student-profile-bg .student-profile-head :is(.profile-close,.student-command-menu>summary,button):not(#pu):not(#pu2){display:grid;width:36px!important;height:36px!important;place-items:center;padding:0!important;border:1px solid rgba(255,255,255,.24)!important;border-radius:10px!important;background:rgba(255,255,255,.12)!important;box-shadow:none!important;color:#fff!important}
+body .student-profile-bg .profile-tabs:not(#pu):not(#pu2){display:flex!important;flex-wrap:wrap;gap:6px!important;margin:0!important;padding:14px 30px!important;border:0!important;border-bottom:1px solid var(--pr-line)!important;background:var(--pr-surface)!important}
+body .student-profile-bg .profile-tab:not(#pu):not(#pu2):not(#pu3){height:32px!important;margin:0!important;padding:0 14px!important;border:1px solid var(--pr-line)!important;border-radius:999px!important;background:transparent!important;color:var(--pr-muted)!important;font:600 11px/1 var(--pr-font)!important}
+body .student-profile-bg .profile-tab.active:not(#pu):not(#pu2):not(#pu3){border-color:var(--pr-accent)!important;background:var(--pr-accent)!important;color:var(--pr-on-accent,#fff)!important}
+body .student-profile-bg .profile-tab::after{display:none!important}
+body .student-profile-bg .student-profile-page>main:not(#pu){padding:22px 30px 30px!important;background:var(--pr-soft)!important}
+/* Content blocks become cards with their heading inside. */
+body .student-profile-bg .student-profile-page>main>:is(section,.profile-section,div:not(.profile-stat-grid):not(.table-scroll)):not(#pu){margin:0 0 16px!important;padding:18px 20px!important;border:1px solid var(--pr-line)!important;border-radius:16px!important;background:var(--pr-surface)!important;box-shadow:none!important}
+body .student-profile-bg .student-profile-page>main :is(h3,h4):not(#pu){margin:0 0 4px!important;color:var(--pr-ink)!important;font:650 15px/1.3 var(--pr-font)!important}
+body .student-profile-bg .student-profile-page>main :is(h3,h4)+p:not(#pu){margin:0 0 12px!important;color:var(--pr-muted)!important;font:400 11.5px/1.4 var(--pr-font)!important}
+body .student-profile-bg .student-profile-page>main table:not(#pu){width:100%;border-collapse:collapse}
+body .student-profile-bg .student-profile-page>main :is(thead,thead tr,th):not(#pu){background:transparent!important}
+body .student-profile-bg .student-profile-page>main th:not(#pu):not(#pu2){padding:9px 14px!important;border:0!important;border-bottom:1px solid var(--pr-line)!important;color:var(--pr-muted)!important;font:650 9.5px/1.3 var(--pr-font)!important;letter-spacing:.055em!important;text-transform:uppercase}
+body .student-profile-bg .student-profile-page>main td:not(#pu):not(#pu2){padding:10px 14px!important;border:0!important;border-bottom:1px solid color-mix(in srgb,var(--pr-line) 60%,transparent)!important;background:transparent!important;color:var(--pr-ink)!important;font:400 12.5px/1.4 var(--pr-font)!important}
+body .student-profile-bg .student-profile-page>main :is(.table-scroll,.management-table-shell):not(#pu){margin:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}
+/* The content area fills the popup, so short tabs leave no lighter strip at the bottom. */
+body .student-profile-bg .student-profile-page:not(#pu):not(#pu2){display:flex!important;flex-direction:column;background:var(--pr-soft)!important}
+body .student-profile-bg .student-profile-page>:is(header,nav):not(#pu){flex:0 0 auto}
+body .student-profile-bg .student-profile-page>main:not(#pu):not(#pu2){flex:1 1 auto;min-height:0}
+
+/* Stat tiles sit straight on the background (no extra card around them). */
+body .student-profile-bg .student-profile-page>main>.profile-stat-grid:not(#pu):not(#pu2){padding:0!important;border:0!important;background:transparent!important}
+/* A table that sits directly in the content is its own card. */
+body .student-profile-bg .student-profile-page>main>.table-scroll:not(#pu):not(#pu2){margin:0 0 16px!important;overflow:auto;border:1px solid var(--pr-line)!important;border-radius:16px!important;background:var(--pr-surface)!important}
+
+/* Account history: toolbar on the header row, borderless icons, table flush in the card. */
+body .lifecycle-history-content:not(#pu):not(#pu2){display:grid!important;grid-template-columns:minmax(0,1fr) auto;align-items:start;column-gap:12px}
+body .lifecycle-history-content>header:not(#pu){grid-column:1;margin:0 0 12px!important;padding:0!important;border:0!important}
+body .lifecycle-history-content>.lifecycle-history-tools:not(#pu):not(#pu2){position:relative;grid-column:2;grid-row:1;display:flex!important;align-items:center;gap:2px;margin:0!important;padding:0!important;border:0!important;background:transparent!important}
+body .lifecycle-history-content>:not(header):not(.lifecycle-history-tools){grid-column:1/-1}
+body .lifecycle-history-content .lifecycle-icon:not(#pu):not(#pu2):not(#pu3){display:inline-grid!important;width:34px!important;height:34px!important;min-height:0!important;margin:0!important;padding:0!important;place-items:center;border:0!important;border-radius:10px!important;background:transparent!important;box-shadow:none!important;color:var(--pr-ink)!important}
+body .lifecycle-history-content .lifecycle-icon:not(#pu):not(#pu2):not(#pu3):is(:hover,.active,[aria-expanded="true"]){background:color-mix(in srgb,var(--pr-ink) 9%,transparent)!important}
+body .lifecycle-history-content .lifecycle-search input:not(#pu):not(#pu2){width:200px;height:34px!important;padding:0 11px!important;border:1px solid var(--pr-line)!important;border-radius:9px!important;background:var(--pr-surface)!important;color:var(--pr-ink)!important;font:400 12.5px var(--pr-font)!important}
+body .lifecycle-history-content :is(.table-scroll,.workspace-table-scroll,table):not(#pu):not(#pu2){margin:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}
+body .lifecycle-history-content :is(thead,thead tr,th):not(#pu){background:transparent!important}
+body .lifecycle-history-content th:not(#pu):not(#pu2){padding:9px 14px!important;border:0!important;border-bottom:1px solid var(--pr-line)!important;color:var(--pr-muted)!important;font:650 9.5px/1.3 var(--pr-font)!important;letter-spacing:.055em!important;text-transform:uppercase}
+body .lifecycle-history-content td:not(#pu):not(#pu2){padding:10px 14px!important;border:0!important;border-bottom:1px solid color-mix(in srgb,var(--pr-line) 60%,transparent)!important;background:transparent!important;font:400 12.5px/1.4 var(--pr-font)!important}
+
+/* ===== Easier student / faculty administration popups ===== */
+/* Quick facts strip under the banner. */
+.pe-facts{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border-bottom:1px solid var(--pr-line);background:var(--pr-surface)}
+.pe-facts>div{display:grid;gap:3px;padding:12px 18px;border-left:1px solid var(--pr-line)}
+.pe-facts>div:first-child{border-left:0;padding-left:30px}
+.pe-facts span{color:var(--pr-muted);font:600 10px/1.2 var(--pr-font);letter-spacing:.08em;text-transform:uppercase}
+.pe-facts strong{overflow:hidden;color:var(--pr-ink);font:650 14px/1.3 var(--pr-font);text-overflow:ellipsis;white-space:nowrap}
+/* Tabs pinned while scrolling, with icons. */
+body .student-profile-bg .profile-tabs:not(#pu):not(#pu2):not(#pu3){position:sticky;top:0;z-index:5;box-shadow:0 6px 14px -12px rgba(0,0,0,.35)}
+body .student-profile-bg .profile-tab:not(#pu):not(#pu2):not(#pu3):not(#pu4){display:inline-flex!important;align-items:center;gap:6px;height:34px!important;padding:0 14px 0 11px!important;font-size:11.5px!important}
+.student-profile-bg .profile-tab svg{width:14px;height:14px;fill:currentColor;opacity:.85}
+/* Subject tables: code chip, section pill, professor with initials. */
+.pe-code{display:inline-block;padding:2px 8px;border-radius:7px;background:color-mix(in srgb,var(--pr-accent) 12%,transparent);color:var(--pr-accent)!important;font:700 11.5px/1.5 var(--pr-font)!important;letter-spacing:.02em}
+.pe-code+br{display:none}
+.pe-code~small{display:block;margin-top:4px;color:var(--pr-muted)!important;font-size:11.5px!important}
+.pe-section{display:inline-block;padding:3px 10px;border-radius:999px;background:var(--pr-soft);color:var(--pr-ink);font:600 11px/1.4 var(--pr-font)}
+.pe-prof{display:inline-flex;align-items:center;gap:9px;color:var(--pr-ink);font:500 12.5px var(--pr-font)}
+.pe-prof i{display:grid;width:28px;height:28px;flex:0 0 auto;place-items:center;border-radius:50%;background:color-mix(in srgb,var(--pr-accent) 14%,transparent);color:var(--pr-accent);font:700 10px var(--pr-font);font-style:normal}
+.pe-missing{display:inline-block;padding:3px 10px;border-radius:999px;background:color-mix(in srgb,#d39a2c 16%,transparent);color:#8a5a12;font:600 11px/1.4 var(--pr-font)}
+:root[data-theme="dark"] .pe-missing{color:#f0c06a}
+body .student-profile-bg .student-profile-page>main tbody tr:hover td:not(#pu):not(#pu2):not(#pu3){background:color-mix(in srgb,var(--pr-accent) 5%,transparent)!important}
+body .student-profile-bg .student-profile-page>main td:not(#pu):not(#pu2):not(#pu3){padding:12px 14px!important;vertical-align:middle}
+@media(max-width:760px){.pe-facts{grid-template-columns:repeat(2,minmax(0,1fr))}.pe-facts>div{border-left:0;padding-left:18px!important}}
+body .student-profile-bg .student-profile-page>main td .pe-code:not(#pu):not(#pu2):not(#pu3){background:color-mix(in srgb,var(--pr-accent) 13%,transparent)!important;color:var(--pr-accent)!important;font-weight:700!important}

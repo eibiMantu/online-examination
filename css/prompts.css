@@ -100,3 +100,25 @@ body[data-role="student"] :is(.role-page-hero,.student-dashboard-welcome,.subjec
 body[data-role="student"] :is(.role-page-hero,.student-dashboard-welcome,.subject-detail-hero)::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(340px 300px at 72% -30%,var(--glow-a),transparent 70%),radial-gradient(380px 320px at -4% 130%,var(--glow-b),transparent 70%)}
 body[data-role="student"]::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(900px 600px at 85% -10%,color-mix(in srgb,var(--glow-a) 45%,transparent),transparent 70%),radial-gradient(800px 600px at 0% 105%,color-mix(in srgb,var(--glow-b) 55%,transparent),transparent 70%)}
 :root[data-theme="dark"] body[data-role="student"]::before{opacity:.55}
+
+/* ===== Legacy form prompts (.modal-bg > .modal): same look as the themed prompts ===== */
+body .modal-bg>.modal:not(#pr):not(#pr2){display:flex!important;flex-wrap:wrap;align-items:center;gap:0;width:min(520px,calc(100vw - 32px))!important;max-height:calc(100dvh - 48px);margin:0!important;padding:0 0 22px!important;overflow:hidden auto;border:0!important;border-radius:20px!important;background:var(--pr-surface)!important;box-shadow:0 30px 80px rgba(0,0,0,.3)!important;color:var(--pr-ink)!important;font-family:var(--pr-font)!important}
+body .modal-bg>.modal>*:not(button):not(#pr){order:1;flex:1 1 100%;box-sizing:border-box}
+body .modal-bg>.modal>:is(h2,h3):first-child:not(#pr):not(#pr2){position:sticky;top:0;z-index:1;margin:0 0 16px!important;padding:20px 24px!important;background:linear-gradient(132deg,var(--pr-hero-a),var(--pr-hero-b))!important;color:#fff!important;font:700 17px/1.3 var(--pr-font)!important;letter-spacing:-.015em}
+body .modal-bg>.modal>*:not(:first-child):not(button):not(#pr){margin-left:24px!important;margin-right:24px!important;flex-basis:calc(100% - 48px)!important}
+body .modal-bg>.modal :is(label,.student-form-field>span):not(#pr){color:var(--pr-muted)!important;font:600 12px/1.3 var(--pr-font)!important}
+body .modal-bg>.modal .student-form-field:not(#pr){display:grid!important;gap:6px;margin-bottom:12px!important}
+body .modal-bg>.modal :is(input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),select,textarea):not(#pr):not(#pr2){width:100%!important;height:40px;margin:0 0 12px!important;padding:0 12px!important;border:1px solid var(--pr-line)!important;border-radius:11px!important;background:var(--pr-surface)!important;box-shadow:none!important;color:var(--pr-ink)!important;font:400 13px/1.4 var(--pr-font)!important;box-sizing:border-box}
+body .modal-bg>.modal .student-form-field :is(input,select):not(#pr):not(#pr2){margin-bottom:0!important}
+body .modal-bg>.modal :is(input[readonly]):not(#pr):not(#pr2){background:var(--pr-soft)!important;color:var(--pr-accent)!important;font-weight:700!important}
+body .modal-bg>.modal :is(input,select,textarea):focus:not(#pr){border-color:var(--pr-accent)!important;outline:0;box-shadow:0 0 0 3px color-mix(in srgb,var(--pr-accent) 16%,transparent)!important}
+body .modal-bg>.modal>small:not(#pr){color:var(--pr-muted);font-size:11.5px}
+/* Buttons: Cancel (outlined) then the primary action, right aligned, side by side. */
+body .modal-bg>.modal>button:not(#pr):not(#pr2){order:3;display:inline-flex;align-items:center;justify-content:center;width:auto!important;min-width:110px;height:40px!important;margin:14px 24px 0 0!important;padding:0 18px!important;border:0!important;border-radius:11px!important;background:var(--pr-accent)!important;box-shadow:none!important;color:var(--pr-on-accent,#fff)!important;font:600 12px/1 var(--pr-font)!important;cursor:pointer}
+body .modal-bg>.modal>button.cancel:not(#pr):not(#pr2){order:2;margin-left:auto!important;margin-right:10px!important;min-width:96px;border:1px solid var(--pr-line)!important;background:transparent!important;color:var(--pr-ink)!important}
+body .modal-bg>.modal>button:not(.cancel):not(#pr):hover{filter:brightness(1.08)}
+body .modal-bg>.modal>button.cancel:not(#pr):hover{background:var(--pr-soft)!important}
+body .modal-bg>.modal :is(fieldset):not(#pr){padding:12px!important;border:1px solid var(--pr-line)!important;border-radius:12px!important}
+body .modal-bg>.modal table:not(#pr){width:100%;border-collapse:collapse;font-size:12px}
+body .modal-bg>.modal :is(th):not(#pr){padding:8px 10px!important;border-bottom:1px solid var(--pr-line)!important;background:transparent!important;color:var(--pr-muted)!important;font:650 9.5px/1.3 var(--pr-font)!important;letter-spacing:.055em;text-transform:uppercase}
+body .modal-bg>.modal :is(td):not(#pr){padding:8px 10px!important;border-bottom:1px solid color-mix(in srgb,var(--pr-line) 60%,transparent)!important}
