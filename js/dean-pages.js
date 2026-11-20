@@ -17,7 +17,7 @@ const DeanPages = (() => {
   const W = () => (typeof CoordinatorWorkspaces !== 'undefined' ? CoordinatorWorkspaces : null);
   const NORMAL_LOAD = 24;
   const STATUS = [['pending', 'Pending', 'Waiting for your decision'], ['approved', 'Approved', 'Applied to the records'], ['rejected', 'Rejected', 'Returned with remarks'], ['withdrawn', 'Withdrawn', 'Pulled back by the requester']];
-  const TYPE = { 'professor-assignment': 'assignment', 'student-overload': 'overload', 'faculty-student-enrollment': 'enrollment' };
+  const TYPE = { 'professor-assignment': 'assignment', 'student-overload': 'overload', 'faculty-student-enrollment': 'enrollment', 'role-assignment': 'role' };
   function requests() { try { return ApprovalService.queryFor(session, {}) || []; } catch (_) { return read('approvalRequests'); } }
 
   /* ---------- Approvals ---------- */

@@ -3,34 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Opening Sign In | Online Examination</title>
+  <title>Sign In | Online Examination</title>
+  <!-- Go straight to the sign-in page; nothing is drawn here, so there is no flash of an old page. -->
+  <script>window.location.replace('login.html' + window.location.search + window.location.hash);</script>
   <meta http-equiv="refresh" content="0; url=login.html">
-  <link rel="stylesheet" href="../css/style.css?v=20260919-unified-login">
-  <link rel="stylesheet" href="../css/shared-ui.css?v=20261118-keep-search">
+  <style>html,body{margin:0;min-height:100%;background:#0b1626}</style>
 </head>
-
-<body class="login-bg">
-  <div class="overlay"></div>
-  
-  <div class="container login-container">
-    <div class="header">
-      <img src="../assets/logo.PNG" alt="NEU Logo" class="logo" />
-      <div>
-        <h1>NEW ERA UNIVERSITY</h1>
-        <h3>COLLEGE OF INFORMATION AND COMPUTER STUDIES</h3>
-      </div>
-    </div>
-    
-    <p class="subtitle">Online Examination System</p>
-    
-    <p>Opening the secure sign-in page…</p>
-    <a class="btn admin" href="login.html">CONTINUE TO SIGN IN</a>
-  </div>
-  
-  <script>
-    window.location.replace("login.html");
-  </script>
-
-<script src="../js/overlay-stack.js?v=20261119-1"></script>
-</body>
+<body><noscript><a href="login.html" style="color:#fff;font:14px sans-serif">Continue to sign in</a></noscript></body>
 </html>

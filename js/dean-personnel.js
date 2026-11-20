@@ -30,13 +30,35 @@ const DeanPersonnel=(()=>{
     return`<tr data-id="${esc(person.id)}"><td><span class="ck-person"><span class="ck-avatar">${esc(initials(person.first,person.last))}</span><span>${esc(`${person.last||''}, ${person.first||''}`)}</span></span></td><td>${esc(person.id)}</td><td><span class="dp-pill${coordinator?' gold':''}">${esc(person.displayRole)}</span></td><td>${esc(person.program||'CICS')}</td><td>${person.load===null?'<span class="dp-muted">No teaching load</span>':`<span class="dp-load">${person.load}/${NORMAL_LOAD} units</span><i class="ck-mini"><b class="${tone}" style="width:${pct}%"></b></i>`}</td><td>${coordinator?'<span class="dp-muted">Active appointment</span>':`<button type="button" class="dp-row-action" data-appoint="${esc(person.id)}">Appoint coordinator</button>`}</td></tr>`;
   }
 
+  /* ---------- Members tabs: College members · Role assignments ---------- */
+  let tab='members';
+  const tabsNav=()=>{const n=(typeof RoleAccess!=='undefined'?RoleAccess.assignments().length:0);return`<nav class="dp-tabs" role="tablist" aria-label="Members"><button type="button" role="tab" data-dp-tab="members" class="${tab==='members'?'active':''}" aria-selected="${tab==='members'}">College members</button><button type="button" role="tab" data-dp-tab="roles" class="${tab==='roles'?'active':''}" aria-selected="${tab==='roles'}">Role assignments<span>${n}</span></button></nav>`;};
+  function bindTabs(host){host.querySelectorAll('[data-dp-tab]').forEach(b=>b.onclick=()=>{tab=b.dataset.dpTab;render();});}
+  function renderRoles(host){
+    const RA=RoleAccess,list=RA.assignments().slice().sort((a,b)=>String(b.assignedAt).localeCompare(String(a.assignedAt)));
+    const byRole=RA.roles().map(r=>[r.name,list.filter(a=>a.roleId===r.id).length,r.color]);
+    const P=typeof CoordinatorPages!=='undefined'?CoordinatorPages:null;
+    const charts=P?P.insights(P.card('Assignments by role',`${list.length} assignment${list.length===1?'':'s'}`,P.donut(byRole.filter(r=>r[1]).map(([label,value,color])=>({label,value,color})),'assigned')),P.card('How roles work','',`<ul class="dp-howto"><li><b>Administrator</b> defines roles and their permissions.</li><li><b>You</b> give a role to a person for one subject or all subjects.</li><li><b>Faculty Coordinators</b> can request a role for a Professor; it appears in Approvals.</li><li><b>Exam maker</b> lets a person create exams in that subject. <b>Intern</b> lets them view the Professor workspace without editing.</li></ul>`)):'';
+    host.innerHTML=`${tabsNav()}${charts}<section class="dp-table-card"><header class="dp-table-head"><div><h3>Role assignments</h3><p>Who holds which role, and in which subject</p></div><div class="dp-tools" id="deanRoleTools"></div></header><div class="dp-table-scroll"><table class="dp-table" id="deanRoleTable"><thead><tr><th>Person</th><th>Role</th><th>Subject</th><th>Given by</th><th>Date</th><th>Action</th></tr></thead><tbody>${list.map(a=>{const r=RA.roleById(a.roleId),name=RA.nameOf(a.username);return`<tr data-ra="${esc(a.id)}"><td><span class="ck-person"><span class="ck-avatar">${esc(name.split(/\s+/).map(w=>w[0]).slice(0,2).join('').toUpperCase())}</span><span>${esc(name)}<small class="dp-muted"> · ${esc(a.username)}</small></span></span></td><td><span class="ra-pill" style="--c:${esc(r?.color||'#888')}">${esc(r?.name||a.roleId)}</span></td><td><span class="ra-subject">${esc(RA.subjectName(a.subjectCode))}</span></td><td>${esc(a.via==='request'?`${a.assignedBy} · approved request`:a.assignedBy)}</td><td>${esc(new Date(a.assignedAt).toLocaleDateString())}</td><td><button type="button" class="dp-row-action" data-ra-remove="${esc(a.id)}">Remove</button></td></tr>`;}).join('')||'<tr><td colspan="6" class="dp-muted">No roles assigned yet. Use + to give someone a role.</td></tr>'}</tbody></table></div></section><div id="deanPersonnelForm"></div>`;
+    bindTabs(host);
+    if(typeof AdminTableTools!=='undefined')AdminTableTools.mount('dean-roles',document.getElementById('deanRoleTable'),document.getElementById('deanRoleTools'),{exportName:'role-assignments',add:{label:'Assign a role',onClick:showAssign}});
+    host.querySelectorAll('[data-ra-remove]').forEach(b=>b.onclick=async()=>{if(typeof confirmDialog==='function'&&!await confirmDialog({title:'Remove this role?',message:'The person loses the role in that subject right away.',confirmLabel:'Remove',danger:true}))return;RoleAccess.unassign(b.dataset.raRemove);notify('Role removed.','success');render();});
+  }
+  function showAssign(){
+    const RA=RoleAccess,people=read('users').filter(u=>u.role!=='admin').map(u=>({id:u.username,name:RA.nameOf(u.username),role:u.role})),subjects=read('subjects');
+    const roleLabel={faculty:'Professor',coordinator:'Faculty Coordinator',dean:'Dean',student:'Student'};
+    dialog('Assign a role',`<label>Role<select name="roleId" required>${RA.roles().map(r=>`<option value="${esc(r.id)}">${esc(r.name)}</option>`).join('')}</select></label><label>Subject<select name="subjectCode"><option value="*">All subjects</option>${subjects.map(s=>`<option value="${esc(s.code)}">${esc(s.code)} — ${esc(s.name)}</option>`).join('')}</select></label><label class="dp-wide">Person<input name="person" list="dpPeople" required placeholder="Type a name or ID"><datalist id="dpPeople">${people.map(p=>`<option value="${esc(p.id)}">${esc(p.name)} · ${esc(roleLabel[p.role]||p.role)}</option>`).join('')}</datalist></label>`,'Any account can hold any role. The role applies only in the chosen subject (or every subject).','Assign role',async values=>{const person=people.find(p=>p.id===values.person.trim()||p.name.toLowerCase()===values.person.trim().toLowerCase());if(!person)throw new Error('Pick a person from the list.');RA.assign({username:person.id,roleId:values.roleId,subjectCode:values.subjectCode});document.getElementById('deanPersonnelForm').innerHTML='';notify(`${person.name} now has the ${RA.roleById(values.roleId)?.name} role.`,'success');render();});
+  }
+
   function render(){
     const host=document.getElementById('deanPersonnelRoot');if(!host)return;
-    const rows=people();
     host.closest('section')?.classList.add('dp-page');
-    host.innerHTML=`${charts(rows)}<section class="dp-table-card"><header class="dp-table-head"><div><h3>College members</h3><p>${rows.filter(p=>p.displayRole==='Professor').length} Professors · ${rows.filter(p=>p.displayRole!=='Professor').length} Faculty Coordinators</p></div><div class="dp-tools" id="deanPersonnelTools"></div></header><div class="dp-table-scroll"><table class="dp-table" id="deanPersonnelTable"><thead><tr><th>Name</th><th>ID</th><th>Role</th><th>Program</th><th>Load</th><th>Action</th></tr></thead><tbody>${rows.map(row).join('')||'<tr><td colspan="6" class="dp-muted">No personnel yet.</td></tr>'}</tbody></table></div></section><div id="deanPersonnelForm"></div>`;
+    if(tab==='roles'&&typeof RoleAccess!=='undefined')return renderRoles(host);
+    const rows=people();
+    host.innerHTML=`${typeof RoleAccess!=='undefined'?tabsNav():''}${charts(rows)}<section class="dp-table-card"><header class="dp-table-head"><div><h3>College members</h3><p>${rows.filter(p=>p.displayRole==='Professor').length} Professors · ${rows.filter(p=>p.displayRole!=='Professor').length} Faculty Coordinators</p></div><div class="dp-tools" id="deanPersonnelTools"></div></header><div class="dp-table-scroll"><table class="dp-table" id="deanPersonnelTable"><thead><tr><th>Name</th><th>ID</th><th>Role</th><th>Program</th><th>Load</th><th>Action</th></tr></thead><tbody>${rows.map(row).join('')||'<tr><td colspan="6" class="dp-muted">No personnel yet.</td></tr>'}</tbody></table></div></section><div id="deanPersonnelForm"></div>`;
     if(typeof AdminTableTools!=='undefined')AdminTableTools.mount('dean-members',document.getElementById('deanPersonnelTable'),document.getElementById('deanPersonnelTools'),{exportName:'college-members',add:{label:'Add Professor',onClick:showHire}});
     host.querySelectorAll('[data-appoint]').forEach(button=>button.onclick=event=>{event.stopPropagation();showAppointment(button.dataset.appoint);});
+    bindTabs(host);
   }
 
   /* ---------- dialogs (themed prompt look) ---------- */
@@ -59,6 +81,6 @@ const DeanPersonnel=(()=>{
     dialog(`Appoint ${person?.first||id} as Faculty Coordinator`,`<label>Program responsibility<input name="program" required value="${esc(person?.program||'BSCS')}"></label><label>Effective date<input name="effectiveDate" type="date" required value="${today()}"></label>`,'The server enforces the appointment authority configured by the Administrator.','Confirm appointment',async values=>{await api(`/api/personnel/${encodeURIComponent(id)}/appoint-coordinator`,values);await refresh('Faculty Coordinator appointed.');});
   }
   async function refresh(message){if(typeof sqliteBootstrap==='function')sqliteBootstrap();notify(message,'success');render();}
-  return{render,showHire,showAppointment};
+  return{render,showHire,showAppointment,showAssign,tab:t=>{tab=t;render();}};
 })();
 if(typeof window!=='undefined')window.DeanPersonnel=DeanPersonnel;

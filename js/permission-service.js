@@ -8,14 +8,14 @@ const PermissionService = (() => {
       'personnel.coordinator.manage', 'profile.faculty.view',
       'profile.coordinator.view', 'approval.professor-assignment.review',
       'approval.student-overload.review', 'approval.faculty-student-enrollment.review',
-      'audit.college.view', 'statistics.college.view'
+      'audit.college.view', 'statistics.college.view', 'approval.role-assignment.review', 'role.assign'
     ],
     coordinator: [
       'dashboard.coordinator.view', 'offering.manage', 'schedule.manage',
       'enrollment.view', 'load.view', 'profile.faculty.view',
       'profile.student.view', 'approval.professor-assignment.submit',
       'approval.student-overload.submit', 'approval.own.withdraw',
-      'audit.own.view'
+      'audit.own.view', 'approval.role-assignment.submit'
     ],
     faculty: [
       'dashboard.faculty.view', 'exam.own.manage', 'grade.own.manage',
@@ -65,10 +65,25 @@ const PermissionService = (() => {
     const roles = DB.read('systemSettings', {})?.permissionRoles || [];
     return roles.find(r => (r.members || []).includes(actor.username) && normalizeRole(r.baseRole) === normalizeRole(actor.role)) || null;
   }
+  /* Administrator rules (Accounts & Permissions → Roles): every role the person
+     holds votes Deny / Default / Allow; Allow wins. Rules live in the
+     pagePermissions record, which every role can read. Older switches in
+     systemSettings still turn a permission off when no role votes. */
+  function rulesAllow(actor, permission) {
+    const normalized = normalizeRole(actor.role);
+    const legacyOff = (typeof DB !== 'undefined' && DB.read('systemSettings', {})?.permissionOverrides?.[normalized]?.[permission] === false)
+      || customRoleOf(actor)?.permissions?.[permission] === false;
+    const PP = typeof PagePermissions !== 'undefined' ? PagePermissions : (typeof window !== 'undefined' ? window.PagePermissions : null);
+    if (!PP || typeof DB === 'undefined') return !legacyOff;
+    const doc = DB.read('pagePermissions', {}) || {};
+    return PP.decide(doc, { role: normalized, username: actor.username, assignments: DB.read('roleAssignments', []) || [] }, permission, !legacyOff);
+  }
   function can(permission, context = {}) {
     const actor = session(context.actor);
-    if (!active(actor) || !roleAllows(actor.role, permission)) return false;
-    if (customRoleOf(actor)?.permissions?.[permission] === false) return false;
+    if (!active(actor)) return false;
+    const base = grants[normalizeRole(actor.role)] || [];
+    if (base.includes('*')) return true;
+    if (!base.includes(permission) || !rulesAllow(actor, permission)) return false;
     if (permission.endsWith('.own.view') && context.ownerId && actor.username !== context.ownerId) return false;
     if (permission.includes('.own.manage') && context.ownerId && actor.username !== context.ownerId) return false;
     return true;
@@ -86,7 +101,7 @@ const PermissionService = (() => {
     const overrides=DB.read('systemSettings',{})?.permissionOverrides?.[normalized]||{};
     return baseline.filter(permission=>overrides[permission]!==false);
   }
-  return { can, require: requirePermission, active, permissionsFor, normalizeRole, grants, customRoleOf };
+  return { can, require: requirePermission, active, permissionsFor, normalizeRole, grants, customRoleOf, roleAllows };
 })();
 
 if (typeof window !== 'undefined') window.PermissionService = PermissionService;

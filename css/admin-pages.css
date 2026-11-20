@@ -57,8 +57,8 @@ body[data-role="admin"].ap-ready :is(#systemSection,#academicPeriodsSection,#gov
 body[data-role="admin"].ap-ready :is(#systemSection,#academicPeriodsSection,#governanceSection) textarea:not(#ap):not(#ap2){height:auto!important;min-height:96px;padding:10px 12px!important;resize:vertical}
 body[data-role="admin"].ap-ready :is(#systemSection,#academicPeriodsSection,#governanceSection) :is(input,select,textarea):not(#ap):focus{border-color:var(--ap)!important;outline:0;box-shadow:0 0 0 3px color-mix(in srgb,var(--ap) 16%,transparent)!important}
 /* Buttons: primary = plum fill, secondary = outline; 40px, 600 weight */
-body[data-role="admin"].ap-ready :is(#systemSection,#academicPeriodsSection,#governanceSection) button:not(.governance-tab):not([aria-haspopup]):not([class*="menu"]):not(#ap):not(#ap2){height:40px;min-height:40px;padding:0 18px!important;border:1px solid transparent!important;border-radius:11px!important;background:var(--ap)!important;box-shadow:none!important;color:#fff!important;font:600 12.5px/1 var(--pr-font)!important;letter-spacing:0!important;text-transform:none!important;cursor:pointer}
-:root[data-theme="dark"] body[data-role="admin"].ap-ready :is(#systemSection,#academicPeriodsSection,#governanceSection) button:not(.governance-tab):not([aria-haspopup]):not([class*="menu"]):not(#ap):not(#ap2){color:#1c1830!important}
+body[data-role="admin"].ap-ready :is(#systemSection,#academicPeriodsSection,#governanceSection) button:not(.governance-tab):not([aria-haspopup]):not([data-pp-set]):not([data-pp-page]):not([class*="menu"]):not(#ap):not(#ap2){height:40px;min-height:40px;padding:0 18px!important;border:1px solid transparent!important;border-radius:11px!important;background:var(--ap)!important;box-shadow:none!important;color:#fff!important;font:600 12.5px/1 var(--pr-font)!important;letter-spacing:0!important;text-transform:none!important;cursor:pointer}
+:root[data-theme="dark"] body[data-role="admin"].ap-ready :is(#systemSection,#academicPeriodsSection,#governanceSection) button:not(.governance-tab):not([aria-haspopup]):not([data-pp-set]):not([data-pp-page]):not([class*="menu"]):not(#ap):not(#ap2){color:#1c1830!important}
 body[data-role="admin"].ap-ready :is(#systemSection,#academicPeriodsSection,#governanceSection) :is(button.secondary,button[class*="secondary"],button[class*="restore"],button[class*="ghost"],button[class*="outline"],.workspace-row button):not(#ap):not(#ap2):not(#ap3){border-color:var(--pr-line)!important;background:transparent!important;color:var(--ap)!important}
 body[data-role="admin"].ap-ready :is(#systemSection,#academicPeriodsSection,#governanceSection) button:not(#ap):hover{filter:brightness(1.08)}
 /* Full-width primary buttons become normal width, left aligned */
@@ -93,7 +93,7 @@ body[data-role="admin"].ap-ready #systemSection .system-announcements article :i
 :root[data-theme="dark"] .ap-pill.ok{color:#8fd3c9!important}
 :root[data-theme="dark"] .ap-pill.bad{color:#f0a49c!important}
 /* Second button in a pair (Restore defaults, Restore backup, Cancel) is the outlined one. */
-body[data-role="admin"].ap-ready :is(#systemSection,#governanceSection,#academicPeriodsSection) button+button:not(.governance-tab):not(#ap):not(#ap2):not(#ap3){border-color:var(--pr-line)!important;background:transparent!important;color:var(--ap)!important}
+body[data-role="admin"].ap-ready :is(#systemSection,#governanceSection,#academicPeriodsSection) button+button:not(.governance-tab):not([data-pp-set]):not([data-pp-page]):not(#ap):not(#ap2):not(#ap3){border-color:var(--pr-line)!important;background:transparent!important;color:var(--ap)!important}
 /* Academic Periods: list + side column; the form opens in a dialog. */
 .ap-period-layout{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(280px,1fr);gap:16px;align-items:start}
 .ap-period-list{overflow:hidden;border:1px solid var(--pr-line);border-radius:18px;background:var(--pr-surface);box-shadow:0 7px 20px rgba(28,36,42,.06)}

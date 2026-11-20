@@ -5,7 +5,8 @@ const ApprovalService = (() => {
   const types = Object.freeze({
     'professor-assignment': { submit: 'coordinator', review: 'dean' },
     'student-overload': { submit: ['coordinator', 'admin'], review: 'dean' },
-    'faculty-student-enrollment': { submit: 'faculty', review: 'dean' }
+    'faculty-student-enrollment': { submit: 'faculty', review: 'dean' },
+    'role-assignment': { submit: ['coordinator', 'admin'], review: 'dean' }
   });
   const applyHandlers = new Map();
   const now = () => new Date().toISOString();

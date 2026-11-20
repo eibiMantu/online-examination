@@ -26,7 +26,7 @@ function validHistoryTransition(prior, item, session, status) {
 function validNewRequest(item, session) {
   const history = Array.isArray(item.history) ? item.history : [];
   const submitRole = item.type === 'faculty-student-enrollment' ? 'faculty' : item.type === 'student-overload' && session.role === 'admin' ? 'admin' : 'coordinator';
-  return item?.id && ['professor-assignment', 'student-overload', 'faculty-student-enrollment'].includes(item.type)
+  return item?.id && ['professor-assignment', 'student-overload', 'faculty-student-enrollment', 'role-assignment'].includes(item.type)
     && item.requesterId === session.username && item.requesterRole === submitRole && session.role === submitRole
     && item.status === 'pending' && item.targetType && item.targetId && item.reason
     && item.proposedChange && typeof item.proposedChange === 'object' && !Array.isArray(item.proposedChange)
@@ -54,7 +54,7 @@ function validateApprovals(existing, next, session) {
   if (session.role === 'dean') {
     if (added.length || changed.length !== 1) forbidden('A Dean may decide one existing request at a time.');
     const prior = before.get(changed[0].id), item = changed[0];
-    if (!['professor-assignment','student-overload','faculty-student-enrollment'].includes(prior.type) || prior.status !== 'pending' || !['approved','rejected'].includes(item.status)
+    if (!['professor-assignment','student-overload','faculty-student-enrollment','role-assignment'].includes(prior.type) || prior.status !== 'pending' || !['approved','rejected'].includes(item.status)
       || item.reviewerId !== session.username || item.reviewerRole !== 'dean' || !item.decisionAt
       || item.status === 'rejected' && !String(item.reviewerRemarks || '').trim()
       || !sameApprovalPayload(prior, item) || !validHistoryTransition(prior, item, session, item.status)) forbidden('Dean decisions are limited to pending academic applications and cannot alter the proposal.');

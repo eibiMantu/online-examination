@@ -105,6 +105,12 @@ function required(condition, message) {
    })
 */
 function roleShellEscape(value){return String(value??'').replace(/[&<>"']/g,character=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[character]));}
+/* Gmail-style read state: reading a message anywhere (Mail page or header inbox)
+   updates every view at once: Mail rows, header list highlight, header badge and the
+   sidebar Mail count. Views listen for the "inbox:changed" event. */
+function announceInboxChange(){try{window.dispatchEvent(new CustomEvent('inbox:changed'))}catch(_){}}
+function syncSidebarMailBadge(){const items=globalThis.__roleShellProfile?.inboxItems||[],count=items.filter(item=>item.pending).length,link=document.querySelector('#sidebar [data-panel="role-mail-panel"]');if(!link)return;let badge=link.querySelector('.nav-count');if(count){if(!badge){link.insertAdjacentHTML('beforeend','<span class="nav-count"></span>');badge=link.querySelector('.nav-count');}badge.textContent=count;badge.setAttribute('aria-label',count+' pending');}else badge?.remove();}
+if(typeof window!=='undefined')window.addEventListener('inbox:changed',syncSidebarMailBadge);
 function ensureRoleMailPage(profile){
   let panel=document.getElementById('role-mail-panel');if(panel)return panel;
   const items=profile?.inboxItems||[];
@@ -113,8 +119,9 @@ function ensureRoleMailPage(profile){
   document.body.appendChild(panel);
   const reader=panel.querySelector('.role-mail-reader'),visible=items.slice(0,20),owner=`${profile?.role||'role'}:${profile?.id||'anonymous'}`;
   const markRead=item=>{if(typeof DB==='undefined'||!item)return;const receipts=new Set(DB.read('inboxReadReceipts',[]));receipts.add(`${owner}:${item.key}`);DB.write('inboxReadReceipts',[...receipts]);item.pending=false};
-  panel.querySelectorAll('[data-role-mail-index]').forEach(button=>button.addEventListener('click',()=>{const index=Number(button.dataset.roleMailIndex),item=visible[index];if(!item)return;markRead(item);button.classList.remove('unread');panel.querySelectorAll('.role-mail-row').forEach(row=>row.classList.toggle('active',row===button));reader.innerHTML=`<span class="role-mail-reader-kind">${roleShellEscape(item.kind)}</span><h2>${roleShellEscape(item.title)}</h2><time>${item.at?new Date(item.at).toLocaleString():''}</time><p>${roleShellEscape(item.text)}</p><button type="button" class="role-mail-open-item" data-open-mail-index="${index}">Open message actions</button>`;reader.querySelector('[data-open-mail-index]')?.addEventListener('click',()=>document.querySelector(`.header-inbox-item[data-inbox-index="${index}"]`)?.click())}));
-  panel.querySelector('.role-mail-read-all')?.addEventListener('click',()=>{visible.forEach(markRead);panel.querySelectorAll('.role-mail-row.unread').forEach(row=>row.classList.remove('unread'));document.querySelector('.header-inbox-read-all')?.click()});
+  panel.querySelectorAll('[data-role-mail-index]').forEach(button=>button.addEventListener('click',()=>{const index=Number(button.dataset.roleMailIndex),item=visible[index];if(!item)return;markRead(item);button.classList.remove('unread');announceInboxChange();panel.querySelectorAll('.role-mail-row').forEach(row=>row.classList.toggle('active',row===button));reader.innerHTML=`<span class="role-mail-reader-kind">${roleShellEscape(item.kind)}</span><h2>${roleShellEscape(item.title)}</h2><time>${item.at?new Date(item.at).toLocaleString():''}</time><p>${roleShellEscape(item.text)}</p><button type="button" class="role-mail-open-item" data-open-mail-index="${index}">Open message actions</button>`;reader.querySelector('[data-open-mail-index]')?.addEventListener('click',()=>document.querySelector(`.header-inbox-item[data-inbox-index="${index}"]`)?.click())}));
+  panel.querySelector('.role-mail-read-all')?.addEventListener('click',()=>{visible.forEach(markRead);panel.querySelectorAll('.role-mail-row.unread').forEach(row=>row.classList.remove('unread'));document.querySelector('.header-inbox-read-all')?.click();announceInboxChange()});
+  window.addEventListener('inbox:changed',()=>panel.querySelectorAll('[data-role-mail-index]').forEach(row=>{const item=visible[Number(row.dataset.roleMailIndex)];row.classList.toggle('unread',!!item?.pending)}));
   return panel;
 }
 function enhanceRoleSidebar(bar,menuBtn,profile){
@@ -707,7 +714,7 @@ function mountProfileMenu({ name, role, id, container }) {
   async function openInboxItem(item,index){
     markInboxRead([item]);
     wrap.querySelector(`[data-inbox-index="${index}"]`)?.classList.remove('pending');
-    refreshInboxPending();
+    refreshInboxPending();announceInboxChange();
     if(item.source==='report'&&typeof openReportedQuestion==='function'){inboxPanel.classList.remove('open');openReportedQuestion(item.sourceId);return;}
     const canReply=(role==='faculty'&&item.source==='student-mail'&&item.senderId)||(role==='student'&&item.source==='student-notice'&&item.senderId);
     const contextPromise=confirmDialog({title:item.title,message:`${item.kind}\n\n${item.text}`,confirmLabel:canReply?'Reply':'Done',cancelLabel:'Close'});
@@ -737,8 +744,9 @@ function mountProfileMenu({ name, role, id, container }) {
   wrap.querySelector('.header-inbox-read-all').addEventListener('click',event=>{
     event.stopPropagation();markInboxRead(inboxItems);
     wrap.querySelectorAll('.header-inbox-item.pending').forEach(item=>item.classList.remove('pending'));
-    refreshInboxPending();
+    refreshInboxPending();announceInboxChange();
   });
+  window.addEventListener('inbox:changed',()=>{wrap.querySelectorAll('.header-inbox-item').forEach(button=>button.classList.toggle('pending',!!visibleInboxItems[Number(button.dataset.inboxIndex)]?.pending));refreshInboxPending();});
   wrap.querySelectorAll('.header-inbox-item').forEach(button=>button.addEventListener('click',event=>{
     event.stopPropagation();openInboxItem(visibleInboxItems[Number(button.dataset.inboxIndex)],Number(button.dataset.inboxIndex));
   }));

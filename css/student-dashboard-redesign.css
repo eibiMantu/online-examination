@@ -280,3 +280,7 @@ body[data-role="student"] .student-progress-chart .chart-label{font-family:Inter
 :root[data-theme="dark"] body[data-role="student"] :is(.dashboard-class-code,.student-course-code){color:#93bcdc!important}
 :root[data-theme="dark"] body[data-role="student"] .compact-calendar-day:not(.today,.selected,.active){color:var(--student-muted)!important}
 :root[data-theme="dark"] body[data-role="student"] .dashboard-class-icon{background:color-mix(in srgb,var(--student-teal) 22%,var(--student-card))!important;color:#cfe3ec!important}
+/* Mail rows: read messages sit on the plain card (like every other role); only unread,
+   hovered or selected rows are tinted. */
+body[data-role="student"] .student-mail-row:not(.unread):not(.active):not(:hover):not(#sm){background:var(--student-card,#fff)!important}
+body[data-role="student"] .student-mail-row:is(:hover,.active):not(.unread):not(#sm){background:var(--student-soft)!important}

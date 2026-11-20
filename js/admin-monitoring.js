@@ -31,15 +31,20 @@ const AdminMonitoring = (() => {
   /* Smooth "mountain" chart: a curved line through the samples (monotone cubic,
      so peaks never overshoot) over an area that fades to transparent. The SVG's
      own content is rebuilt; the line and area keep their ids. */
-  function smooth(pts) {
-    if (pts.length < 2) return '';
+  function smooth(raw, top = -Infinity, bottom = Infinity) {
+    // Points closer than half a unit make near-vertical slopes; keep the later one.
+    const pts = raw.filter((p, i) => i === raw.length - 1 || raw[i + 1][0] - p[0] >= 0.5).map(([x, y]) => [x, Math.min(bottom, Math.max(top, y))]);
+    if (pts.length < 2) return pts.length ? `M${pts[0][0].toFixed(1)},${pts[0][1].toFixed(1)}` : '';
     const n = pts.length, d = [], m = [];
-    for (let i = 0; i < n - 1; i++) d.push((pts[i + 1][1] - pts[i][1]) / (pts[i + 1][0] - pts[i][0]));
+    for (let i = 0; i < n - 1; i++) d.push((pts[i + 1][1] - pts[i][1]) / Math.max(1e-6, pts[i + 1][0] - pts[i][0]));
     m.push(d[0]); for (let i = 1; i < n - 1; i++) m.push(d[i - 1] * d[i] <= 0 ? 0 : (d[i - 1] + d[i]) / 2); m.push(d[n - 2]);
+    // Fritsch–Carlson limit, then keep each control point between its segment's ends: the curve never leaves the samples' range.
+    for (let i = 0; i < n - 1; i++) { if (d[i] === 0) { m[i] = 0; m[i + 1] = 0; continue; } const a = m[i] / d[i], b = m[i + 1] / d[i], s = a * a + b * b; if (s > 9) { const t = 3 / Math.sqrt(s); m[i] = t * a * d[i]; m[i + 1] = t * b * d[i]; } }
+    const between = (v, y0, y1) => Math.min(Math.max(y0, y1), Math.max(Math.min(y0, y1), v));
     let path = `M${pts[0][0].toFixed(1)},${pts[0][1].toFixed(1)}`;
     for (let i = 0; i < n - 1; i++) {
       const [x0, y0] = pts[i], [x1, y1] = pts[i + 1], h = (x1 - x0) / 3;
-      path += ` C${(x0 + h).toFixed(1)},${(y0 + m[i] * h).toFixed(1)} ${(x1 - h).toFixed(1)},${(y1 - m[i + 1] * h).toFixed(1)} ${x1.toFixed(1)},${y1.toFixed(1)}`;
+      path += ` C${(x0 + h).toFixed(1)},${between(y0 + m[i] * h, y0, y1).toFixed(1)} ${(x1 - h).toFixed(1)},${between(y1 - m[i + 1] * h, y0, y1).toFixed(1)} ${x1.toFixed(1)},${y1.toFixed(1)}`;
     }
     return path;
   }
@@ -79,7 +84,9 @@ const AdminMonitoring = (() => {
       pts.push([x(last.t + Math.min(GLIDE_MS, now - last.t)), y(tipValue)]);
       if (now > last.t + GLIDE_MS) pts.push([x(now), y(last.v)]);
       if (pts.length === 1) pts.unshift([x(start), pts[0][1]]);
-      const line = smooth(pts), tip = pts[pts.length - 1], first = pts[0][0];
+      const top = 4, bottom = H - 2;
+      pts.forEach(p => { p[1] = Math.min(bottom, Math.max(top, p[1])); });
+      const line = smooth(pts, top, bottom), tip = pts[pts.length - 1], first = pts[0][0];
       svg.querySelector(`#${name}Line`)?.setAttribute('d', line);
       svg.querySelector(`#${name}Area`)?.setAttribute('d', `${line} L${tip[0].toFixed(1)},${H} L${first.toFixed(1)},${H} Z`);
       const dot = svg.querySelector('.ad-mtn-dot'); dot?.setAttribute('cx', tip[0].toFixed(1)); dot?.setAttribute('cy', tip[1].toFixed(1));
