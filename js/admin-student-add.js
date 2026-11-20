@@ -66,11 +66,10 @@ const AdminStudentAdd = (() => {
     const year = Number(document.getElementById('sYear')?.value || 1), codes = curriculumCodes(state.program, year), blocks = blockSections(state.program, year);
     const picked = [...state.picks.entries()].filter(([, id]) => id), units = picked.reduce((t, [code]) => t + (Number(unitsOf(code)) || 0), 0);
     const others = [...new Set(offerings().map(o => o.subjectCode))].filter(code => !codes.includes(code) && !state.extras.includes(code)).sort();
-    const roles = typeof RoleAccess !== 'undefined' ? RoleAccess.roles() : [];
     host.innerHTML = `
       <div class="sa-grid">
         <label class="student-form-field"><span>Curriculum</span><select id="saProgram">${programs().map(([code, label]) => `<option value="${esc(code)}"${code === state.program ? ' selected' : ''}>${esc(label)}</option>`).join('')}</select></label>
-        <label class="student-form-field"><span>Role</span><select id="saRole"><option value="">Student</option>${roles.map(r => `<option value="${esc(r.id)}">Student + ${esc(r.name)} (all subjects)</option>`).join('')}</select></label>
+        <label class="student-form-field"><span>Role</span><input id="saRole" value="Student" readonly aria-readonly="true"></label>
       </div>
       <div class="sa-status" role="radiogroup" aria-label="Admission status">${[['regular', 'Regular', 'Takes the block section'], ['irregular', 'Irregular', 'Mixes sections and subjects'], ['transferee', 'Transferee', 'Coming from another school']].map(([k, l, n]) => `<button type="button" role="radio" aria-checked="${state.status === k}" class="${state.status === k ? 'on' : ''}" data-sa-status="${k}"><strong>${l}</strong><small>${n}</small></button>`).join('')}</div>
       ${state.status === 'regular' ? `<label class="student-form-field sa-block"><span>Block section</span><select id="saBlock">${blocks.length ? blocks.map(id => `<option value="${esc(id)}"${id === state.block ? ' selected' : ''}>${esc(id)}</option>`).join('') : '<option value="">No section for this year yet</option>'}</select></label>` : ''}
@@ -91,6 +90,7 @@ const AdminStudentAdd = (() => {
     const help = modal.querySelector('#studentYearHelp');
     help?.insertAdjacentHTML('afterend', '<div id="saEnroll" class="sa-enroll"></div>');
     if (help) help.hidden = true;
+    const mi = modal.querySelector('#sMiddle'); if (mi) mi.placeholder = 'If applicable';
     const save = modal.querySelector('button[onclick*="saveItem(\'students\')"]'); if (save) save.textContent = 'Save';
     modal.addEventListener('change', e => {
       const t = e.target;
@@ -114,7 +114,7 @@ const AdminStudentAdd = (() => {
   }
   function plan() {
     const offers = offerings();
-    return { status: state.status, program: state.program, block: state.status === 'regular' ? state.block : '', role: document.getElementById('saRole')?.value || '', offers: [...state.picks.values()].filter(Boolean).map(id => offers.find(o => o.id === id)).filter(Boolean) };
+    return { status: state.status, program: state.program, block: state.status === 'regular' ? state.block : '', role: '' /* always Student; other roles are given by the Dean */, offers: [...state.picks.values()].filter(Boolean).map(id => offers.find(o => o.id === id)).filter(Boolean) };
   }
   async function enroll(studentId, p) {
     const list = g('students') || [], student = list.find(s => s.id === studentId); if (!student) return;
