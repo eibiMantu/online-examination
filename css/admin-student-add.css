@@ -47,3 +47,10 @@
 @media (max-width:640px){.sa-basics{grid-template-columns:1fr}.sa-basics>label{grid-column:1/-1!important}}
 body #studentModal.modal-bg>.modal.sa-modal.sa-adding:not(#pr):not(#pr2){width:min(760px,calc(100vw - 32px))!important}
 .sa-basics>label[for="sMiddle"] small{display:none}.sa-basics>label[for="sMiddle"]>span{white-space:nowrap}
+.sa-pick{display:flex;align-items:center;gap:8px}
+.sa-seats{flex:none;padding:3px 10px;border-radius:999px;font:700 10.5px var(--pr-font,inherit);white-space:nowrap}
+.sa-seats.ok{background:color-mix(in srgb,#2fa36b 14%,transparent);color:#23885a}
+.sa-seats.low{background:color-mix(in srgb,#d39a2c 18%,transparent);color:#a8741a}
+.sa-seats.full{background:color-mix(in srgb,#d0524a 14%,transparent);color:#c2463e}
+#studentModal .sa-pick select{width:118px!important;flex:none}
+body #studentModal .sa-pick select:not(#pr):not(#pr2):not(#pr3){width:118px!important;flex:none}

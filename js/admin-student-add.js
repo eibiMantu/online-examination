@@ -55,11 +55,13 @@ const AdminStudentAdd = (() => {
       state.block = list.sort((a, b) => score(b) - score(a))[0] || '';
     }
   }
+  // Seats left in the chosen section, as a pill: green with room, amber when nearly full, red when full.
+  const seatPill = room => `<span class="sa-seats ${room <= 0 ? 'full' : room <= 5 ? 'low' : 'ok'}">${room <= 0 ? 'Full' : `${room} seat${room === 1 ? '' : 's'} left`}</span>`;
   function rowHtml(code, extra) {
     const subject = subjectsList().find(s => s.code === code), offers = offersFor(code), picked = state.picks.has(code), chosen = state.picks.get(code) || '';
     const offer = offers.find(o => o.id === chosen), units = unitsOf(code);
-    const sectionSelect = offers.length ? `<select data-sa-section="${esc(code)}" aria-label="Section for ${esc(code)}"${picked ? '' : ' disabled'}>${offers.map(o => { const room = roomIn(o); return `<option value="${esc(o.id)}"${o.id === chosen ? ' selected' : ''}${room <= 0 && o.id !== chosen ? ' disabled' : ''}>${esc(o.sectionId)} · ${room > 0 ? `${room} seat${room === 1 ? '' : 's'}` : 'full'}</option>`; }).join('')}</select>` : '<span class="sa-none">Not offered this semester</span>';
-    return `<li class="sa-row${picked ? '' : ' off'}${offer ? '' : ' no-offer'}"><label class="sa-check"><input type="checkbox" data-sa-pick="${esc(code)}"${picked ? ' checked' : ''}${offers.length ? '' : ' disabled'}><span><strong>${esc(code)}</strong><small>${esc(subject?.name || 'Unknown subject')}${Number.isFinite(units) ? ` · ${units} unit${units === 1 ? '' : 's'}` : ''}</small></span></label><span class="sa-where">${sectionSelect}${offer ? `<small>${esc(professor(offer))}</small>` : ''}</span>${extra ? `<button type="button" class="sa-x" data-sa-drop="${esc(code)}" aria-label="Remove ${esc(code)}" title="Remove">×</button>` : ''}</li>`;
+    const sectionSelect = offers.length ? `<select data-sa-section="${esc(code)}" aria-label="Section for ${esc(code)}"${picked ? '' : ' disabled'}>${offers.map(o => { const room = roomIn(o); return `<option value="${esc(o.id)}"${o.id === chosen ? ' selected' : ''}${room <= 0 && o.id !== chosen ? ' disabled' : ''}>${esc(o.sectionId)}${room > 0 ? '' : ' (full)'}</option>`; }).join('')}</select>` : '<span class="sa-none">Not offered this semester</span>';
+    return `<li class="sa-row${picked ? '' : ' off'}${offer ? '' : ' no-offer'}"><label class="sa-check"><input type="checkbox" data-sa-pick="${esc(code)}"${picked ? ' checked' : ''}${offers.length ? '' : ' disabled'}><span><strong>${esc(code)}</strong><small>${esc(subject?.name || 'Unknown subject')}${Number.isFinite(units) ? ` · ${units} unit${units === 1 ? '' : 's'}` : ''}</small></span></label><span class="sa-where"><span class="sa-pick">${offer ? seatPill(roomIn(offer)) : ''}${sectionSelect}</span>${offer ? `<small>${esc(professor(offer))}</small>` : ''}</span>${extra ? `<button type="button" class="sa-x" data-sa-drop="${esc(code)}" aria-label="Remove ${esc(code)}" title="Remove">×</button>` : ''}</li>`;
   }
   function render() {
     const host = document.getElementById('saEnroll'); if (!host) return;
