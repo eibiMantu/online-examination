@@ -13,13 +13,13 @@
 <script src="../js/lesson-viewer.js?v=20261118-toc"></script>
 <script src="../js/lesson-view-mode.js?v=20261118-2"></script>
 <script src="../js/course-path.js?v=20261118-2"></script>
-<script src="../js/class-members.js?v=20261118-2"></script>
+<script src="../js/class-members.js?v=20261120-roles2"></script>
 <script src="../js/student-lessons.js?v=20261118-members"></script>
 <script src="../js/demo-data.js"></script>
 <script src="../js/admin-table-tools.js?v=20261118-export2"></script>
 <script src="../js/student-card-tools.js"></script>
-<script src="../js/auth.js?v=20261119-keep"></script><script src="../js/page-permissions.js?v=20261120-tri"></script>
-<script src="../js/role-access.js?v=20261120-6"></script>
+<script src="../js/auth.js?v=20261119-keep"></script><script src="../js/page-permissions.js?v=20261120-exp"></script>
+<script src="../js/role-access.js?v=20261120-exp"></script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   .sr-only { position:absolute!important; width:1px!important; height:1px!important; padding:0!important; margin:-1px!important; overflow:hidden!important; clip:rect(0,0,0,0)!important; white-space:nowrap!important; border:0!important; }
@@ -435,8 +435,8 @@
 <link rel="stylesheet" href="../css/student-dashboard-redesign.css?v=20261120-mail">
 <link rel="stylesheet" href="../css/lesson-viewer.css?v=20261118-toc">
 <link rel="stylesheet" href="../css/course-path.css?v=20261118-3">
-<link rel="stylesheet" href="../css/class-members.css?v=20261118-3">
-<link rel="stylesheet" href="../css/responsive-shell.css?v=20261118-4"><link rel="stylesheet" href="../css/prompts.css?v=20261119-modal"><link rel="stylesheet" href="../css/role-access.css?v=20261120-6"><link rel="stylesheet" href="../css/table-toolbar.css?v=20261118-4"><link rel="stylesheet" href="../css/profile-popup.css?v=20261118-3"><link rel="stylesheet" href="../css/profile-uniform.css?v=20261119-6">
+<link rel="stylesheet" href="../css/class-members.css?v=20261120-roles">
+<link rel="stylesheet" href="../css/responsive-shell.css?v=20261118-4"><link rel="stylesheet" href="../css/prompts.css?v=20261119-modal"><link rel="stylesheet" href="../css/role-access.css?v=20261120-exp"><link rel="stylesheet" href="../css/table-toolbar.css?v=20261118-4"><link rel="stylesheet" href="../css/profile-popup.css?v=20261118-3"><link rel="stylesheet" href="../css/profile-uniform.css?v=20261119-6">
 <script src="../js/dates.js"></script>
 <script src="../js/exam-timing.js"></script>
 <script src="../js/grading.js"></script>
@@ -795,7 +795,7 @@ function answerReviewMarkup(answers, questionSet, showCorrect = true, showFeedba
     if (isChoiceQuestion(question) && Array.isArray(question.options)) {
       body = question.options.map((option,index) => `<div class="review-choice${answer.selectedIndex===index?' is-student':''}${showCorrect&&option.isCorrect?' is-correct':''}"><span>${answer.selectedIndex===index?'&#9679;':'&#9675;'}</span><span>${escapeQuestionMedia(option.text)}${answer.selectedIndex===index?` · Your answer · ${option.isCorrect?'Correct':'Wrong'}`:''}${showCorrect&&option.isCorrect?' · Correct answer':''}</span></div>`).join('');
     } else if (question.type === 'matching' && Array.isArray(question.pairs)) {
-      body = `<div class="review-match-list">${question.pairs.map((pair,index)=>{const selected=answer.matches?.[index],selectedPair=question.pairs[selected],pairCorrect=selected===index;return `<div class="review-match-row"><div class="review-answer-cell ${pairCorrect?'is-correct':'is-wrong'}"><span>Your match · <b class="review-answer-state">${pairCorrect?'Correct':'Wrong'}</b></span>${escapeQuestionMedia(pair.left)} → ${escapeQuestionMedia(selectedPair?.right||'No answer')}</div>${showCorrect?`<div class="review-answer-cell is-correct"><span>Correct match</span>${escapeQuestionMedia(pair.left)} → ${escapeQuestionMedia(pair.right)}</div>`:''}</div>`}).join('')}</div>`;
+      body = `<div class="review-match-list">${question.pairs.map((pair,index)=>{const selected=question.pairsShuffled?answer.matchesShown?.[index]:answer.matches?.[index],selectedPair=question.pairs[selected],pairCorrect=question.pairsShuffled?answer.isCorrect===true:selected===index;return `<div class="review-match-row"><div class="review-answer-cell ${pairCorrect?'is-correct':'is-wrong'}"><span>Your match · <b class="review-answer-state">${pairCorrect?'Correct':'Wrong'}</b></span>${escapeQuestionMedia(pair.left)} → ${escapeQuestionMedia(selectedPair?.right||'No answer')}</div>${showCorrect?`<div class="review-answer-cell is-correct"><span>Correct match</span>${escapeQuestionMedia(pair.left)} → ${escapeQuestionMedia(pair.right)}</div>`:''}</div>`}).join('')}</div>`;
     } else {
       const given = answer.response ?? answer.selectedText ?? 'No answer';
       const correct = question.type === 'number' ? `${question.acceptedValue} ± ${question.tolerance || 0}` : question.expectedAnswer || 'Marked by instructor';
@@ -2305,7 +2305,7 @@ async function submitExamAnswers(opts = {}) {
       const matches = stored?.matches || [];
       const isCorrect = matchingAnswerIsCorrect(matches, q.pairs);
       if (isCorrect) earnedPoints += points;
-      answers.push({ questionId:q.id, type:q.type, matches, isCorrect, points,
+      answers.push({ questionId:q.id, type:q.type, matches, matchesShown:matches, pairsShuffled:!!q.pairsShuffled, isCorrect, points,
         awarded:isCorrect ? points : 0, needsManualGrading:false });
     } else if (isChoiceQuestion(q) && q.options) {
       const stored = getAnswer(activeAttempt, q.id);
@@ -2396,6 +2396,8 @@ async function submitExamAnswers(opts = {}) {
     startAttemptTimer(exams.find(e => e.id === activeExamId));
     return;
   }
+  // The server grades the attempt from the real answer keys; show its result.
+  {const sentId=submissions[submissions.length-1].id,graded=(DB.read('studentSubmissions',[])||[]).find(s=>s.id===sentId);if(graded){submissions[submissions.length-1]=graded;earnedPoints=Number(graded.score)||0;totalPoints=Number(graded.total)||totalPoints;pendingPoints=Number(graded.pendingPoints)||0;}}
   AuditLog.record('submit','exam',activeExamId,{submissionId:submissions[submissions.length-1].id,submittedBy:auto?'timeout':'student'});
   clearAttempt(currentStudent.id, activeExamId);
   activeAttempt = null;

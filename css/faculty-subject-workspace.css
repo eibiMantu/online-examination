@@ -134,3 +134,33 @@
 /* Examinations are a full-width list; weekly content keeps its own layout. */
 #facultySubjectWorkspace .student-facing-course .subject-detail-grid>.subject-info-cell:last-child>.subject-detail-exam-grid{grid-template-columns:minmax(0,1fr)}
 #facultySubjectWorkspace .student-facing-course .subject-detail-grid>.subject-info-cell:last-child .faculty-exam-cell{min-height:92px;padding:16px 18px}
+/* Professors card: people stand out, with sections and roles. */
+.sp-people-cell .sp-title{display:flex;align-items:center;gap:9px;margin:0 0 12px}
+.sp-title-icon{display:grid;width:28px;height:28px;place-items:center;border-radius:9px;background:color-mix(in srgb,var(--accent,#8a5a44) 14%,transparent)}
+.sp-title-icon svg{width:15px;height:15px;fill:var(--accent,#8a5a44)}
+.sp-title small{margin-left:auto;padding:2px 9px;border-radius:999px;background:var(--accent-soft,#f1e6df);color:var(--accent,#8a5a44);font-size:11px;font-weight:700}
+.sp-list{display:grid;gap:8px}
+.sp-person{display:flex;align-items:center;gap:12px;padding:11px 13px;border:1px solid var(--line,rgba(0,0,0,.08));border-radius:13px;background:var(--surface,#fff);transition:border-color .15s,box-shadow .15s}
+.sp-person:hover{border-color:color-mix(in srgb,var(--accent,#8a5a44) 35%,transparent);box-shadow:0 6px 16px rgba(0,0,0,.06)}
+.sp-person.me{border-color:color-mix(in srgb,var(--accent,#8a5a44) 45%,transparent);background:color-mix(in srgb,var(--accent,#8a5a44) 6%,var(--surface,#fff))}
+.sp-avatar{display:grid;flex:none;width:40px;height:40px;place-items:center;border-radius:50%;background:var(--accent,#8a5a44);color:#fff;font-size:13px;font-weight:800;letter-spacing:.02em}
+.sp-person.helper .sp-avatar{background:color-mix(in srgb,var(--c) 18%,transparent);color:var(--c)}
+.sp-body{display:grid;gap:3px;min-width:0}
+.sp-body strong{display:flex;align-items:center;gap:8px;font-size:13.5px}
+.sp-body small{color:var(--muted,#7a6a62);font-size:11px}
+.sp-you{padding:2px 9px;border-radius:999px;background:var(--accent,#8a5a44);color:#fff;font-size:10px;font-weight:700}
+.sp-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:3px}
+.sp-section{padding:2px 8px;border-radius:6px;background:var(--accent-soft,#f1e6df);color:var(--accent,#8a5a44);font-size:10.5px;font-weight:700}
+.sp-section.muted{background:transparent;color:var(--muted,#7a6a62);font-weight:500}
+.sp-role{font-size:10.5px!important;padding:2px 9px 2px 7px!important}
+.sp-sub{margin:14px 0 8px;color:var(--muted,#7a6a62);font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.sp-empty{margin:0;color:var(--muted,#7a6a62)}
+
+/* Exam export menu (question bank) */
+.exam-export-wrap{position:relative;display:inline-flex;align-self:center;align-items:center}
+.exam-export-menu{position:absolute;z-index:60;top:calc(100% + 6px);right:0;display:grid;gap:2px;min-width:250px;padding:6px;border:1px solid var(--line,rgba(0,0,0,.1));border-radius:12px;background:var(--surface,#fff);box-shadow:0 14px 34px rgba(0,0,0,.18)}
+.exam-export-menu button{display:grid;gap:2px;padding:9px 11px;border:0;border-radius:8px;background:transparent;color:var(--ink,#1d2730);text-align:left;cursor:pointer}
+.exam-export-menu button:hover{background:var(--accent-soft,#f3ede9)}
+.exam-export-menu strong{font-size:12.5px}
+.exam-export-menu small{color:var(--muted,#7a6a62);font-size:10.5px}
+.exam-export-menu{grid-template-columns:1fr}

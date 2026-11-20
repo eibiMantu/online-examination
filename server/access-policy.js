@@ -31,8 +31,13 @@ function requireCollectionAccess(session, key, method) {
   throw error;
 }
 
+// Per-record filter (server/exam-guard): answer keys and other students' records.
+let recordFilter = null;
+function setRecordFilter(fn) { recordFilter = typeof fn === 'function' ? fn : null; }
+function filterRecord(session, key, value) { return recordFilter ? recordFilter(session, key, value) : value; }
+
 function visibleRecords(session, records) {
-  const visible = Object.fromEntries(Object.entries(records).filter(([key]) => permitted(session, key, 'GET')));
+  const visible = Object.fromEntries(Object.entries(records).filter(([key]) => permitted(session, key, 'GET')).map(([key, value]) => [key, filterRecord(session, key, value)]));
   // requireRole() verifies that the signed-in account still exists. Students
   // must receive that one record without gaining access to the user directory.
   if (session?.role === 'student' && Array.isArray(records.users)) {
@@ -41,4 +46,4 @@ function visibleRecords(session, records) {
   return visible;
 }
 
-module.exports = { permitted, requireCollectionAccess, visibleRecords, WRITE_ACCESS, READ_DENY };
+module.exports = { permitted, requireCollectionAccess, visibleRecords, setRecordFilter, filterRecord, WRITE_ACCESS, READ_DENY };

@@ -44,3 +44,12 @@
 #studentSubjectDetail .cm-table th{border-bottom:1px solid var(--pr-line)!important}
 #studentSubjectDetail .cm-table thead tr{background:transparent!important}
 :root[data-theme="dark"] .cm-card .cm-table :is(thead,thead tr,th){background:transparent!important}
+/* Assignable roles in the Class tab (Exam maker, Intern, …) */
+.cm-roles{display:inline-flex;flex-wrap:wrap;align-items:center;gap:5px}
+.cm-xrole{padding:2px 9px 2px 7px!important;font-size:10px!important;font-weight:700!important;color:color-mix(in srgb,var(--c) 70%,var(--pr-ink,#1d2730))!important;background:color-mix(in srgb,var(--c) 15%,transparent)!important}
+.cm-row.cm-has-role td:first-child{box-shadow:inset 3px 0 0 var(--cm-role-c,transparent)}
+.cm-avatar.role{background:color-mix(in srgb,var(--c,#7c6bd6) 18%,transparent);color:var(--c,#7c6bd6)}
+.cm-filters .cm-role-chip{display:inline-flex;align-items:center;gap:6px}
+.cm-filters .cm-role-chip::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--c)}
+.cm-filters .cm-role-chip.active{background:var(--c)!important;border-color:var(--c)!important;color:#fff!important}
+.cm-filters .cm-role-chip.active::before{background:#fff}

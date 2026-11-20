@@ -30,13 +30,29 @@ const RoleAccess = (() => {
   const roles = () => { const r = raw('accessRoles', null); return Array.isArray(r) && r.length ? r : DEFAULT_ROLES; };
   const configured = () => Array.isArray(raw('roleAssignments', null));
   const assignments = () => raw('roleAssignments', []) || [];
+  // Roles can end (Admin → Roles → Ends): an expired assignment grants nothing.
+  const isLive = a => !(a?.expiresAt && Date.parse(a.expiresAt) <= Date.now());
+  const live = () => assignments().filter(isLive);
+  function periodEnd() { const p = (raw('academicPeriods', []) || []).find(x => x.status === 'active'); return p?.endDate ? `${p.endDate}T23:59:59` : null; }
+  // until: '' = the role's own rule, 'none' = never, or a yyyy-mm-dd date.
+  function expiryFor(role, until) {
+    if (until === 'none') return null;
+    if (until && /^d{4}-d{2}-d{2}$/.test(until)) return `${until}T23:59:59`;
+    const mode = role?.expiry?.mode || 'none';
+    if (mode === 'period') return periodEnd();
+    if (mode === 'date' && role.expiry.date) return `${role.expiry.date}T23:59:59`;
+    return null;
+  }
+  const fmtDate = iso => new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+  function expiryLabel(a) { if (!a?.expiresAt) return 'No end date'; return isLive(a) ? `Until ${fmtDate(a.expiresAt)}` : `Ended ${fmtDate(a.expiresAt)}`; }
+  function roleExpiryLabel(role) { const m = role?.expiry?.mode; return m === 'period' ? 'Ends with the academic period' : m === 'date' && role.expiry.date ? `Ends ${fmtDate(role.expiry.date + 'T12:00:00')}` : 'No end date'; }
   const roleById = id => roles().find(r => r.id === id) || null;
   const matches = (a, subjectCode) => a.subjectCode === '*' || !subjectCode || a.subjectCode === subjectCode;
   function has(username, cap, subjectCode) {
-    return assignments().some(a => a.username === username && matches(a, subjectCode) && roleById(a.roleId)?.grants?.[cap]);
+    return live().some(a => a.username === username && matches(a, subjectCode) && roleById(a.roleId)?.grants?.[cap]);
   }
   function subjectsFor(username, cap) {
-    const codes = new Set(assignments().filter(a => a.username === username && roleById(a.roleId)?.grants?.[cap]).map(a => a.subjectCode));
+    const codes = new Set(live().filter(a => a.username === username && roleById(a.roleId)?.grants?.[cap]).map(a => a.subjectCode));
     if (codes.has('*')) return (raw('subjects', []) || []).map(s => s.code);
     return [...codes];
   }
@@ -48,12 +64,13 @@ const RoleAccess = (() => {
   const subjectName = code => code === '*' ? 'All subjects' : `${code} — ${(raw('subjects', []) || []).find(s => s.code === code)?.name || ''}`.replace(/ — $/, '');
 
   /* ---------- changes ---------- */
-  function assign({ username, roleId, subjectCode = '*' }, via = 'direct') {
+  function assign({ username, roleId, subjectCode = '*', until = '' }, via = 'direct') {
     const list = assignments();
     if (!username || !roleById(roleId)) throw new Error('Choose a person and a role.');
-    if (list.some(a => a.username === username && a.roleId === roleId && a.subjectCode === subjectCode)) throw new Error(`${nameOf(username)} already has that role for ${subjectName(subjectCode)}.`);
+    if (list.some(a => isLive(a) && a.username === username && a.roleId === roleId && a.subjectCode === subjectCode)) throw new Error(`${nameOf(username)} already has that role for ${subjectName(subjectCode)}.`);
     const actor = raw('currentUser', {}) || {};
-    const item = { id: `RA-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`, roleId, username, subjectCode, assignedBy: actor.username || 'system', assignedAt: new Date().toISOString(), via };
+    const item = { id: `RA-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`, roleId, username, subjectCode, assignedBy: actor.username || 'system', assignedAt: new Date().toISOString(), via, expiresAt: expiryFor(roleById(roleId), until) };
+    if (item.expiresAt && Date.parse(item.expiresAt) <= Date.now()) throw new Error('That end date has already passed.');
     if (!DB.write('roleAssignments', [...list, item])) throw new Error('The role could not be saved.');
     try { AuditLog.record('assign-role', 'role-assignment', item.id, { username, roleId, subjectCode, via }); } catch (_) {}
     return item;
@@ -177,7 +194,7 @@ const RoleAccess = (() => {
     modal.addEventListener('click', e => { if (e.target === modal) close(); });
     modal.querySelector('form').onsubmit = e => {
       e.preventDefault(); const v = Object.fromEntries(new FormData(e.target));
-      if (assignments().some(a => a.username === username && a.roleId === v.roleId && (a.subjectCode === v.subjectCode || a.subjectCode === '*'))) { notify(`${nameOf(username)} already has that role there.`, 'info'); return; }
+      if (live().some(a => a.username === username && a.roleId === v.roleId && (a.subjectCode === v.subjectCode || a.subjectCode === '*'))) { notify(`${nameOf(username)} already has that role there.`, 'info'); return; }
       try { request({ username, roleId: v.roleId, subjectCode: v.subjectCode, reason: v.reason }); close(); notify(`Request sent to the Dean: ${roleById(v.roleId)?.name} for ${nameOf(username)}.`, 'success'); }
       catch (error) { notify(error.code === 'DUPLICATE_PENDING' ? 'That request is already waiting for the Dean.' : error.message, 'error'); }
     };
@@ -187,7 +204,7 @@ const RoleAccess = (() => {
     document.addEventListener('contextmenu', e => {
       const row = e.target.closest('#coordinatorProfessorTable tbody tr[data-id]'); if (!row) return;
       e.preventDefault(); closeMenu();
-      const id = row.dataset.id, held = assignments().filter(a => a.username === id);
+      const id = row.dataset.id, held = live().filter(a => a.username === id);
       const menu = document.createElement('div'); menu.id = 'raMenu'; menu.className = 'ra-menu'; menu.setAttribute('role', 'menu');
       menu.innerHTML = `<button type="button" role="menuitem" data-ra="request"><svg viewBox="0 0 24 24"><path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6V5Z"/></svg>Request a role…</button><button type="button" role="menuitem" data-ra="open"><svg viewBox="0 0 24 24"><path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm0 2c-5 0-9 2.5-9 6v2h18v-2c0-3.5-4-6-9-6Z"/></svg>Open profile</button>${held.length ? `<p class="ra-held">${held.map(a => `<span class="ra-pill" style="--c:${esc(roleById(a.roleId)?.color || '#888')}">${esc(roleById(a.roleId)?.name || a.roleId)} · ${esc(a.subjectCode === '*' ? 'All' : a.subjectCode)}</span>`).join('')}</p>` : ''}`;
       document.body.appendChild(menu);
@@ -218,6 +235,6 @@ const RoleAccess = (() => {
     if (/coordinator\.html$/.test(location.pathname)) coordinatorMenu();
     switcher(); new MutationObserver(() => switcher()).observe(document.body, { childList: true, subtree: true });
   }
-  return { requestDialog, CAPS, DEFAULT_ROLES, roles, assignments, configured, has, subjectsFor, assign, unassign, request, nameOf, subjectName, roleById, bootIntern, mount, registerApproval };
+  return { requestDialog, CAPS, DEFAULT_ROLES, roles, assignments, live, isLive, expiryFor, expiryLabel, roleExpiryLabel, periodEnd, configured, has, subjectsFor, assign, unassign, request, nameOf, subjectName, roleById, bootIntern, mount, registerApproval };
 })();
 if (typeof window !== 'undefined') { window.RoleAccess = RoleAccess; document.addEventListener('DOMContentLoaded', () => RoleAccess.mount()); if (document.readyState !== 'loading') setTimeout(() => RoleAccess.mount(), 0); }

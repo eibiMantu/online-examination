@@ -105,6 +105,7 @@
         ['prof.exams.publish', 'Publish exams', 'Release an exam to students', any('reviewAndPublishExam'), ['exams']],
         ['prof.questions.edit', 'Write questions', 'Add, change, move and copy questions', any('openQuestionModal', 'editQuestion', 'saveQuestion', 'duplicateQuestion', 'moveQuestion'), ['questions', 'questionDrafts']],
         ['prof.questions.delete', 'Delete questions', 'Remove questions', any('deleteQuestion'), ['questions']],
+        ['prof.exams.export', 'Export exams', 'Download an exam as a file or spreadsheet', ['.exam-export-wrap']],
         ['prof.questions.import', 'Import questions', 'Upload questions from a CSV file', any('confirmQuestionCSVUpload'), ['questions']]
       ]],
       ['Grading', [
@@ -156,7 +157,8 @@
   function heldKeys(doc, ctx) {
     const role = norm(ctx.role), keys = { base: `system:${role}`, others: [] };
     (doc?.restrictions || []).forEach(r => { if (norm(r.baseRole) === role && (r.members || []).includes(ctx.username)) keys.others.push(r.id); });
-    const held = new Set((ctx.assignments || []).filter(a => a.username === ctx.username).map(a => a.roleId));
+    const now = Date.now(); // ended role assignments (Admin → Roles → Ends) no longer count
+    const held = new Set((ctx.assignments || []).filter(a => a.username === ctx.username && !(a.expiresAt && Date.parse(a.expiresAt) <= now)).map(a => a.roleId));
     held.forEach(id => keys.others.push(id));
     return keys;
   }

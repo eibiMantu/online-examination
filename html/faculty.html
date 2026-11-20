@@ -11,8 +11,8 @@
 <script src="../js/approval-service.js?v=20261120-roles"></script>
 <script src="../js/academic-workflow-service.js"></script>
 <script src="../js/admin-table-tools.js?v=20261118-export2"></script>
-<script src="../js/auth.js?v=20261119-keep"></script><script src="../js/page-permissions.js?v=20261120-tri"></script>
-<script src="../js/role-access.js?v=20261120-6"></script>
+<script src="../js/auth.js?v=20261119-keep"></script><script src="../js/page-permissions.js?v=20261120-exp"></script>
+<script src="../js/role-access.js?v=20261120-exp"></script>
 <script src="../js/weekly-learning.js"></script>
 <script src="../js/demo-data.js"></script>
 <script src="../js/question-draft.js"></script>
@@ -914,7 +914,7 @@
 </style>
 <!-- Loaded after the page styles so the shared tokens win on ties -->
 <link rel="stylesheet" href="../css/shared-ui.css?v=20261118-keep-search">
-<link rel="stylesheet" href="../css/faculty-subject-workspace.css?v=20261105-mobile-tabs">
+<link rel="stylesheet" href="../css/faculty-subject-workspace.css?v=20261120-export">
 <link rel="stylesheet" href="../css/report-status.css?v=20260829-1">
 <link rel="stylesheet" href="../css/faculty-dashboard.css?v=20261118-3">
 <link rel="stylesheet" href="../css/faculty-pages.css?v=20261118-13">
@@ -927,14 +927,14 @@
 <link rel="stylesheet" href="../css/faculty-reports.css?v=20261118-3">
 <link rel="stylesheet" href="../css/lesson-viewer.css?v=20261118-toc">
 <link rel="stylesheet" href="../css/course-path.css?v=20261118-3">
-<link rel="stylesheet" href="../css/class-members.css?v=20261118-3">
-<link rel="stylesheet" href="../css/responsive-shell.css?v=20261118-4"><link rel="stylesheet" href="../css/prompts.css?v=20261119-modal"><link rel="stylesheet" href="../css/role-access.css?v=20261120-6"><link rel="stylesheet" href="../css/table-toolbar.css?v=20261118-4"><link rel="stylesheet" href="../css/profile-popup.css?v=20261118-3"><link rel="stylesheet" href="../css/profile-uniform.css?v=20261119-6">
+<link rel="stylesheet" href="../css/class-members.css?v=20261120-roles">
+<link rel="stylesheet" href="../css/responsive-shell.css?v=20261118-4"><link rel="stylesheet" href="../css/prompts.css?v=20261119-modal"><link rel="stylesheet" href="../css/role-access.css?v=20261120-exp"><link rel="stylesheet" href="../css/table-toolbar.css?v=20261118-4"><link rel="stylesheet" href="../css/profile-popup.css?v=20261118-3"><link rel="stylesheet" href="../css/profile-uniform.css?v=20261119-6">
 <script src="../js/dates.js"></script>
 <script src="../js/exam-timing.js"></script>
 <script src="../js/grading.js"></script>
 <script src="../js/ui.js?v=20261120-mail"></script>
 <script src="../js/role-profile.js?v=20261118-overview-2"></script>
-<script src="../js/faculty-subject-workspace.js?v=20261118-members"></script>
+<script src="../js/faculty-subject-workspace.js?v=20261120-people2"></script>
 <script src="../js/faculty-dashboard.js?v=20261118-5"></script>
 <script src="../js/faculty-roster-insights.js?v=20261118-8"></script>
 <script src="../js/faculty-exams-overview.js?v=20261118-export"></script>
@@ -943,7 +943,7 @@
 <script src="../js/lesson-viewer.js?v=20261118-toc"></script>
 <script src="../js/lesson-view-mode.js?v=20261118-2"></script>
 <script src="../js/course-path.js?v=20261118-2"></script>
-<script src="../js/class-members.js?v=20261118-2"></script>
+<script src="../js/class-members.js?v=20261120-roles2"></script>
 <script src="../js/faculty-lessons.js?v=20261118-path"></script>
 </head>
 <body data-role="faculty">
@@ -1281,7 +1281,7 @@
 </div>
 
 <!-- Hidden CSV File Input -->
-<input type="file" id="csvQuestionInput" accept=".csv" style="display: none;" onchange="handleQuestionCSV(this)">
+<input type="file" id="csvQuestionInput" accept=".csv,.json" style="display: none;" onchange="handleQuestionCSV(this)">
 
 <!-- CSV Preview Modal -->
 <div id="csvQuestionPreviewModal" class="question-modal-bg">
@@ -2091,7 +2091,8 @@ function manageQuestions(examId) {
                     <div class="question-catalog-actions">
                         <button class="catalog-icon-btn exam-settings-btn" onclick="editExam('${examId}')" aria-label="Exam settings" title="Exam settings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.4 13a7.8 7.8 0 0 0 0-2l2.1-1.6-2-3.4-2.5 1a7.7 7.7 0 0 0-1.7-1L15 3.3h-4L10.7 6A7.7 7.7 0 0 0 9 7L6.5 6l-2 3.4L6.6 11a7.8 7.8 0 0 0 0 2l-2.1 1.6 2 3.4L9 17a7.7 7.7 0 0 0 1.7 1l.3 2.7h4l.3-2.7a7.7 7.7 0 0 0 1.7-1l2.5 1 2-3.4L19.4 13ZM13 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Z"/></svg></button>
                         <button class="catalog-icon-btn" onclick="openQuestionModal()" aria-label="Add question" title="Add question"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 4h2v7h7v2h-7v7h-2v-7H4v-2h7V4Z"/></svg></button>
-                        <button class="catalog-icon-btn" onclick="document.getElementById('csvQuestionInput').click()" aria-label="Import questions from CSV" title="Import CSV"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 15h2V8l3 3 1.4-1.4L12 4.2 6.6 9.6 8 11l3-3v7Zm-6 3h14v2H5v-2Z"/></svg></button>
+                        <button class="catalog-icon-btn" onclick="document.getElementById('csvQuestionInput').click()" aria-label="Import questions (exam file or CSV)" title="Import questions"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 15h2V8l3 3 1.4-1.4L12 4.2 6.6 9.6 8 11l3-3v7Zm-6 3h14v2H5v-2Z"/></svg></button>
+                        <span class="exam-export-wrap"><button class="catalog-icon-btn" onclick="toggleExamExportMenu(event, '${examId}')" aria-label="Export examination" title="Export examination" aria-haspopup="menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 3h2v8.2l2.6-2.6L17 10l-5 5-5-5 1.4-1.4 2.6 2.6V3ZM5 19v-4h2v2h10v-2h2v4H5Z"/></svg></button></span>
                         <button class="catalog-icon-btn" onclick="previewExam('${examId}')" aria-label="Preview examination" title="Preview examination"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5c5.2 0 9.3 4.4 10 7-.7 2.6-4.8 7-10 7S2.7 14.6 2 12c.7-2.6 4.8-7 10-7Zm0 2c-3.7 0-6.9 2.9-7.8 5 .9 2.1 4.1 5 7.8 5s6.9-2.9 7.8-5C18.9 9.9 15.7 7 12 7Zm0 2.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5Z"/></svg></button>
                         ${exam.status === 'draft' ? `<button class="catalog-icon-btn publish" id="publishExamBtn" onclick="reviewAndPublishExam('${examId}')" aria-label="Review and publish examination" title="Review and publish"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9.2 16.2-4.4-4.4-1.4 1.4L9.2 19 21 7.2l-1.4-1.4-10.4 10.4Z"/></svg></button>` : '<span class="publish-state"><span aria-hidden="true">●</span> Published</span>'}
                     </div>
@@ -3424,7 +3425,19 @@ function handleQuestionCSV(input) {
 
     const reader = new FileReader();
     reader.onload = function(e) {
-        const lines = e.target.result.split('\n').filter(l => l.trim());
+        input.value = '';
+        // An exam file exported from this app keeps every question type exactly.
+        const text = String(e.target.result || '');
+        if (/\.json$/i.test(file.name) || text.trim().startsWith('{')) {
+            try {
+                const data = JSON.parse(text), list = Array.isArray(data) ? data : data.questions;
+                csvQuestionPreview = (Array.isArray(list) ? list : []).filter(q => q && typeof q.text === 'string' && q.type).map(({ id, examId, ...rest }) => rest);
+            } catch (_) { csvQuestionPreview = []; }
+            if (!csvQuestionPreview.length) { notify('That file has no questions this app can read.', 'error'); return; }
+            showCsvQuestionPreview();
+            return;
+        }
+        const lines = text.split('\n').filter(l => l.trim());
         csvQuestionPreview = [];
 
         // Parse CSV
@@ -3519,27 +3532,49 @@ function closeCsvQuestionModal() {
     csvQuestionPreview = [];
 }
 
+/* Export the exam being viewed: an exam file (.json, every question type, can be
+   imported back with Import) or a spreadsheet (.csv) to read or print. */
+function toggleExamExportMenu(event, examId) {
+    event.stopPropagation();
+    const wrap = event.currentTarget.closest('.exam-export-wrap'), open = wrap.querySelector('.exam-export-menu');
+    document.querySelectorAll('.exam-export-menu').forEach(m => m.remove());
+    if (open) return;
+    wrap.insertAdjacentHTML('beforeend', '<div class="exam-export-menu" role="menu"><button type="button" role="menuitem" data-exam-export="json"><strong>Exam file</strong><small>.json · every question type, can be imported back</small></button><button type="button" role="menuitem" data-exam-export="csv"><strong>Spreadsheet</strong><small>.csv · questions and answers to read or print</small></button></div>');
+    const menu = wrap.querySelector('.exam-export-menu');
+    menu.onclick = e => { const b = e.target.closest('[data-exam-export]'); if (!b) return; menu.remove(); exportExam(examId, b.dataset.examExport); };
+    setTimeout(() => document.addEventListener('click', function close(e) { if (!e.target.closest('.exam-export-wrap')) { menu.remove(); document.removeEventListener('click', close); } }), 0);
+}
+function exportExam(examId, format = 'json') {
+    const exam = exams.find(e => e.id === examId); if (!exam) return;
+    const list = questions.filter(q => q.examId === examId);
+    const slug = (exam.subjectCode ? exam.subjectCode + '-' : '') + String(exam.title || 'exam').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    const save = (text, name, type) => { const url = URL.createObjectURL(new Blob([text], { type })); const a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 1000); };
+    if (format === 'json') {
+        const keep = ['title', 'desc', 'subjectCode', 'durationMinutes', 'passingPercent', 'maxAttempts', 'navigationMode', 'questionLayout', 'scoreRelease', 'answerRelease', 'resultReleaseAt', 'showFeedback', 'showSubmittedAnswers', 'materials'];
+        const payload = { format: 'neu-exam', version: 1, exportedAt: new Date().toISOString(), exam: Object.fromEntries(keep.filter(k => exam[k] !== undefined).map(k => [k, exam[k]])), questions: list.map(({ id, examId, ...rest }) => rest) };
+        save(JSON.stringify(payload, null, 2), slug + '.json', 'application/json');
+    } else {
+        const cell = v => { const t = String(v ?? ''); return /[",\n]/.test(t) ? '"' + t.replace(/"/g, '""') + '"' : t; };
+        const answer = q => isChoiceQuestion(q) ? (q.options || []).filter(o => o.isCorrect).map(o => o.text).join('; ')
+            : q.type === 'number' ? String(q.acceptedValue ?? '') + (q.tolerance ? ' ± ' + q.tolerance : '')
+            : (q.type === 'matching' || q.type === 'imagedrag') ? (q.pairs || []).map(p => p.left + ' → ' + p.right).join('; ')
+            : (q.expectedAnswer || '');
+        const rows = [['#', 'Type', 'Question', 'Choices', 'Answer', 'Points'], ...list.map((q, i) => [i + 1, questionTypeLabel(q.type), q.text, (q.options || []).map(o => o.text).join('; '), answer(q), q.points || 5])];
+        save('﻿' + rows.map(r => r.map(cell).join(',')).join('\r\n'), slug + '.csv', 'text/csv');
+    }
+    notify('Exported ' + list.length + ' question' + (list.length === 1 ? '' : 's') + '.', 'success');
+}
+
 function confirmQuestionCSVUpload() {
     csvQuestionPreview.forEach(q => {
-        const newQuestion = {
-            id: 'question_' + Date.now() + Math.random(),
-            examId: currentEditingExamForQuestions,
-            type: q.type,
-            text: q.text
-        };
-
-        if (isChoiceQuestion(q)) {
-            newQuestion.options = q.options;
-        } else {
-            newQuestion.expectedAnswer = q.expectedAnswer;
-            newQuestion.points = q.points;
-        }
-
+        const newQuestion = { ...q, id: 'question_' + Date.now() + Math.random().toString(36).slice(2, 8), examId: currentEditingExamForQuestions };
+        if (!newQuestion.points) newQuestion.points = 5;
         questions.push(newQuestion);
     });
 
     const imported = csvQuestionPreview.length;
-    localStorage.setItem('questions', JSON.stringify(questions));
+    // Saved through the server like every other change (it used to skip it).
+    if (!DB.write('questions', questions)) { questions = DB.read('questions', []); notify('The questions could not be imported.', 'error'); return; }
     closeCsvQuestionModal();
     notify(`Imported ${imported} question(s).`, 'success');
     manageQuestions(currentEditingExamForQuestions);

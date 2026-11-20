@@ -101,3 +101,5 @@ body[data-role="dean"] .dp-tabs button.active:not(#dp):not(#dp2){border-bottom-c
 .dp-howto{display:grid;gap:9px;margin:0;padding:0;list-style:none;color:var(--pr-muted);font:400 12px/1.5 var(--pr-font)}
 .dp-howto b{color:var(--pr-ink);font-weight:600}
 .dp-form-grid .dp-wide{grid-column:1/-1}
+.dp-until{color:var(--pr-muted,#6b7280);font-size:12px}
+.dp-until.ended{color:#c2463e;font-weight:600}
